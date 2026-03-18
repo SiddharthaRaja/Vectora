@@ -1,0 +1,6 @@
+.env
+papers/
+venv/
+__pycache__/
+qdrant_storage/
+*.pyc

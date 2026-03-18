@@ -1,0 +1,34 @@
+# Research Paper RAG — Ingestion Pipeline
+# Install with: pip install -r requirements.txt
+
+# PDF parsing
+pdfplumber>=0.10.0
+PyMuPDF>=1.23.0         # fitz
+Pillow>=10.0.0
+
+# Unstructured (richer layout parsing — optional but recommended for complex PDFs)
+# unstructured[pdf]>=0.12.0
+
+# Semantic chunking
+sentence-transformers>=2.6.0
+numpy>=1.24.0
+
+# Progress bar
+tqdm>=4.66.0
+
+# Vector database
+qdrant-client>=1.9.0
+
+# Retrieval
+rank-bm25>=0.2.2
+
+# Generation
+openai>=1.30.0
+python-dotenv>=1.0.0
+
+# Web UI
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Optional: Claude vision captioning for figures
+# anthropic>=0.25.0
