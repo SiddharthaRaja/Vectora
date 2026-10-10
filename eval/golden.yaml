@@ -1,0 +1,102 @@
+# Golden set for retrieval evaluation.
+#
+# Each case names a question and what a correct retrieval must surface. There
+# are two ways to specify that, and you can use both:
+#
+#   must_contain   substrings that should appear in the retrieved text. The
+#                  most practical kind of label: you do not need to know chunk
+#                  ids, only what a right answer has to mention.
+#   relevant_papers  paper_ids that should appear in the results. Use when the
+#                  answer lives in a specific paper regardless of wording.
+#
+# Scoring, reported per mode:
+#   recall@k   fraction of cases where at least one relevant chunk is in top k
+#   precision  fraction of returned chunks that are relevant
+#   MRR        1/rank of the first relevant chunk, averaged
+#   nDCG@k     rank-weighted gain, so being right at rank 1 beats rank 5
+#
+# Add a case every time you find a question the system gets wrong. That is
+# what turns "it felt better after the change" into a number.
+
+cases:
+  - id: lcmsms-definition
+    query: "What is LC-MS/MS and how is it used to measure vitamin D?"
+    query_type: definitional
+    must_contain:
+      - "mass spectrometry"
+    notes: "Lexical match on the acronym; the tokenizer must expand LC-MS/MS."
+
+  - id: deficiency-threshold
+    query: "What serum 25(OH)D concentration defines vitamin D deficiency?"
+    query_type: factual
+    must_contain:
+      - "ng/mL"
+    notes: "Needs a chunk with an actual threshold, not a discussion of thresholds."
+
+  - id: immunoassay-vs-massspec
+    query: "How do immunoassays compare with mass spectrometry for 25-hydroxyvitamin D?"
+    query_type: comparative
+    must_contain:
+      - "immunoassay"
+    notes: "Should pull from more than one paper; checks per-paper capping."
+
+  - id: assay-limitations
+    query: "What are the limitations of current 25-hydroxyvitamin D assays?"
+    query_type: exploratory
+    must_contain:
+      - "assay"
+
+  - id: electrochemical-biosensor
+    query: "How do electrochemical impedance biosensors detect vitamin D?"
+    query_type: methodological
+    must_contain:
+      - "impedance"
+    notes: "Distinct subtopic in the corpus; checks that routing does not collapse everything to one cluster."
+
+  - id: sample-preparation
+    query: "How are serum samples prepared before vitamin D quantification?"
+    query_type: methodological
+    must_contain:
+      - "serum"
+
+  - id: molecularly-imprinted-polymer
+    query: "What is a molecularly imprinted polymer sensor?"
+    query_type: definitional
+    must_contain:
+      - "polymer"
+
+  - id: standardisation
+    query: "What reference materials are used to standardise vitamin D measurement?"
+    query_type: factual
+    must_contain:
+      - "reference"
+    notes: "NIST SRM and DEQAS appear in the corpus; tests exact-term recall."
+
+  - id: spectroscopic-methods
+    query: "Which spectroscopic techniques have been applied to vitamin D determination?"
+    query_type: methodological
+    must_contain:
+      - "spectroscop"
+
+  - id: vitamin-d-metabolism
+    query: "Describe the metabolic pathway from cholecalciferol to calcitriol"
+    query_type: causal
+    must_contain:
+      - "25"
+
+# Questions the corpus genuinely cannot answer. A correct system returns a
+# fallback for these rather than something fluent and ungrounded — this is
+# the half of evaluation that scoring recall alone never catches.
+negative_cases:
+  - id: off-topic-politics
+    query: "Who is the current president of the United States?"
+    expect: fallback
+
+  - id: off-topic-sports
+    query: "Which team won the most recent cricket world cup?"
+    expect: fallback
+
+  - id: adjacent-but-absent
+    query: "What is the optimal dosing schedule of vitamin K2 for arterial calcification?"
+    expect: fallback
+    notes: "Adjacent subject matter, not in this corpus. The harder negative."

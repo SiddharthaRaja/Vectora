@@ -1,0 +1,105 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vectora"
+version = "2.0.0"
+description = "Retrieval-augmented question answering over research papers"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Sidhartha Tammana" }]
+keywords = ["rag", "retrieval", "qdrant", "llm", "research-papers"]
+classifiers = [
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+  # Config and models
+  "pydantic>=2.7,<3",
+  "pydantic-settings>=2.2,<3",
+  "python-dotenv>=1.0",
+  # API
+  "fastapi>=0.111,<1",
+  "uvicorn[standard]>=0.29",
+  "sse-starlette>=2.1",
+  # Retrieval
+  "qdrant-client>=1.9,<2",
+  "sentence-transformers>=2.6",
+  "rank-bm25>=0.2.2",
+  "numpy>=1.24",
+  # LLM
+  "openai>=1.30,<2",
+  # CLI
+  "typer>=0.12",
+]
+
+[project.optional-dependencies]
+ingest = ["pdfplumber>=0.11", "PyMuPDF>=1.24", "Pillow>=10.0", "tqdm>=4.66"]
+pdf = ["weasyprint>=62.0"]
+metrics = ["prometheus-client>=0.20"]
+caption = ["anthropic>=0.30"]
+eval = ["pyyaml>=6.0"]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.23",
+  "pytest-cov>=5.0",
+  "httpx>=0.27",
+  "ruff>=0.4",
+  "mypy>=1.10",
+  "pyyaml>=6.0",
+]
+all = [
+  "vectora[ingest,pdf,metrics,eval]",
+]
+
+[project.scripts]
+vectora = "vectora.cli:entrypoint"
+
+[tool.setuptools.packages.find]
+include = ["vectora*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+filterwarnings = ["ignore::DeprecationWarning"]
+addopts = "-q --strict-markers"
+
+[tool.ruff]
+line-length = 96
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM", "RUF"]
+ignore = [
+  "E501",    # line length is handled by the formatter
+  "B008",    # FastAPI's Depends() in defaults is the documented pattern
+  "N818",    # exception names
+  "RUF012",  # mutable class attrs; pydantic handles these
+  "SIM108",  # ternaries are not always clearer
+  "RUF001",  # em dashes and curly quotes in prose are intentional
+  "RUF002",  # same, in docstrings
+  "SIM102",  # nested ifs often read better when each condition is a distinct idea
+  "SIM105",  # contextlib.suppress is not clearer for a one-line best-effort cleanup
+  "SIM118",  # sqlite3.Row needs .keys(): `in row` tests values, not column names
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["N802", "N806", "B011", "SIM117"]
+"vectora/ingestion/pipeline.py" = ["SLF001"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+ignore_missing_imports = true
+check_untyped_defs = true
+disallow_untyped_defs = false
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "eval.*"]
+ignore_errors = true
