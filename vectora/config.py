@@ -16,10 +16,10 @@ import os
 from enum import Enum
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import Field, SecretStr, field_validator, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -311,7 +311,11 @@ class Settings(BaseSettings):
     # ── API ───────────────────────────────────────────────────────────────
     host: str = "127.0.0.1"
     port: int = 5000
-    cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:5000"])
+    # NoDecode: read the value as a plain comma-separated string, not JSON, so
+    # VECTORA_CORS_ORIGINS=http://a,http://b works; _split_origins does the split.
+    cors_origins: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: ["http://localhost:5000"]
+    )
     request_timeout_seconds: float = 120.0
     rate_limit_per_minute: int = 60
     enable_metrics: bool = True

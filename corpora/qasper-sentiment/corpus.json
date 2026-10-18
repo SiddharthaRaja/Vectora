@@ -1,0 +1,25 @@
+{
+  "name": "qasper-sentiment",
+  "description": "QASPER: NLP research papers with practitioner-written questions \u2014 topic: sentiment, opinion mining",
+  "document_kind": "NLP research papers",
+  "domain_terms": [
+    "dataset",
+    "baseline",
+    "benchmark",
+    "annotation",
+    "model",
+    "embedding",
+    "attention",
+    "fine-tuning",
+    "evaluation",
+    "F1",
+    "accuracy",
+    "corpus"
+  ],
+  "source": "QASPER v0.3 all split",
+  "created_at": "2026-10-18T13:59:32.068466+00:00",
+  "updated_at": "2026-10-18T14:27:01.397965+00:00",
+  "documents": 40,
+  "chunks": 3185,
+  "notes": ""
+}

@@ -1,0 +1,649 @@
+# Golden set generated from QASPER (CC BY 4.0) by scripts/qasper_corpus.py.
+# Split: all. Each query is prefixed with its paper's title because QASPER
+# questions assume the reader knows which paper they are about.
+#
+# Retrieval is scored with relevant_papers. `notes` holds the annotators' answer
+# so you can compare it with Vectora's. Negative cases are questions every
+# annotator marked unanswerable from that paper: Vectora should decline them.
+
+cases:
+  - id: q-3d39e57e90
+    query: "In the paper \"Trading the Twitter Sentiment with Reinforcement Learning\": Do the authors give any examples of major events which draw the public's attention and the impact they have on stock price?"
+    relevant_papers:
+      - "1801.02243"
+    notes: "Gold answer: Yes"
+
+  - id: q-69ef007fc1
+    query: "In the paper \"Trading the Twitter Sentiment with Reinforcement Learning\": Which tweets are used to output the daily sentiment signal?"
+    relevant_papers:
+      - "1801.02243"
+    notes: "Gold answer: Tesla and Ford are investigated on how Twitter sentiment could impact the stock price"
+
+  - id: q-20df24165b
+    query: "In the paper \"Trading the Twitter Sentiment with Reinforcement Learning\": What is the baseline machine learning prediction approach?"
+    relevant_papers:
+      - "1801.02243"
+    notes: "Gold answer: linear logistic regression to a set of stock technical signals"
+
+  - id: q-3bf429633e
+    query: "In the paper \"Basic tasks of sentiment analysis\": How are aspects identified in aspect extraction?"
+    relevant_papers:
+      - "1710.06536"
+    notes: "Gold answer: apply an ensemble of deep learning and linguistics t"
+
+  - id: q-e574f0f733
+    query: "In the paper \"Transfer Learning Between Related Tasks Using Expected Label Proportions\": How is the expectation regularization loss defined?"
+    relevant_papers:
+      - "1909.00430"
+    notes: "Gold answer: DISPLAYFORM0"
+
+  - id: q-931a2a13a1
+    query: "In the paper \"Multi-modal Sentiment Analysis using Super Characters Method on Low-power CNN Accelerator Device\": How is Super Character method modified to handle tabular data also?"
+    relevant_papers:
+      - "2001.10179"
+    notes: "Gold answer: simply split the image into two parts. One for the text input, and the other for the tabular data"
+
+  - id: q-e79a5b6b66
+    query: "In the paper \"Multilingual Sentiment Analysis: An RNN-Based Framework for Limited Data\": which non-english language had the best performance?"
+    relevant_papers:
+      - "1806.04511"
+    notes: "Gold answer: Russian"
+
+  - id: q-c7486d0393
+    query: "In the paper \"Multilingual Sentiment Analysis: An RNN-Based Framework for Limited Data\": which non-english language was the had the worst results?"
+    relevant_papers:
+      - "1806.04511"
+    notes: "Gold answer: Turkish"
+
+  - id: q-f1f1dcc67b
+    query: "In the paper \"Multilingual Sentiment Analysis: An RNN-Based Framework for Limited Data\": what datasets were used in evaluation?"
+    relevant_papers:
+      - "1806.04511"
+    notes: "Gold answer: SemEval-2016 Challenge Task 5 BIBREF27 , BIBREF28"
+
+  - id: q-0ad4359e3e
+    query: "In the paper \"Dynamic Compositionality in Recursive Neural Networks with Structure-aware Tag Representations\": Which baselines did they compare against?"
+    relevant_papers:
+      - "1809.02286"
+    notes: "Gold answer: Various tree structured neural networks including variants of Tree-LSTM, Tree-based CNN, RNTN, and non-tree models including variants of LSTMs, CNNs, residual, and self-attention based networks"
+
+  - id: q-eda4869c67
+    query: "In the paper \"Improving Distributed Representations of Tweets - Present and Future\": Which dataset do they use?"
+    relevant_papers:
+      - "1706.09673"
+    notes: "Gold answer: Paraphrase Database (PPDB) | book corpus"
+
+  - id: q-ecc63972b2
+    query: "In the paper \"Improving Distributed Representations of Tweets - Present and Future\": How do they encourage understanding of literature as part of their objective function?"
+    relevant_papers:
+      - "1706.09673"
+    notes: "Gold answer: They group the existing works in terms of the objective function they optimize - within-tweet relationships, inter-tweet relationships, autoencoder, and weak supervision."
+
+  - id: q-c09a92e25e
+    query: "In the paper \"Crowdsourcing for Beyond Polarity Sentiment Analysis A Pure Emotion Lexicon\": How do they compare lexicons?"
+    relevant_papers:
+      - "1710.04203"
+    notes: "Gold answer: Human evaluators were asked to evaluate on a scale from 1 to 5 the validity of the lexicon annotations made by the experts and crowd contributors."
+
+  - id: q-589be705a5
+    query: "In the paper \"RobBERT: a Dutch RoBERTa-based Language Model\": What data did they use?"
+    relevant_papers:
+      - "2001.06286"
+    notes: "Gold answer: the Dutch section of the OSCAR corpus"
+
+  - id: q-6e962f1f23
+    query: "In the paper \"RobBERT: a Dutch RoBERTa-based Language Model\": What is the state of the art?"
+    relevant_papers:
+      - "2001.06286"
+    notes: "Gold answer: BERTje BIBREF8 | an ULMFiT model (Universal Language Model Fine-tuning for Text Classification model) BIBREF19. | mBERT"
+
+  - id: q-594a6bf37e
+    query: "In the paper \"RobBERT: a Dutch RoBERTa-based Language Model\": What language tasks did they experiment on?"
+    relevant_papers:
+      - "2001.06286"
+    notes: "Gold answer: sentiment analysis | the disambiguation of demonstrative pronouns,"
+
+  - id: q-d8cecea477
+    query: "In the paper \"Incorporating Structured Commonsense Knowledge in Story Completion\": Which metrics are they evaluating with?"
+    relevant_papers:
+      - "1811.00625"
+    notes: "Gold answer: accuracy"
+
+  - id: q-1405824a68
+    query: "In the paper \"SOC: hunting the underground inside story of the ethereum Social-network Opinion and Comment\": Was the introduced LSTM+CNN model trained on annotated data in a supervised fashion?"
+    relevant_papers:
+      - "1811.11136"
+    notes: "Gold answer: Yes"
+
+  - id: q-11c77ee117
+    query: "In the paper \"Adapt or Get Left Behind: Domain Adaptation through BERT Language Model Finetuning for Aspect-Target Sentiment Classification\": By how much does their model outperform the baseline in the cross-domain evaluation?"
+    relevant_papers:
+      - "1908.11860"
+    notes: "Gold answer: $2.2\\%$ absolute accuracy improvement on the laptops test set | $3.6\\%$ accuracy improvement on the restaurants test set"
+
+  - id: q-0b92fb692f
+    query: "In the paper \"Adapt or Get Left Behind: Domain Adaptation through BERT Language Model Finetuning for Aspect-Target Sentiment Classification\": What are the performance results?"
+    relevant_papers:
+      - "1908.11860"
+    notes: "Gold answer: results that for the in-domain training case, our models BERT-ADA Lapt and BERT-ADA Rest achieve performance close to state-of-the-art on the laptops dataset | new state-of-the-art on the restaurants dataset with accuracies of $79.19\\%$ and $87.14\\%$, respectively."
+
+  - id: q-2419b38624
+    query: "In the paper \"AraNet: A Deep Learning Toolkit for Arabic Social Media\": Did they experiment on all the tasks?"
+    relevant_papers:
+      - "1912.13072"
+    notes: "Gold answer: Yes"
+
+  - id: q-b99d100d17
+    query: "In the paper \"AraNet: A Deep Learning Toolkit for Arabic Social Media\": What models did they compare to?"
+    relevant_papers:
+      - "1912.13072"
+    notes: "Gold answer: we do not explicitly compare to previous research since most existing works either exploit smaller data (and so it will not be a fair comparison), use methods pre-dating BERT (and so will likely be outperformed by our models)"
+
+  - id: q-578d0b23cb
+    query: "In the paper \"AraNet: A Deep Learning Toolkit for Arabic Social Media\": What datasets are used in training?"
+    relevant_papers:
+      - "1912.13072"
+    notes: "Gold answer: Arap-Tweet BIBREF19 | an in-house Twitter dataset for gender | the MADAR shared task 2 BIBREF20 | the LAMA-DINA dataset from BIBREF22 | LAMA-DIST | Arabic tweets released by IDAT@FIRE2019 shared-task BIBREF24 | BIBREF25, BIBREF26, BIBREF27, BIBREF1, BIBREF28, BIBREF29, BIBREF30, BIBREF31, BIBREF32, BIBREF33, BIBREF34"
+
+  - id: q-f608fbc7a4
+    query: "In the paper \"Learning Explicit and Implicit Structures for Targeted Sentiment Analysis\": Which model is used to capture the implicit structure?"
+    relevant_papers:
+      - "1909.07593"
+    notes: "Gold answer: Bi-directional LSTM | self-attention"
+
+  - id: q-9439430ff9
+    query: "In the paper \"Learning Explicit and Implicit Structures for Targeted Sentiment Analysis\": How is the robustness of the model evaluated?"
+    relevant_papers:
+      - "1909.07593"
+    notes: "Gold answer: 10-fold cross validation"
+
+  - id: q-00d6228bcd
+    query: "In the paper \"Learning Explicit and Implicit Structures for Targeted Sentiment Analysis\": How is the effectiveness of the model evaluated?"
+    relevant_papers:
+      - "1909.07593"
+    notes: "Gold answer: precision ($P.$), recall ($R.$) and $F_1$ scores for target recognition and targeted sentiment"
+
+  - id: q-e292676c8c
+    query: "In the paper \"Learning to Detect Opinion Snippet for Aspect-Based Sentiment Analysis\": Which soft-selection approaches are evaluated?"
+    relevant_papers:
+      - "1909.11297"
+    notes: "Gold answer: LSTM and BERT"
+
+  - id: q-1afd550cbe
+    query: "In the paper \"Learning to Detect Opinion Snippet for Aspect-Based Sentiment Analysis\": Is the model evaluated against the baseline also on single-aspect sentences?"
+    relevant_papers:
+      - "1909.11297"
+    notes: "Gold answer: No"
+
+  - id: q-cc354c952b
+    query: "In the paper \"Examining Gender and Race Bias in Two Hundred Sentiment Analysis Systems\": Which race and gender are given higher sentiment intensity predictions?"
+    relevant_papers:
+      - "1805.04508"
+    notes: "Gold answer: Females are given higher sentiment intensity when predicting anger, joy or valence, but males are given higher sentiment intensity when predicting  fear.
+African American names are given higher score on the tasks of anger, fear, and sadness intensity prediction,  but European American names are given higher scores on joy and valence task."
+
+  - id: q-0f12dc077f
+    query: "In the paper \"Examining Gender and Race Bias in Two Hundred Sentiment Analysis Systems\": What criteria are used to select the 8,640 English sentences?"
+    relevant_papers:
+      - "1805.04508"
+    notes: "Gold answer: Sentences involving at least one race- or gender-associated word,  sentence  have to be short and grammatically simple,  sentence have to  include expressions of sentiment and emotion."
+
+  - id: q-637aa32a34
+    query: "In the paper \"Stacked DeBERT: All Attention in Incomplete Data for Text Classification\": Do they report results only on English datasets?"
+    relevant_papers:
+      - "2001.00137"
+    notes: "Gold answer: Yes"
+
+  - id: q-4b8257cdd9
+    query: "In the paper \"Stacked DeBERT: All Attention in Incomplete Data for Text Classification\": How do the authors define or exemplify 'incorrect words'?"
+    relevant_papers:
+      - "2001.00137"
+    notes: "Gold answer: typos in spellings or ungrammatical words"
+
+  - id: q-abc5836c54
+    query: "In the paper \"Stacked DeBERT: All Attention in Incomplete Data for Text Classification\": Do they test their approach on a dataset without incomplete data?"
+    relevant_papers:
+      - "2001.00137"
+    notes: "Gold answer: No"
+
+  - id: q-975085e3b6
+    query: "In the paper \"Bidirectional Context-Aware Hierarchical Attention Network for Document Understanding\": Do they compare to other models appart from HAN?"
+    relevant_papers:
+      - "1908.06006"
+    notes: "Gold answer: No"
+
+  - id: q-609fbe6273
+    query: "In the paper \"Bidirectional Context-Aware Hierarchical Attention Network for Document Understanding\": What are the datasets used"
+    relevant_papers:
+      - "1908.06006"
+    notes: "Gold answer: large-scale document classification datasets introduced by BIBREF14"
+
+  - id: q-c2eb743c9d
+    query: "In the paper \"Cell-aware Stacked LSTMs for Modeling Sentences\": Which models did they experiment with?"
+    relevant_papers:
+      - "1809.02279"
+    notes: "Gold answer: Stacked LSTMs | Cell-aware Stacked LSTMs | Sentence Encoders | Top-layer Classifiers"
+
+  - id: q-c35806cf68
+    query: "In the paper \"Cell-aware Stacked LSTMs for Modeling Sentences\": What were their best results on the benchmark datasets?"
+    relevant_papers:
+      - "1809.02279"
+    notes: "Gold answer: In SNLI, our best model achieves the new state-of-the-art accuracy of 87.0% | we can see that our models outperform other models by large margin, achieving the new state of the art. | Our models achieve the new state-of-the-art accuracy on SST-2 and competitive accuracy on SST-5"
+
+  - id: q-f7d0fa5201
+    query: "In the paper \"Cell-aware Stacked LSTMs for Modeling Sentences\": What were the baselines?"
+    relevant_papers:
+      - "1809.02279"
+    notes: "Gold answer: (i) models that use plain stacked LSTMs | (ii) models with different INLINEFORM0 | (iii) models without INLINEFORM1 | (iv) models that integrate lower contexts via peephole connections"
+
+  - id: q-3d34a02cee
+    query: "In the paper \"We Built a Fake News&Click-bait Filter: What Happened Next Will Blow Your Mind!\": what classifiers were used in this paper?"
+    relevant_papers:
+      - "1803.03786"
+    notes: "Gold answer: Support Vector Machines (SVM) classifier"
+
+  - id: q-96992460cf
+    query: "In the paper \"We Built a Fake News&Click-bait Filter: What Happened Next Will Blow Your Mind!\": what are their evaluation metrics?"
+    relevant_papers:
+      - "1803.03786"
+    notes: "Gold answer: F1 | accuracy"
+
+  - id: q-363ddc06db
+    query: "In the paper \"We Built a Fake News&Click-bait Filter: What Happened Next Will Blow Your Mind!\": what types of features were used?"
+    relevant_papers:
+      - "1803.03786"
+    notes: "Gold answer: stylometric, lexical, grammatical, and semantic"
+
+  - id: q-4e4d377b14
+    query: "In the paper \"Sentiment Analysis of Citations Using Word2vec\": What dataset is used?"
+    relevant_papers:
+      - "1704.00177"
+    notes: "Gold answer: ACL Anthology Reference Corpus"
+
+  - id: q-828ce5faed
+    query: "In the paper \"Sentiment Analysis of Citations Using Word2vec\": What metrics are considered?"
+    relevant_papers:
+      - "1704.00177"
+    notes: "Gold answer: F-score | micro-F | macro-F | weighted-F"
+
+  - id: q-0b9021cefc
+    query: "In the paper \"$\\rho$-hot Lexicon Embedding-based Two-level LSTM for Sentiment Analysis\": What are the other models they compare to?"
+    relevant_papers:
+      - "1803.07771"
+    notes: "Gold answer: CNN-C | CNN-W | CNN-Lex-C | CNN-Lex-W | Bi-LSTM-C | Bi-LSTM-W | Lex-rule | BOW"
+
+  - id: q-2d307b4374
+    query: "In the paper \"$\\rho$-hot Lexicon Embedding-based Two-level LSTM for Sentiment Analysis\": How long are the datasets?"
+    relevant_papers:
+      - "1803.07771"
+    notes: "Gold answer: Travel dataset contains 4100 raw samples, 11291 clauses, Hotel dataset contains 3825 raw samples, 11264 clauses, and the Mobile dataset contains 3483 raw samples and 8118 clauses"
+
+  - id: q-fe90eec1e3
+    query: "In the paper \"$\\rho$-hot Lexicon Embedding-based Two-level LSTM for Sentiment Analysis\": What are the sources of the data?"
+    relevant_papers:
+      - "1803.07771"
+    notes: "Gold answer: User reviews written in Chinese collected online for hotel, mobile phone, and travel domains"
+
+  - id: q-4cbe5a36b4
+    query: "In the paper \"Causal Explanation Analysis on Social Media\": What baselines did they consider?"
+    relevant_papers:
+      - "1809.01202"
+    notes: "Gold answer: state-of-the-art PDTB taggers"
+
+  - id: q-a4d1152204
+    query: "In the paper \"Causal Explanation Analysis on Social Media\": What types of social media did they consider?"
+    relevant_papers:
+      - "1809.01202"
+    notes: "Gold answer: Facebook status update messages"
+
+  - id: q-37edc25e39
+    query: "In the paper \"Multitask Learning for Fine-Grained Twitter Sentiment Analysis\": What was the baseline?"
+    relevant_papers:
+      - "1707.03569"
+    notes: "Gold answer: SVMs | LR | BIBREF2"
+
+  - id: q-e431661f17
+    query: "In the paper \"Multitask Learning for Fine-Grained Twitter Sentiment Analysis\": By how much did they improve?"
+    relevant_papers:
+      - "1707.03569"
+    notes: "Gold answer: They decrease MAE in 0.34"
+
+  - id: q-876700622b
+    query: "In the paper \"Multitask Learning for Fine-Grained Twitter Sentiment Analysis\": What dataset did they use?"
+    relevant_papers:
+      - "1707.03569"
+    notes: "Gold answer: high-quality datasets  from SemEval-2016 “Sentiment Analysis in Twitter” task"
+
+  - id: q-e9d9bb87a5
+    query: "In the paper \"Utilizing BERT for Aspect-Based Sentiment Analysis via Constructing Auxiliary Sentence\": How much do they outperform previous state-of-the-art?"
+    relevant_papers:
+      - "1903.09588"
+    notes: "Gold answer: On subtask 3 best proposed model has F1 score of 92.18 compared to best previous F1 score of 88.58.
+On subtask 4 best proposed model has 85.9, 89.9 and 95.6 compared to best previous results of 82.9, 84.0 and 89.9 on 4-way, 3-way and binary aspect polarity."
+
+  - id: q-3554ac92d4
+    query: "In the paper \"Utilizing BERT for Aspect-Based Sentiment Analysis via Constructing Auxiliary Sentence\": How do they generate the auxiliary sentence?"
+    relevant_papers:
+      - "1903.09588"
+    notes: "Gold answer: The sentence we want to generate from the target-aspect pair is a question, and the format needs to be the same. | For the NLI task, the conditions we set when generating sentences are less strict, and the form is much simpler. | For QA-B, we add the label information and temporarily convert TABSA into a binary classification problem ( INLINEFORM0 ) to obtain the probability distribution | auxilia"
+
+  - id: q-37016cc987
+    query: "In the paper \"Weighed Domain-Invariant Representation Learning for Cross-domain Sentiment Analysis\": How are different domains weighted in WDIRL?"
+    relevant_papers:
+      - "1909.08167"
+    notes: "Gold answer: To achieve this purpose, we introduce a trainable class weight $\\mathbf {w}$ to reweigh source domain examples by class when performing DIRL, with $\\mathbf {w}_i > 0$"
+
+  - id: q-b3dc6d95d1
+    query: "In the paper \"Weighed Domain-Invariant Representation Learning for Cross-domain Sentiment Analysis\": How is DIRL evaluated?"
+    relevant_papers:
+      - "1909.08167"
+    notes: "Gold answer: Through the experiments, we empirically studied our analysis on DIRL and the effectiveness of our proposed solution in dealing with the problem it suffered from."
+
+  - id: q-cc5d390391
+    query: "In the paper \"Weighed Domain-Invariant Representation Learning for Cross-domain Sentiment Analysis\": Which sentiment analysis tasks are addressed?"
+    relevant_papers:
+      - "1909.08167"
+    notes: "Gold answer: 12 binary-class classification and multi-class classification of reviews based on rating"
+
+  - id: q-8fc14714eb
+    query: "In the paper \"UniSent: Universal Adaptable Sentiment Lexica for 1000+ Languages\": what sentiment sources do they compare with?"
+    relevant_papers:
+      - "1904.09678"
+    notes: "Gold answer: manually created lexicon in Czech BIBREF11 , German BIBREF12 , French BIBREF13 , Macedonian BIBREF14 , and Spanish BIBREF15"
+
+  - id: q-284ea817fd
+    query: "In the paper \"VAIS Hate Speech Detection System: A Deep Learning based Approach for System Combination\": Is the data all in Vietnamese?"
+    relevant_papers:
+      - "1910.05608"
+    notes: "Gold answer: Yes"
+
+  - id: q-c012219011
+    query: "In the paper \"VAIS Hate Speech Detection System: A Deep Learning based Approach for System Combination\": What classifier do they use?"
+    relevant_papers:
+      - "1910.05608"
+    notes: "Gold answer: Stacking method | LSTMCNN | SARNN | simple LSTM bidirectional model | TextCNN"
+
+  - id: q-1ed6acb889
+    query: "In the paper \"VAIS Hate Speech Detection System: A Deep Learning based Approach for System Combination\": What is private dashboard?"
+    relevant_papers:
+      - "1910.05608"
+    notes: "Gold answer: Private dashboard is leaderboard where competitors can see results after competition is finished - on hidden part of test set (private test set)."
+
+  - id: q-981443fce6
+    query: "In the paper \"Automating Political Bias Prediction\": Which countries and languages do the political speeches and manifestos come from?"
+    relevant_papers:
+      - "1608.02195"
+    notes: "Gold answer: german"
+
+  - id: q-6d0f2cce46
+    query: "In the paper \"Automating Political Bias Prediction\": Do changes in policies of the political actors account for all of the mistakes the model made?"
+    relevant_papers:
+      - "1608.02195"
+    notes: "Gold answer: Yes"
+
+  - id: q-5816ebf15e
+    query: "In the paper \"Automating Political Bias Prediction\": What model are the text features used in to provide predictions?"
+    relevant_papers:
+      - "1608.02195"
+    notes: "Gold answer: multinomial logistic regression"
+
+  - id: q-282aa4e160
+    query: "In the paper \"Aspect Term Extraction with History Attention and Selective Transformation\": How do they determine the opinion summary?"
+    relevant_papers:
+      - "1805.00760"
+    notes: "Gold answer: the weighted sum of the new opinion representations, according to their associations with the current aspect representation"
+
+  - id: q-ecfb2e75eb
+    query: "In the paper \"Aspect Term Extraction with History Attention and Selective Transformation\": Do they explore how useful is the detection history and opinion summary?"
+    relevant_papers:
+      - "1805.00760"
+    notes: "Gold answer: Yes"
+
+  - id: q-a6950c22c7
+    query: "In the paper \"Aspect Term Extraction with History Attention and Selective Transformation\": Which dataset(s) do they use to train the model?"
+    relevant_papers:
+      - "1805.00760"
+    notes: "Gold answer: INLINEFORM0 (SemEval 2014) contains reviews of the laptop domain and those of INLINEFORM1 (SemEval 2014), INLINEFORM2 (SemEval 2015) and INLINEFORM3 (SemEval 2016) are for the restaurant domain."
+
+  - id: q-3a6e843c6c
+    query: "In the paper \"A Deeper Look into Sarcastic Tweets Using Deep Convolutional Neural Networks\": What are the state of the art models?"
+    relevant_papers:
+      - "1610.08815"
+    notes: "Gold answer: BIBREF9 | BIBREF8"
+
+  - id: q-fabf6fdcfb
+    query: "In the paper \"A Deeper Look into Sarcastic Tweets Using Deep Convolutional Neural Networks\": Which benchmark datasets are used?"
+    relevant_papers:
+      - "1610.08815"
+    notes: "Gold answer: Semeval 2014 BIBREF34 Twitter Sentiment Analysis Dataset | dataset was created by BIBREF8 | English dataset from BIBREF8 | dataset from The Sarcasm Detector"
+
+  - id: q-1beb4a590f
+    query: "In the paper \"A Deeper Look into Sarcastic Tweets Using Deep Convolutional Neural Networks\": What are the network's baseline features?"
+    relevant_papers:
+      - "1610.08815"
+    notes: "Gold answer: The features extracted from CNN."
+
+  - id: q-602396d1f5
+    query: "In the paper \"Recurrently Controlled Recurrent Networks\": By how much do they outperform BiLSTMs in Sentiment Analysis?"
+    relevant_papers:
+      - "1811.09786"
+    notes: "Gold answer: Proposed RCRN outperforms ablative baselines BiLSTM by +2.9% and 3L-BiLSTM by +1.1% on average across 16 datasets."
+
+  - id: q-b984612cea
+    query: "In the paper \"Recurrently Controlled Recurrent Networks\": Does their model have more parameters than other models?"
+    relevant_papers:
+      - "1811.09786"
+    notes: "Gold answer: approximately equal parameterization"
+
+  - id: q-64af7f5c10
+    query: "In the paper \"Cost-Sensitive BERT for Generalisable Sentence Classification with Imbalanced Data\": How is \"propaganda\" defined for the purposes of this study?"
+    relevant_papers:
+      - "2003.11563"
+    notes: "Gold answer: an intentional and potentially multicast communication | “the expression of an opinion or an action by individuals or groups deliberately designed to influence the opinions or the actions of other individuals or groups with reference to predetermined ends\""
+
+  - id: q-b0a1862828
+    query: "In the paper \"Cost-Sensitive BERT for Generalisable Sentence Classification with Imbalanced Data\": What metrics are used in evaluation?"
+    relevant_papers:
+      - "2003.11563"
+    notes: "Gold answer: precision | recall | F1 score"
+
+  - id: q-72ce05546c
+    query: "In the paper \"Cost-Sensitive BERT for Generalisable Sentence Classification with Imbalanced Data\": Which natural language(s) are studied in this paper?"
+    relevant_papers:
+      - "2003.11563"
+    notes: "Gold answer: English"
+
+  - id: q-08b57deb23
+    query: "In the paper \"Performance Comparison of Crowdworkers and NLP Tools onNamed-Entity Recognition and Sentiment Analysis of Political Tweets\": Who are the crowdworkers?"
+    relevant_papers:
+      - "2002.04181"
+    notes: "Gold answer: people in the US that use Amazon Mechanical Turk"
+
+  - id: q-9b7655d39c
+    query: "In the paper \"Performance Comparison of Crowdworkers and NLP Tools onNamed-Entity Recognition and Sentiment Analysis of Political Tweets\": Which toolkits do they use?"
+    relevant_papers:
+      - "2002.04181"
+    notes: "Gold answer: BIBREF17 | BIBREF18 | TensiStrength BIBREF13 | TwitterNLP BIBREF6 | BIBREF19 | CogComp-NLP BIBREF20 | Stanford NLP NER BIBREF21"
+
+  - id: q-cd06d775f4
+    query: "In the paper \"Performance Comparison of Crowdworkers and NLP Tools onNamed-Entity Recognition and Sentiment Analysis of Political Tweets\": Which sentiment class is the most accurately predicted by ELS systems?"
+    relevant_papers:
+      - "2002.04181"
+    notes: "Gold answer: neutral sentiment"
+
+  - id: q-aa979aed5a
+    query: "In the paper \"Depressed individuals express more distorted thinking on social media\": Do they report results only on English datasets?"
+    relevant_papers:
+      - "2002.02800"
+    notes: "Gold answer: Yes"
+
+  - id: q-3a1bd3ec1a
+    query: "In the paper \"BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis with CNNs and LSTMs\": What were the five English subtasks?"
+    relevant_papers:
+      - "1704.06125"
+    notes: "Gold answer: five subtasks which involve standard classification, ordinal classification and distributional estimation. For a more detailed description see BIBREF0"
+
+  - id: q-39492338e2
+    query: "In the paper \"BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis with CNNs and LSTMs\": How many CNNs and LSTMs were ensembled?"
+    relevant_papers:
+      - "1704.06125"
+    notes: "Gold answer: 10 CNNs and 10 LSTMs"
+
+  - id: q-41bff17f7d
+    query: "In the paper \"Generating Narrative Text in a Switching Dynamical System\": What metrics are used for evaluation?"
+    relevant_papers:
+      - "2004.03762"
+    notes: "Gold answer: ROUGE BIBREF29 and METEOR BIBREF30"
+
+  - id: q-b03e8e9a0c
+    query: "In the paper \"Generating Narrative Text in a Switching Dynamical System\": What baselines are used?"
+    relevant_papers:
+      - "2004.03762"
+    notes: "Gold answer: a two layer recurrent neural language model with GRU cells of hidden size 512 | a two layer neural sequence to sequence model equipped with bi-linear attention function with GRU cells of hidden size 512 | a linear dynamical system | semi-supervised SLDS models with varying amount of labelled sentiment tags"
+
+  - id: q-6dfad97356
+    query: "In the paper \"Fortia-FBK at SemEval-2017 Task 5: Bullish or Bearish? Inferring Sentiment towards Brands from Financial News Headlines\": How do they incorporate lexicon into the neural network?"
+    relevant_papers:
+      - "1704.00939"
+    notes: "Gold answer: concatenation of GloVe pre-trained embeddings and DepecheMood BIBREF19 lexicon representation | cannot directly concatenate | re-build the latter in token-based form"
+
+  - id: q-59a5959a6a
+    query: "In the paper \"Fortia-FBK at SemEval-2017 Task 5: Bullish or Bearish? Inferring Sentiment towards Brands from Financial News Headlines\": What is the source of their lexicon?"
+    relevant_papers:
+      - "1704.00939"
+    notes: "Gold answer: DepecheMood"
+
+  - id: q-e2e31ab279
+    query: "In the paper \"Fortia-FBK at SemEval-2017 Task 5: Bullish or Bearish? Inferring Sentiment towards Brands from Financial News Headlines\": What was their performance?"
+    relevant_papers:
+      - "1704.00939"
+    notes: "Gold answer: beneficial impact of word-representations and basic pre-processing"
+
+  - id: q-2555ca85ff
+    query: "In the paper \"Explaining Recurrent Neural Network Predictions in Sentiment Analysis\": Which datasets are used for evaluation?"
+    relevant_papers:
+      - "1706.07206"
+    notes: "Gold answer: Stanford Sentiment Treebank"
+
+  - id: q-33d1f53cf2
+    query: "In the paper \"Opinion Recommendation using Neural Memory Model\": Does they focus on any specific product/service domain?"
+    relevant_papers:
+      - "1702.01517"
+    notes: "Gold answer: local businesses (i.e. restaurants)"
+
+  - id: q-0aa46c1325
+    query: "In the paper \"Opinion Recommendation using Neural Memory Model\": What are the baselines?"
+    relevant_papers:
+      - "1702.01517"
+    notes: "Gold answer: RS-Average | RS-Linear | RS-Item | RS-MF | Sum-Opinosis | Sum-LSTM-Att"
+
+negative_cases:
+  - id: neg-940873658e
+    query: "In the paper \"Trading the Twitter Sentiment with Reinforcement Learning\": What is the optimal trading strategy based on reinforcement learning?"
+    expect: fallback
+    notes: "Paper 1801.02243 is in the corpus but does not answer this."
+
+  - id: neg-547be35cff
+    query: "In the paper \"Transfer Learning Between Related Tasks Using Expected Label Proportions\": How much more data does the model trained using XR loss have access to, compared to the fully supervised model?"
+    expect: fallback
+    notes: "Paper 1909.00430 is in the corpus but does not answer this."
+
+  - id: neg-38e2f07ba9
+    query: "In the paper \"Multi-modal Sentiment Analysis using Super Characters Method on Low-power CNN Accelerator Device\": Does this implementation on CNN-DSA lead to diminishing of performance?"
+    expect: fallback
+    notes: "Paper 2001.10179 is in the corpus but does not answer this."
+
+  - id: neg-4d7ff4e5d0
+    query: "In the paper \"Improving Distributed Representations of Tweets - Present and Future\": Which representation learning architecture do they adopt?"
+    expect: fallback
+    notes: "Paper 1706.09673 is in the corpus but does not answer this."
+
+  - id: neg-7e161d9fac
+    query: "In the paper \"Stacked DeBERT: All Attention in Incomplete Data for Text Classification\": How many vanilla transformers do they use after applying an embedding layer?"
+    expect: fallback
+    notes: "Paper 2001.00137 is in the corpus but does not answer this."
+
+  - id: neg-028910d643
+    query: "In the paper \"Bidirectional Context-Aware Hierarchical Attention Network for Document Understanding\": What languages are the model evaluated on?"
+    expect: fallback
+    notes: "Paper 1908.06006 is in the corpus but does not answer this."
+
+  - id: neg-f08a66665f
+    query: "In the paper \"We Built a Fake News&Click-bait Filter: What Happened Next Will Blow Your Mind!\": what are the three reasons everybody hates them?"
+    expect: fallback
+    notes: "Paper 1803.03786 is in the corpus but does not answer this."
+
+  - id: neg-b512ab8de2
+    query: "In the paper \"Sentiment Analysis of Citations Using Word2vec\": What kernels are used in the support vector machines?"
+    expect: fallback
+    notes: "Paper 1704.00177 is in the corpus but does not answer this."
+
+  - id: neg-6ad92aad46
+    query: "In the paper \"$\\rho$-hot Lexicon Embedding-based Two-level LSTM for Sentiment Analysis\": What is the agreement value for each dataset?"
+    expect: fallback
+    notes: "Paper 1803.07771 is in the corpus but does not answer this."
+
+  - id: neg-4fdc707fae
+    query: "In the paper \"$\\rho$-hot Lexicon Embedding-based Two-level LSTM for Sentiment Analysis\": How many annotators participated?"
+    expect: fallback
+    notes: "Paper 1803.07771 is in the corpus but does not answer this."
+
+  - id: neg-b04098f750
+    query: "In the paper \"UniSent: Universal Adaptable Sentiment Lexica for 1000+ Languages\": how many languages exactly is the sentiment lexica for?"
+    expect: fallback
+    notes: "Paper 1904.09678 is in the corpus but does not answer this."
+
+  - id: neg-11e376f98d
+    query: "In the paper \"VAIS Hate Speech Detection System: A Deep Learning based Approach for System Combination\": What was the baseline?"
+    expect: fallback
+    notes: "Paper 1910.05608 is in the corpus but does not answer this."
+
+  - id: off-topic
+    query: "What is the boiling point of water at the top of Mount Everest?"
+    expect: fallback
+    notes: "Plainly outside the corpus."
+
+  # ── Added by hand: genuinely off-topic and adjacent-but-absent questions.
+  # The QASPER negatives above are in-domain (right paper, answer not in it);
+  # a similarity floor cannot catch those, only the answer step can. These
+  # give calibration real off-topic examples to separate from the real ones.
+
+  - id: off-cooking
+    query: "How long should I boil an egg for a soft yolk?"
+    expect: fallback
+    notes: "Plainly outside the corpus."
+
+  - id: off-football
+    query: "Who won the 2018 FIFA World Cup?"
+    expect: fallback
+    notes: "Plainly outside the corpus."
+
+  - id: off-physics
+    query: "What is the speed of light in a vacuum?"
+    expect: fallback
+    notes: "Plainly outside the corpus."
+
+  - id: off-finance
+    query: "How do I calculate compound interest on a fixed deposit?"
+    expect: fallback
+    notes: "Plainly outside the corpus."
+
+  - id: off-history
+    query: "When did the Roman Empire fall?"
+    expect: fallback
+    notes: "Plainly outside the corpus."
+
+  - id: adjacent-speech
+    query: "Which acoustic features work best for speech recognition?"
+    expect: fallback
+    notes: "Adjacent but absent: NLP-flavoured, not covered by these sentiment papers."
+
+  - id: adjacent-mt
+    query: "How is the BLEU score computed for machine translation?"
+    expect: fallback
+    notes: "Adjacent but absent: the hard negative."
+
+  - id: adjacent-ner
+    query: "What tagging scheme is best for nested named entity recognition?"
+    expect: fallback
+    notes: "Adjacent but absent: the hard negative."
