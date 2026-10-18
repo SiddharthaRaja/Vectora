@@ -1,0 +1,92 @@
+{
+  "answer": "| Dataset | Source(s) |\n|--------------------------|-----------|\n| SemEval 2014 | [1][2][3][5] |\n| BIBREF66 (Aspect-based sentiment analysis dataset) | [1] |\n| SentiHood | [2][5] |\n| Amazon review dataset | [6] |\n| AraNet datasets | [8] |\n\nThe sources indicate that the SemEval 2014 dataset [1][2][3][5] and the Aspect-based sentiment analysis dataset developed by BIBREF66 [1] are used for aspect-based sentiment analysis. Additionally, the SentiHood dataset [2][5] and the Amazon review dataset [6] are also mentioned, though their specific use is not explicitly stated for aspect-based sentiment analysis. The AraNet datasets [8] are noted for various sentiment analysis tasks but not specifically for aspect-based sentiment analysis.",
+  "citations": [
+    {
+      "index": 1,
+      "chunk_id": "f79f48115789c739",
+      "paper_id": "1710.06536",
+      "title": "Basic tasks of sentiment analysis",
+      "authors": "Sentiment Analysis, Subjectivity Detection, Deep Learning Aspect Extraction, Polarity Distribution, Convolutional Neural Network",
+      "year": "2002",
+      "doi": "",
+      "section": "Introduction",
+      "page": 2,
+      "quote": ""
+    },
+    {
+      "index": 2,
+      "chunk_id": "f2d4fa88562f7687",
+      "paper_id": "1903.09588",
+      "title": "Utilizing BERT for Aspect-Based Sentiment Analysis via Constructing Auxiliary Sentence",
+      "authors": "",
+      "year": "2014",
+      "doi": "",
+      "section": "Methods",
+      "page": 1,
+      "quote": ""
+    },
+    {
+      "index": 3,
+      "chunk_id": "46a62d60bb69f3a1",
+      "paper_id": "1908.11860",
+      "title": "Adapt or Get Left Behind: Domain Adaptation through BERT Language Model Finetuning for Aspect-Target Sentiment Classification",
+      "authors": "Sentiment Analysis (SA) is an active field of research in Natural Language Processing, deals with opinions in text. A typical application of classical SA in an industrial setting would be to classify a document like a product review into positve, negative or neutral sentiment polarity",
+      "year": "2014",
+      "doi": "",
+      "section": "Related Work",
+      "page": 1,
+      "quote": ""
+    },
+    {
+      "index": 8,
+      "chunk_id": "64838f85405f257b",
+      "paper_id": "1912.13072",
+      "title": "AraNet: A Deep Learning Toolkit for Arabic Social Media",
+      "authors": "",
+      "year": "2018",
+      "doi": "",
+      "section": "Methods",
+      "page": 1,
+      "quote": ""
+    }
+  ],
+  "query_type": "comparative",
+  "mode": "balanced",
+  "faithfulness": null,
+  "fallback": null,
+  "diagnostics": {
+    "mode": "balanced",
+    "query_type": "comparative",
+    "variants": [
+      "Which datasets are utilized for aspect-based sentiment analysis tasks?",
+      "What corpora are employed in the evaluation of models for aspect-based sentiment analysis?"
+    ],
+    "hyde_used": true,
+    "dense_hits": 200,
+    "sparse_hits": 120,
+    "fused_pool": 94,
+    "reranked": true,
+    "diversified": true,
+    "returned": 8,
+    "top_score": 9.21646,
+    "elapsed_ms": {
+      "route": 1.7,
+      "contextualise": 0.0,
+      "expand": 15520.5,
+      "search": 88.9,
+      "fuse": 1.2,
+      "rerank": 4801.8,
+      "mmr": 134.6,
+      "postprocess": 15.6,
+      "total": 20562.6,
+      "routed_by": 1.0
+    },
+    "degraded": []
+  },
+  "usage": {
+    "prompt_tokens": 1836,
+    "completion_tokens": 361,
+    "calls": 3,
+    "cost_usd": 0.0004919999999999999
+  }
+}
