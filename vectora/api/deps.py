@@ -15,6 +15,7 @@ from typing import Any
 
 from vectora.cache import Cache
 from vectora.config import Settings, get_settings
+from vectora.corpus import CorpusContext
 from vectora.db import ChatRepository
 from vectora.embeddings import Encoder, Reranker
 from vectora.generation import RAGEngine
@@ -22,6 +23,7 @@ from vectora.llm import LLMClient
 from vectora.observability import configure_logging, get_logger
 from vectora.retrieval import Retriever
 from vectora.store import QdrantStore, SparseIndex
+from vectora.tracing import configure_tracing, shutdown_tracing
 
 log = get_logger(__name__)
 
@@ -31,6 +33,7 @@ class Container:
     """Everything the app needs, built once."""
 
     settings: Settings
+    corpus: CorpusContext
     cache: Cache
     store: QdrantStore
     sparse: SparseIndex
@@ -42,6 +45,7 @@ class Container:
     startup_warnings: list[str]
 
     async def aclose(self) -> None:
+        shutdown_tracing()
         if self.llm is not None:
             await self.llm.close()
         self.cache.close()
@@ -62,6 +66,12 @@ class Container:
             except Exception:
                 store_ok = False
         return {
+            "corpus": {
+                "name": self.corpus.name,
+                "collection": self.corpus.collection,
+                "documents": self.corpus.profile.documents,
+                "kind": self.corpus.profile.document_kind,
+            },
             "vector_store": {"ok": store_ok, "vectors": indexed},
             "sparse_index": {"ok": self.sparse.ready, "chunks": self.sparse.size},
             "llm": {"ok": self.llm is not None, "model": self.settings.answer_model},
@@ -71,7 +81,12 @@ class Container:
         }
 
 
-def build_container(settings: Settings | None = None, *, warm: bool = True) -> Container:
+def build_container(
+    settings: Settings | None = None,
+    *,
+    warm: bool = True,
+    corpus: str | None = None,
+) -> Container:
     """Construct the application graph.
 
     Startup is deliberately tolerant: a missing API key or an unreachable
@@ -81,13 +96,23 @@ def build_container(settings: Settings | None = None, *, warm: bool = True) -> C
     """
     settings = settings or get_settings()
     configure_logging(settings)
+    if configure_tracing(settings):
+        log.info("tracing active")
     warnings: list[str] = []
+
+    # Resolve the corpus first: it decides the collection, the lexical index
+    # and the chunk file, so nothing below can be built without it.
+    try:
+        ctx = CorpusContext.build(settings, corpus)
+    except KeyError as exc:
+        raise RuntimeError(str(exc).strip("\"'")) from exc
+    log.info("corpus resolved", extra={"corpus": ctx.name, "collection": ctx.collection})
 
     cache = Cache(settings.cache_path, settings.cache_ttl_seconds, settings.enable_cache)
     encoder = Encoder(settings, cache=cache)
     reranker = Reranker(settings)
-    store = QdrantStore(settings)
-    sparse = SparseIndex(settings)
+    store = QdrantStore(settings, collection=ctx.collection)
+    sparse = SparseIndex(settings, path=ctx.bm25)
     repository = ChatRepository(settings.sqlite_path)
 
     llm: LLMClient | None = None
@@ -110,11 +135,13 @@ def build_container(settings: Settings | None = None, *, warm: bool = True) -> C
         )
     elif not store.exists():
         warnings.append(
-            f"Collection '{settings.qdrant_collection}' does not exist yet. "
-            "Run `vectora index` to build it."
+            f"Corpus '{ctx.name}' is not indexed yet (collection "
+            f"'{ctx.collection}' does not exist). Run `vectora index`."
         )
 
-    if not sparse.ensure(store=store if store.healthy() else None):
+    if not sparse.ensure(
+        store=store if store.healthy() else None, chunks_path=ctx.chunks
+    ):
         warnings.append(
             "Lexical (BM25) index unavailable, so retrieval is dense-only. "
             "Run `vectora index` to build it."
@@ -127,6 +154,7 @@ def build_container(settings: Settings | None = None, *, warm: bool = True) -> C
         encoder=encoder,
         reranker=reranker,
         llm=llm,
+        corpus=ctx.profile,
     )
     engine = RAGEngine(settings, retriever=retriever, llm=llm)
 
@@ -142,6 +170,7 @@ def build_container(settings: Settings | None = None, *, warm: bool = True) -> C
 
     return Container(
         settings=settings,
+        corpus=ctx,
         cache=cache,
         store=store,
         sparse=sparse,

@@ -17,7 +17,7 @@ Changes from the previous implementation:
 * **Structured output** for the rewrites, so a chatty model cannot smuggle
   a preamble into the variant list.
 * **Follow-up questions are resolved against the conversation** before
-  retrieval, so "and in serum?" becomes a standalone query instead of being
+  retrieval, so "and on the test set?" becomes a standalone query instead
   naively prefixed with the previous question.
 
 Every stage degrades to a no-op if the LLM is unavailable; the caller gets
@@ -49,26 +49,70 @@ class _Standalone(BaseModel):
     question: str = ""
 
 
-_REWRITE_SYSTEM = (
-    "You rewrite questions for a search engine over biomedical and analytical "
-    "chemistry papers. Produce alternative phrasings of the user's question "
-    "that use formal domain terminology, so that a lexical search can match "
-    "the wording a paper would actually use. Each variant must be a complete "
-    "question about the same topic, approaching it from a different angle: "
-    "one may use the technical term for the concept, another the common name, "
-    "another the measurement or method involved. Never answer the question. "
-    "Never add topics the user did not ask about."
+_REWRITE_TEMPLATE = (
+    "You rewrite questions for a search engine over {kind}. Produce "
+    "alternative phrasings of the user's question that use the formal "
+    "terminology those documents would use, so that a lexical search can "
+    "match their actual wording. Each variant must be a complete question "
+    "about the same topic, approaching it from a different angle: one may "
+    "use the technical term for the concept, another the common name, "
+    "another the method or measurement involved.{terms} Never answer the "
+    "question. Never add topics the user did not ask about."
 )
 
-_HYDE_SYSTEM = (
-    "You write a short passage in the register of a scientific paper. Given a "
-    "research question, write one dense paragraph of three to five sentences "
-    "that reads like an excerpt from the results or methods section of a paper "
-    "answering it. Use formal academic language, domain terminology, plausible "
-    "units and the names of relevant techniques. Factual accuracy is not the "
-    "goal — vocabulary coverage is. Do not hedge, do not mention that this is "
-    "hypothetical, and do not address the reader."
+_HYDE_TEMPLATE = (
+    "You write a short passage in the register of {kind}. Given a question, "
+    "write one dense paragraph of three to five sentences that reads like an "
+    "excerpt from such a document answering it. Use the formal language, "
+    "terminology and conventions of that material, including plausible "
+    "figures, units or identifiers where they would appear.{terms} Factual "
+    "accuracy is not the goal \u2014 vocabulary coverage is. Do not hedge, do "
+    "not mention that this is hypothetical, and do not address the reader."
 )
+
+
+@dataclass(frozen=True)
+class CorpusHint:
+    """What expansion needs to know about the corpus it is searching.
+
+    This is the only domain knowledge the prompts require, and taking it
+    from the corpus profile is what lets the same code serve a corpus of
+    RFCs, one of ML papers and one of internal runbooks. It used to be a
+    sentence hardcoded into the prompt naming a single scientific field,
+    which quietly made every other corpus a worse fit than it needed to be.
+    """
+
+    document_kind: str = "documents"
+    domain_terms: tuple[str, ...] = ()
+
+    @classmethod
+    def from_profile(cls, profile: object | None) -> CorpusHint:
+        if profile is None:
+            return cls()
+        kind = str(getattr(profile, "document_kind", "") or "documents")
+        terms = tuple(str(x) for x in (getattr(profile, "domain_terms", ()) or ()))
+        return cls(document_kind=kind, domain_terms=terms[:24])
+
+    def _terms_clause(self) -> str:
+        if not self.domain_terms:
+            return ""
+        listed = ", ".join(self.domain_terms)
+        return (
+            f" Terminology that appears in this collection includes: {listed}."
+            f" Prefer such terms where they genuinely fit, but never force one"
+            f" that changes what is being asked."
+        )
+
+    def rewrite_system(self) -> str:
+        return _REWRITE_TEMPLATE.format(
+            kind=self.document_kind, terms=self._terms_clause()
+        )
+
+    def hyde_system(self) -> str:
+        return _HYDE_TEMPLATE.format(
+            kind=self.document_kind, terms=self._terms_clause()
+        )
+
 
 _STANDALONE_SYSTEM = (
     "You rewrite a follow-up question into a standalone question. Use the "
@@ -142,6 +186,7 @@ async def rewrite(
     *,
     llm: LLMClient,
     n: int,
+    hint: CorpusHint | None = None,
     usage: Usage | None = None,
 ) -> list[str]:
     """``n`` alternative phrasings. Empty list on any failure."""
@@ -149,7 +194,7 @@ async def rewrite(
         return []
     result = await llm.structured(
         purpose="rewrite",
-        system=_REWRITE_SYSTEM,
+        system=(hint or CorpusHint()).rewrite_system(),
         user=f"Produce exactly {n} alternative phrasings of this question: {query}",
         schema=_Rewrites,
         max_tokens=100 + 60 * n,
@@ -173,13 +218,14 @@ async def hypothetical_document(
     query: str,
     *,
     llm: LLMClient,
+    hint: CorpusHint | None = None,
     usage: Usage | None = None,
 ) -> str:
     """One HyDE passage for the question. Empty string on failure."""
     out = await llm.utility(
         purpose="hyde",
-        system=_HYDE_SYSTEM,
-        user=f"Research question: {query}",
+        system=(hint or CorpusHint()).hyde_system(),
+        user=f"Question: {query}",
         max_tokens=260,
         temperature=0.7,
         usage=usage,
@@ -207,9 +253,11 @@ async def expand(
     llm: LLMClient | None,
     rewrite_variants: int,
     use_hyde: bool,
+    hint: CorpusHint | None = None,
     usage: Usage | None = None,
 ) -> Expansion:
     """Run every expansion step that the mode asks for, concurrently."""
+    hint = hint or CorpusHint()
     exp = Expansion(original=query, search_query=query)
 
     if llm is None or (rewrite_variants <= 0 and not use_hyde):
@@ -221,11 +269,11 @@ async def expand(
     tasks: dict[str, asyncio.Task] = {}
     if rewrite_variants > 0:
         tasks["rewrite"] = asyncio.create_task(
-            rewrite(query, llm=llm, n=rewrite_variants, usage=usage)
+            rewrite(query, llm=llm, n=rewrite_variants, hint=hint, usage=usage)
         )
     if use_hyde:
         tasks["hyde"] = asyncio.create_task(
-            hypothetical_document(query, llm=llm, usage=usage)
+            hypothetical_document(query, llm=llm, hint=hint, usage=usage)
         )
 
     results: dict[str, object] = {}

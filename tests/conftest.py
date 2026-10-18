@@ -9,6 +9,21 @@ from vectora.config import Settings, settings_for_test
 from vectora.models import Chunk
 
 
+@pytest.fixture(autouse=True)
+def _reset_module_state():
+    """Tracing configures itself once per process; reset between tests so a
+    test that enables it cannot change what a later test observes."""
+    import vectora.tracing as tracing
+
+    tracing._configured = False
+    tracing._enabled = False
+    tracing._tracer = None
+    yield
+    tracing._configured = False
+    tracing._enabled = False
+    tracing._tracer = None
+
+
 @pytest.fixture
 def settings(tmp_path) -> Settings:
     """Isolated settings: every path inside tmp_path, embedded Qdrant."""
@@ -22,6 +37,7 @@ def settings(tmp_path) -> Settings:
         images_dir=tmp_path / "images",
         bm25_index_path=tmp_path / "bm25.pkl",
         papers_dir=tmp_path / "papers",
+        corpora_dir=tmp_path / "corpora",
         enable_cache=False,
         min_chunk_tokens=20,
         max_chunk_tokens=120,

@@ -16,7 +16,7 @@ import os
 from enum import Enum
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -213,12 +213,23 @@ class Settings(BaseSettings):
     qdrant_path: str | None = None
     """Set this instead of ``qdrant_url`` to use embedded on-disk Qdrant with
     no server. Mutually exclusive with ``qdrant_url``."""
-    qdrant_collection: str = "research_papers"
+    qdrant_collection: str | None = None
+    """Override the collection name. Normally left unset: the active corpus
+    derives it, so two corpora cannot collide in one collection."""
     qdrant_timeout: float = 30.0
     qdrant_upsert_batch: int = 256
 
+    # ── Corpus ────────────────────────────────────────────────────────────
+    corpus: str = "default"
+    """Which corpus to use. Each one owns its own documents, chunk file,
+    collection, lexical index and evaluation set, so switching corpora is
+    this one value and rebuilding one cannot disturb another."""
+    corpora_dir: Path = PROJECT_ROOT / "corpora"
+
     # ── Sparse index ──────────────────────────────────────────────────────
-    bm25_index_path: Path = PROJECT_ROOT / "data" / "bm25_index.pkl"
+    bm25_index_path: Path | None = None
+    """Override the lexical index location. Normally left unset and derived
+    from the active corpus."""
     bm25_k1: float = 1.5
     bm25_b: float = 0.75
 
@@ -261,7 +272,7 @@ class Settings(BaseSettings):
     history_turns: int = 12
     contextualise_below_words: int = 9
     """Questions shorter than this get rewritten against the conversation
-    so follow-ups like 'and in serum?' still retrieve sensibly."""
+    so follow-ups like 'and on CPU?' still retrieve sensibly."""
 
     # ── Storage ───────────────────────────────────────────────────────────
     database_url: str = Field(default="", alias="DATABASE_URL")
@@ -270,10 +281,15 @@ class Settings(BaseSettings):
     cache_ttl_seconds: int = 60 * 60 * 24 * 14
     enable_cache: bool = True
 
-    chunks_path: Path = PROJECT_ROOT / "chunks.jsonl"
-    manifest_path: Path = PROJECT_ROOT / "data" / "ingestion_manifest.json"
-    papers_dir: Path = PROJECT_ROOT / "papers"
-    images_dir: Path = PROJECT_ROOT / "data" / "extracted_images"
+    # These four are overrides; when unset they come from the active corpus.
+    chunks_path: Path | None = None
+    manifest_path: Path | None = None
+    papers_dir: Path | None = None
+    images_dir: Path | None = None
+
+    legacy_chunks_path: Path = PROJECT_ROOT / "chunks.jsonl"
+    """Where a pre-v3 single-corpus checkout keeps its chunks. Adopted into
+    a corpus profile on first use rather than requiring a manual move."""
 
     # ── Ingestion ─────────────────────────────────────────────────────────
     semantic_similarity_threshold: float = 0.72
@@ -299,6 +315,17 @@ class Settings(BaseSettings):
     request_timeout_seconds: float = 120.0
     rate_limit_per_minute: int = 60
     enable_metrics: bool = True
+
+    # ── Tracing ───────────────────────────────────────────────────────────
+    enable_tracing: bool = False
+    """Off by default: it needs a collector to be useful and a dependency to
+    work. On, each question becomes a span tree showing where its time went."""
+    otel_service_name: str = "vectora"
+    otel_endpoint: str | None = Field(
+        default=None, alias="OTEL_EXPORTER_OTLP_ENDPOINT"
+    )
+    """Read from the standard OTEL variable so this plugs into an existing
+    collector with no Vectora-specific configuration."""
 
     @field_validator("log_level")
     @classmethod
@@ -327,12 +354,13 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _make_dirs(self) -> Settings:
+        """Create only what is unconditional. Corpus directories are created
+        by the registry when a corpus is resolved, so an unset override does
+        not silently make a stray folder."""
         for p in (
             self.sqlite_path.parent,
             self.cache_path.parent,
-            self.manifest_path.parent,
-            self.images_dir,
-            self.bm25_index_path.parent,
+            self.corpora_dir,
         ):
             p.mkdir(parents=True, exist_ok=True)
         return self
@@ -357,6 +385,59 @@ class Settings(BaseSettings):
         except Exception:  # pragma: no cover - torch always present in practice
             pass
         return "cpu"
+
+    # ── corpus resolution ─────────────────────────────────────────────────
+    #
+    # Everything that used to be a fixed path is now derived from the active
+    # corpus, with the settings field acting as an override. The override
+    # exists so a one-off run can point at a stray file without creating a
+    # profile for it; normal operation leaves them unset.
+
+    def resolve_corpus(self, name: str | None = None) -> Any:
+        """Load the active corpus profile, adopting a legacy layout once.
+
+        Returns a ``CorpusProfile``. Imported lazily because
+        :mod:`vectora.corpus` imports the logger, which imports settings.
+        """
+        from vectora.corpus import CorpusRegistry, migrate_legacy_layout
+
+        wanted = name or self.corpus
+        registry = CorpusRegistry(self.corpora_dir)
+
+        if not registry.exists(wanted):
+            if wanted == "default":
+                adopted = migrate_legacy_layout(
+                    self.corpora_dir,
+                    chunks_path=self.legacy_chunks_path,
+                    papers_dir=PROJECT_ROOT / "papers",
+                    collection_hint="research_papers",
+                )
+                if adopted is not None:
+                    return adopted
+                return registry.create(
+                    "default",
+                    description="Empty starter corpus.",
+                    document_kind="documents",
+                )
+            registry.get(wanted)  # raises with the available names listed
+        profile = registry.get(wanted)
+        profile.ensure_dirs()
+        return profile
+
+    def paths_for(self, profile: Any) -> dict[str, Path]:
+        """Concrete paths for one corpus, with overrides applied."""
+        return {
+            "chunks": self.chunks_path or profile.chunks_path,
+            "manifest": self.manifest_path or profile.manifest_path,
+            "papers": self.papers_dir or profile.papers_dir,
+            "images": self.images_dir or profile.images_dir,
+            "bm25": self.bm25_index_path or profile.bm25_path,
+            "golden": profile.golden_path,
+            "reports": profile.reports_dir,
+        }
+
+    def collection_for(self, profile: Any) -> str:
+        return self.qdrant_collection or profile.collection
 
     def profile(self, mode: SearchMode) -> ModeProfile:
         return MODE_PROFILES[mode]

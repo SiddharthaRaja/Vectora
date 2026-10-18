@@ -101,13 +101,22 @@ async def run(
     *,
     dataset: Path | None = None,
     mode: SearchMode = SearchMode.BALANCED,
+    corpus: str | None = None,
 ) -> None:
     configure_logging(settings)
-    from eval.run_eval import DEFAULT_DATASET, load_dataset
+    from evaluation.run_eval import load_dataset
     from vectora.api.deps import build_container
     from vectora.generation.router import classify
 
-    path = dataset or DEFAULT_DATASET
+    container_settings = settings
+    probe = await asyncio.to_thread(
+        build_container, container_settings, warm=False, corpus=corpus
+    )
+    path = dataset or probe.corpus.golden
+    await probe.aclose()
+    if not path.exists():
+        print(f"\nNo golden set at {path}. Draft one: vectora golden generate\n")
+        return
     cases, negatives = load_dataset(path)
     if not negatives:
         print(
@@ -117,7 +126,9 @@ async def run(
         )
         return
 
-    container = await asyncio.to_thread(build_container, settings, warm=True)
+    container = await asyncio.to_thread(
+        build_container, settings, warm=True, corpus=corpus
+    )
     try:
         if not container.store.exists():
             raise RuntimeError("Nothing is indexed. Run `vectora index` first.")

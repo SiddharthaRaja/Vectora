@@ -39,7 +39,9 @@ from vectora.observability import configure_logging, get_logger, request_context
 
 log = get_logger(__name__)
 
-DEFAULT_DATASET = Path(__file__).resolve().parent / "golden.yaml"
+#: Only a fallback: the golden set normally lives with its corpus, since an
+#: eval set written for one corpus measures nothing on another.
+DEFAULT_DATASET = Path(__file__).resolve().parent / "golden.template.yaml"
 
 
 @dataclass
@@ -313,20 +315,32 @@ async def run(
     dataset: Path | None = None,
     only_mode: SearchMode | None = None,
     output: Path | None = None,
+    corpus: str | None = None,
 ) -> list[ModeReport]:
     configure_logging(settings)
     from vectora.api.deps import build_container
 
-    path = dataset or DEFAULT_DATASET
-    cases, negatives = load_dataset(path)
-    print(f"\nLoaded {len(cases)} cases and {len(negatives)} negative cases from {path.name}")
-
-    container = await asyncio.to_thread(build_container, settings, warm=True)
+    container = await asyncio.to_thread(
+        build_container, settings, warm=True, corpus=corpus
+    )
     try:
         if not container.store.exists():
             raise RuntimeError(
                 "Nothing is indexed. Run `vectora index` before evaluating."
             )
+        # The golden set belongs to the corpus, not to the project: an eval
+        # set written for one corpus measures nothing on another.
+        path = dataset or container.corpus.golden
+        if not path.exists():
+            raise RuntimeError(
+                f"No golden set at {path}. Draft one with `vectora golden "
+                f"generate`, or copy evaluation/golden.template.yaml there."
+            )
+        cases, negatives = load_dataset(path)
+        print(
+            f"\nLoaded {len(cases)} cases and {len(negatives)} negatives "
+            f"from {path.name} (corpus '{container.corpus.name}')"
+        )
         modes = [only_mode] if only_mode else list(SearchMode)
         reports: list[ModeReport] = []
         for mode in modes:
@@ -338,6 +352,7 @@ async def run(
     print(render(reports))
     if output:
         payload = {
+            "corpus": container.corpus.name,
             "dataset": str(path),
             "settings": {
                 "embedding_model": settings.embedding_model,

@@ -1,51 +1,26 @@
-# Vectora
-
-Retrieval-augmented question answering over a corpus of research papers. Ask a
-question in natural language, get an answer whose every claim carries a
-citation back to the passage it came from — and a refusal rather than a guess
-when the papers do not support an answer.
-
-The current corpus is ~60 papers on vitamin D measurement: assay methods,
-LC-MS/MS, electrochemical and impedance biosensors, spectroscopy and nutrition.
-Nothing in the code is specific to that subject; point it at a different folder
-of PDFs and it works the same way.
-
 ```
-vectora ingest      PDFs          → chunks.jsonl
-vectora index       chunks.jsonl  → Qdrant (dense) + BM25 (lexical)
-vectora ask "..."   question      → cited answer
-vectora serve                     → web UI on :5000
+vectora fetch arxiv --preset retrieval    build a corpus from arXiv
+vectora ingest                            documents    → chunks.jsonl
+vectora index                             chunks.jsonl → Qdrant + BM25
+vectora ask "..."                         question     → cited answer
+vectora serve                             web UI on :5000
+vectora ablate                            is each stage earning its latency?
+
+
+corpora/<name>/
+  corpus.json        what these documents are, and the vocabulary to expand with
+  papers/            the source documents
+  chunks.jsonl       ingestion output
+  bm25.pkl           the lexical index
+  golden.yaml        this corpus's evaluation set
+  reports/           eval and ablation output
 ```
-
----
-
-## Quick start
 
 ```bash
-python -m venv venv
-venv\Scripts\activate            # Windows;  source venv/bin/activate elsewhere
-pip install -e ".[ingest,metrics,eval]"
-
-cp .env.example .env             # then put your OPENAI_API_KEY in it
-
-docker run -p 6333:6333 -v "%cd%/data/qdrant:/qdrant/storage" qdrant/qdrant
-
-vectora doctor                   # checks everything above and says what is wrong
-vectora index                    # build the index from the chunks you already have
-vectora serve                    # → http://localhost:5000
+vectora corpus list                    # what exists, what is indexed
+vectora corpus show mycorpus
+vectora corpus delete mycorpus         # drops the index, keeps the documents
 ```
-
-No Docker? Set `VECTORA_QDRANT_PATH=./data/qdrant` in `.env` and leave
-`VECTORA_QDRANT_URL` blank — `qdrant-client` has an embedded on-disk engine and
-no server is needed. One process can hold the directory at a time, so the CLI
-and the server cannot both run against it simultaneously.
-
-`vectora doctor` is the first thing to run when anything misbehaves. It checks
-the API key, the vector store, the collection's dimension against the embedding
-model, every optional dependency, and the data files, and prints the command
-that fixes each problem.
-
----
 
 ## How it works
 
@@ -198,16 +173,54 @@ shows what each stage contributed — dense rank, BM25 rank, fused score, rerank
 logit, which query variants found each chunk — and separates a retrieval problem
 from a prompting one. In `fast` mode it costs nothing.
 
-### Evaluating changes
+### Measuring it
 
-`eval/golden.yaml` holds questions with what a correct retrieval must surface,
-plus **negative cases** the corpus genuinely cannot answer. `vectora eval`
-reports recall@k, precision, MRR and nDCG per mode, and separately how often
-off-topic questions are correctly refused — which the ranking metrics cannot
-see, and which is half of whether this system is trustworthy.
+The point of this part is to stop guessing. Four commands, in the order you
+would use them.
 
-Add a case every time you find a question it gets wrong. That is what turns "it
-felt better after the change" into a number.
+```bash
+vectora golden generate     # draft an evaluation set from the indexed corpus
+vectora eval                # recall@k, precision, MRR, nDCG, refusal rate
+vectora ablate              # does each stage earn its latency?
+vectora answers             # citation and grounding quality
+vectora calibrate           # measure the refusal thresholds
+```
+
+**`golden generate`** drafts cases from the corpus and then *verifies each
+one against real retrieval*, so a question that cannot find its own source
+passage is flagged rather than quietly included. Negatives are generated
+from adjacent-but-absent topics and checked against the guard. Review the
+output — a generated set is a starting point, and the cases you write after
+seeing the system get something wrong are worth more than ten generated
+ones.
+
+**`eval`** reports the ranking metrics per mode, and separately how often
+off-topic questions are correctly refused. That last number matters at least
+as much: recall and MRR cannot see whether the system declines, and a RAG
+system that answers anything fluently is not trustworthy however good its
+recall is.
+
+**`ablate`** runs the golden set with one component removed at a time:
+
+```
+  variant               recall     MRR    nDCG   p50ms    neg         Δrecall  verdict
+  hybrid+rerank+mmr      0.812   0.671   0.704    6100    89%       baseline
+  no-rerank              0.770   0.588   0.631    1900    78%         -0.042   no sig. diff (CI -0.096..+0.013)
+  dense-only             0.684   0.521   0.572    5800    89%         -0.128   worse (CI -0.201..-0.055)
+```
+
+Each comparison is a paired bootstrap confidence interval, and the report
+says plainly when a difference is inside the noise. A table of three-decimal
+numbers with no uncertainty invites exactly the overclaiming that makes
+benchmark tables worthless. `--sweep` sweeps the fusion weights instead.
+
+**`answers`** scores the generated answer, splitting mechanical measures
+(citation coverage and validity, quote verifiability, anchor recall, refusal
+accuracy) from model-judged ones (groundedness, relevance). The mechanical
+ones are the ones to trust when they disagree — using a language model to
+grade a language model shares the failure modes of both.
+
+Reports land in `corpora/<name>/reports/` as JSON and markdown.
 
 ---
 
@@ -220,6 +233,7 @@ codebase reads the environment or hardcodes a URL, model or threshold. See
 | variable | default | notes |
 |---|---|---|
 | `OPENAI_API_KEY` | — | required to answer; retrieval works without it |
+| `VECTORA_CORPUS` | `default` | which corpus to use; or pass `--corpus` |
 | `VECTORA_QDRANT_URL` | `http://localhost:6333` | or `VECTORA_QDRANT_PATH` for embedded |
 | `VECTORA_ANSWER_MODEL` | `gpt-4o-mini` | |
 | `VECTORA_DAILY_COST_CEILING_USD` | `5.0` | soft cap; past it, only the answer call runs |
@@ -227,10 +241,16 @@ codebase reads the environment or hardcodes a URL, model or threshold. See
 | `VECTORA_MIN_DENSE_SCORE` | `0.26` | refusal floor when no reranker ran |
 | `VECTORA_RRF_K` | `60` | fusion damping |
 | `VECTORA_DEFAULT_MODE` | `balanced` | |
+| `VECTORA_ENABLE_TRACING` | `false` | OpenTelemetry spans per stage |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | — | standard OTEL variable; console exporter without it |
 
 Changing the embedding model changes the vector dimension, so the collection has
 to be rebuilt: `vectora index --recreate`. A mismatch is detected at startup and
 refused rather than silently returning nonsense.
+
+The collection name is derived from the corpus, not configured, so two
+corpora cannot share one collection. `VECTORA_QDRANT_COLLECTION` exists as
+an override for a one-off, and is normally left unset.
 
 **Spend.** Every call's tokens and estimated cost are tracked per request and
 against a daily ceiling. Crossing the ceiling disables the optional expansion
@@ -239,6 +259,20 @@ instead of stopping. `GET /stats` shows the running total. The utility calls are
 cached, so re-asking a question does not re-pay for its routing and rewrites.
 
 ---
+
+## Serving retrieval as MCP tools
+
+```bash
+vectora mcp
+```
+
+Speaks MCP over stdio, exposing four tools: `search_corpus` (passages with
+citations, no generation call), `answer_question` (the full pipeline),
+`list_corpora` and `corpus_info`. Point an MCP client at that command.
+
+A client should normally prefer `search_corpus` and reason over the passages
+with its own model, rather than putting a second model between itself and
+the sources.
 
 ## Operating it
 
@@ -255,6 +289,13 @@ each answer's `diagnostics.degraded` rather than being silent.
 Docker: `docker compose up --build` brings up Qdrant and the app. The model
 cache is a named volume, so the weights are not re-downloaded on every rebuild.
 
+**Tracing.** Set `VECTORA_ENABLE_TRACING=true` and
+`OTEL_EXPORTER_OTLP_ENDPOINT` to get an OpenTelemetry span per pipeline
+stage, nested under one span per question and carrying the same request id
+as the logs. The request id answers *what happened*; the spans answer *where
+the time went*, which is the question you actually have when a p95 is bad.
+Optional — a no-op if the dependency is absent.
+
 ---
 
 ## Layout
@@ -262,19 +303,25 @@ cache is a named volume, so the weights are not re-downloaded on every rebuild.
 ```
 vectora/
   config.py          every tunable, env-driven, single source of truth
+  corpus.py          corpora as named, swappable objects
   models.py          the contracts between stages (pydantic)
   llm.py             the only module that talks to OpenAI
   embeddings.py      encoder + cross-encoder, lazily loaded
   cache.py           SQLite KV cache for query vectors and utility calls
   observability.py   logging, request correlation, metrics
-  ingestion/         parse · metadata · sections · chunking · clean · pipeline
+  tracing.py         OpenTelemetry spans (optional)
+  fetch.py           corpus acquisition from arXiv
+  mcp_server.py      retrieval as MCP tools
+  ingestion/         parse · sources · metadata · sections · chunking · clean
   store/             qdrant_store (dense) · sparse (BM25)
   retrieval/         expansion · fusion · diversify · pipeline
   generation/        router · prompts · citations · guards · grounding · pipeline
   db/                conversation persistence
   api/               FastAPI app, routes, schemas, PDF export
   cli.py             every operation
-eval/                golden set, eval harness, threshold calibration
+corpora/<name>/      documents, chunks, index, golden set, reports
+evaluation/                eval harness · ablations · answer metrics · calibration · generator
+docs/DESIGN.md       why it is built this way — the long read
 tests/               runs with no network, no models, no Qdrant
 ```
 
@@ -283,38 +330,48 @@ the network or a vector store is either a pure function or stubbed.
 
 ---
 
-## Notes on the current corpus
+## Notes on the shipped corpus
 
-`chunks.jsonl` was produced by an earlier version of the pipeline, and two of
-its problems cannot be fixed without the source PDFs:
+The `default` corpus is the original material: research papers on vitamin D
+measurement. Its `chunks.jsonl` was produced by the v1 pipeline and carries
+one fault that cannot be fixed without the source PDFs:
 
-* **Spaces lost in parsing.** Around 1,500 chunks across ~30 papers have text
-  like `requiremoreexpensiveequipment` — the PDF extractor dropped the spaces
-  between words. Such text is unmatchable lexically and tokenises badly for the
-  embedder. These chunks are now detected and dropped, and the papers are named
-  in the ingestion report. The fix is to re-ingest from the PDFs; the parser now
-  uses a character tolerance that preserves the spacing.
-* **Titles.** Most papers' embedded titles were publisher furniture, so the
-  filename is used instead. The filenames in this corpus are descriptive, so
-  citations read acceptably, but re-ingesting recovers the real titles.
+**Spaces lost in parsing.** Around 1,500 chunks across ~30 papers have text
+like `requiremoreexpensiveequipment` — the PDF extractor dropped the spaces
+between words. Such text is unmatchable lexically and tokenises badly for
+the embedder. These chunks are detected and dropped, and the affected papers
+are named in the ingestion report. Re-ingesting fixes it; the current parser
+uses a character tolerance that preserves the spacing.
 
-To re-clean what you have without the PDFs:
+To re-clean what is there without the PDFs:
 
 ```bash
-vectora repair          # keeps a .bak; re-applies all current cleaning rules
-vectora index --recreate
+vectora repair --corpus default        # keeps a .bak
+vectora index  --corpus default --recreate
 ```
 
-On the shipped corpus that takes 9,101 chunks to ~4,700, dropping reference
-lists, uncaptioned figure placeholders, fragments and space-damaged text, and
-fixing every chunk's publication year — the old pipeline stored `"20"` for all
-of them, because its year regex used a capturing group and `re.findall` returns
-the group rather than the match.
+That takes 9,101 chunks to ~4,700, dropping reference lists, uncaptioned
+figure placeholders, fragments and space-damaged text, and fixing every
+chunk's publication year — the v1 pipeline stored `"20"` for all of them,
+because its year regex used a capturing group and `re.findall` returns the
+group rather than the match.
 
-Re-ingesting from the PDFs is strictly better. Put them in `papers/` and run
-`vectora ingest`.
+If you are starting fresh, ignore all of that and fetch a corpus:
 
----
+```bash
+vectora fetch arxiv --preset ml-systems --limit 150
+```
+
+## Reading the code
+
+`docs/DESIGN.md` is the long-form explanation: what each decision was
+between, what was chosen, and what it costs. It also lists what is still
+unmeasured, which is the part worth knowing before trusting any number here.
+
+Each module's docstring states the problem it solves and, where relevant,
+the specific defect it replaces. The two most load-bearing ideas are in
+`retrieval/fusion.py` (why ranks rather than scores) and
+`generation/guards.py` (why refusing needs an absolute signal).
 
 ## License
 

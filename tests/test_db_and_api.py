@@ -164,6 +164,7 @@ def client(settings, tmp_path):
     from vectora.api.app import create_app
     from vectora.api.deps import Container
     from vectora.cache import Cache
+    from vectora.corpus import CorpusContext
     from vectora.store import QdrantStore, SparseIndex
 
     app = create_app(settings, warm=False)
@@ -173,6 +174,7 @@ def client(settings, tmp_path):
     # built, so no models load and nothing touches the network.
     app.state.container = Container(
         settings=settings,
+        corpus=CorpusContext.build(settings),
         cache=Cache(tmp_path / "c.db", 60, enabled=False),
         store=QdrantStore(settings, client=object()),
         sparse=SparseIndex(settings),

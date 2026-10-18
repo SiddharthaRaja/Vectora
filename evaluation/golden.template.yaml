@@ -1,0 +1,82 @@
+# Golden set — template.
+#
+# Copy this to your corpus and fill it in:
+#
+#     corpora/<name>/golden.yaml
+#
+# or let `vectora golden generate` draft one from the indexed corpus and then
+# edit what it produced. A generated set is a starting point, not an answer:
+# the cases you write yourself after seeing the system get something wrong are
+# worth more than ten generated ones.
+#
+# ─── How a case is scored ────────────────────────────────────────────────────
+#
+# A retrieved chunk counts as relevant if it satisfies whichever of these the
+# case specifies (you can use more than one):
+#
+#   must_contain      every listed substring appears in the chunk's text,
+#                     title or section. The practical option: you do not need
+#                     to know chunk ids, only what a right answer must mention.
+#   relevant_papers   the chunk's paper_id is in this list. Use when the answer
+#                     lives in a specific document regardless of wording.
+#   relevant_chunks   exact chunk ids. Most precise, most brittle — the ids
+#                     change whenever that text is re-chunked.
+#
+# `query_type` is optional. Set it to pin the retrieval shape for this case;
+# leave it out to let the router decide, which is what happens in production
+# and is therefore the more honest default.
+#
+# ─── Metrics ─────────────────────────────────────────────────────────────────
+#
+#   recall@k    did any relevant chunk make the top k? The headline number:
+#               if the right passage is not retrieved, no prompt saves the answer
+#   precision@k what fraction of what we returned was relevant
+#   MRR         reciprocal rank of the first relevant chunk — sensitive to
+#               whether the best chunk is at rank 1 or rank 5, which recall is not
+#   nDCG@k      rank-weighted, so improving the ordering shows up even when the
+#               retrieved set is unchanged
+#
+# ─── Negative cases ─────────────────────────────────────────────────────────
+#
+# Questions the corpus genuinely cannot answer. These matter at least as much
+# as the positive cases: the ranking metrics above cannot see whether the
+# system correctly declines to answer, and a RAG system that answers anything
+# fluently is not trustworthy however good its recall is.
+#
+# Write three kinds:
+#   - plainly off-topic      (a different field entirely)
+#   - adjacent but absent    (the hard one: neighbouring subject matter your
+#                             corpus happens not to cover)
+#   - in-domain but unasked  (a question your documents would answer if they
+#                             discussed it, and they do not)
+
+cases:
+  - id: example-factual
+    query: "What is the default value of the connection timeout?"
+    query_type: factual
+    must_contain:
+      - "timeout"
+    notes: "Replace with a question whose answer is one specific value in your corpus."
+
+  - id: example-methodological
+    query: "How is the index built?"
+    query_type: methodological
+    must_contain:
+      - "index"
+
+  - id: example-comparative
+    query: "How do the two approaches compare?"
+    query_type: comparative
+    relevant_papers: []
+    notes: "List the paper_ids that should appear. Checks per-paper capping too."
+
+negative_cases:
+  - id: off-topic
+    query: "What is the capital of France?"
+    expect: fallback
+    notes: "Plainly outside the corpus. The easy negative."
+
+  - id: adjacent-but-absent
+    query: "Replace me with a question from a neighbouring subject your corpus does not cover."
+    expect: fallback
+    notes: "The hard negative, and the one that actually tests the guard."

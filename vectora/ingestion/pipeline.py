@@ -12,20 +12,23 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from collections import Counter
 from collections.abc import Callable, Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
 from vectora.config import Settings
 from vectora.embeddings import Encoder
+from vectora.fetch import read_sidecar
 from vectora.ingestion import clean
 from vectora.ingestion import metadata as meta_mod
 from vectora.ingestion.chunking import enforce_size, semantic_chunk
-from vectora.ingestion.parse import parse_pdf
 from vectora.ingestion.sections import split_into_sections
+from vectora.ingestion.sources import iter_documents, parse_document
 from vectora.models import Chunk, content_hash
 from vectora.observability import get_logger
 
@@ -49,6 +52,9 @@ class IngestionReport:
     blank. A title counted here is not absent — it is the filename."""
     low_confidence_papers: list[tuple[str, float]] = field(default_factory=list)
     space_loss_papers: Counter[str] = field(default_factory=Counter)
+    sidecar_papers: int = 0
+    """Documents whose metadata came from the source API rather than
+    from the front matter — these cite exactly."""
     parse_errors: int = 0
 
     def summary(self) -> str:
@@ -63,6 +69,10 @@ class IngestionReport:
             f"  chunks emitted     {self.chunks_emitted}",
             f"  chunks dropped     {self.chunks_dropped}",
         ]
+        if self.sidecar_papers:
+            lines.append(
+                f"  exact metadata     {self.sidecar_papers} paper(s) from source API"
+            )
         if self.chunk_types:
             lines.append(
                 "  by type            "
@@ -151,12 +161,13 @@ def chunks_for_pdf(
     encode: Callable[[Sequence[str]], np.ndarray] | None,
     report: IngestionReport,
     seen_hashes: set[str],
+    images_dir: Path | None = None,
 ) -> list[Chunk]:
-    """Parse one PDF and return the chunks worth indexing."""
+    """Parse one document and return the chunks worth indexing."""
     paper_id = path.stem
-    parsed = parse_pdf(
+    parsed = parse_document(
         path,
-        image_dir=settings.images_dir,
+        image_dir=images_dir or settings.images_dir,
         min_image_width=settings.image_min_width,
         min_image_height=settings.image_min_height,
         extract_images=settings.caption_images or settings.keep_uncaptioned_images,
@@ -165,7 +176,14 @@ def chunks_for_pdf(
     if not parsed.pages:
         raise RuntimeError(parsed.errors[0] if parsed.errors else "no pages extracted")
 
+    # A fetched document carries metadata from the source API. That is known
+    # rather than inferred, so it wins outright and the heuristics only fill
+    # what the sidecar does not have.
+    sidecar = read_sidecar(path)
     info = meta_mod.extract(parsed.header_text, paper_id, parsed.info)
+    if sidecar:
+        info = _apply_sidecar(info, sidecar)
+        report.sidecar_papers += 1
     for field_name in ("title", "authors", "year", "doi"):
         if not getattr(info, field_name):
             report.metadata_gaps[field_name] += 1
@@ -276,6 +294,43 @@ def chunks_for_pdf(
     return out
 
 
+def _apply_sidecar(info: Any, sidecar: dict[str, object]) -> Any:
+    """Overlay source-API metadata onto the heuristic result.
+
+    Only non-empty sidecar values are applied, and the DOI is normalised the
+    same way the text extractor normalises one, so the two paths cannot
+    produce differently-formatted DOIs for the same paper.
+    """
+    title = str(sidecar.get("title") or "").strip()
+    authors = str(sidecar.get("author_string") or "").strip()
+    if not authors and isinstance(sidecar.get("authors"), list):
+        authors = ", ".join(str(a) for a in sidecar["authors"][:14])  # type: ignore[index]
+    year = str(sidecar.get("year") or "").strip()
+    doi = str(sidecar.get("doi") or "").strip()
+
+    if title:
+        info.title = title
+        info.sources["title"] = "source_api"
+    if authors:
+        info.authors = authors
+        info.sources["authors"] = "source_api"
+    if re.fullmatch(r"(?:19|20)\d{2}", year):
+        info.year = year
+        info.sources["year"] = "source_api"
+    if doi:
+        cleaned, _ = meta_mod.extract_doi(doi)
+        info.doi = cleaned or doi
+        info.sources["doi"] = "source_api"
+    if not info.doi and sidecar.get("doc_id") and sidecar.get("source") == "arxiv":
+        # arXiv ids are stable identifiers even when no DOI is registered.
+        info.doi = f"arXiv:{sidecar['doc_id']}"
+        info.sources["doi"] = "arxiv_id"
+
+    filled = sum(bool(x) for x in (info.title, info.authors, info.year, info.doi))
+    info.confidence = round(filled / 4, 2)
+    return info
+
+
 def caption_image(image_path: str, settings: Settings) -> str:
     """Caption a figure with a vision model. Returns "" on any failure.
 
@@ -318,7 +373,7 @@ def caption_image(image_path: str, settings: Settings) -> str:
                         {
                             "type": "text",
                             "text": (
-                                "This is a figure from a scientific paper. In 1-3 "
+                                "This is a figure from a document in a reference corpus. In 1-3 "
                                 "sentences, state what it shows: the figure type, the "
                                 "variables or concepts plotted, and any finding visible. "
                                 "Write it as a caption, not as commentary."
@@ -338,14 +393,19 @@ def caption_image(image_path: str, settings: Settings) -> str:
 
 
 def iter_pdfs(papers_dir: Path) -> Iterator[Path]:
-    yield from sorted(
-        p for p in papers_dir.rglob("*.pdf") if p.is_file() and not p.name.startswith(".")
-    )
+    """Every ingestible document, not only PDFs.
+
+    Kept under the old name because it is referenced elsewhere; the
+    behaviour is the generalised one, so a corpus can mix PDFs with
+    markdown, text and saved HTML.
+    """
+    yield from iter_documents(papers_dir)
 
 
 def run_ingestion(
     settings: Settings,
     *,
+    corpus: Any = None,
     papers_dir: Path | None = None,
     output: Path | None = None,
     force: bool = False,
@@ -359,8 +419,14 @@ def run_ingestion(
     over from the existing JSONL rather than recomputed, so adding one paper
     to a corpus of 62 costs one paper's work.
     """
-    papers_dir = papers_dir or settings.papers_dir
-    output = output or settings.chunks_path
+    if corpus is None:
+        from vectora.corpus import CorpusContext
+
+        corpus = CorpusContext.build(settings)
+    papers_dir = papers_dir or corpus.papers
+    output = output or corpus.chunks
+    manifest_path = corpus.manifest
+    images_dir = corpus.images
     report = IngestionReport()
 
     if not papers_dir.exists():
@@ -373,9 +439,14 @@ def run_ingestion(
     if limit:
         pdfs = pdfs[:limit]
     if not pdfs:
-        raise FileNotFoundError(f"No PDFs found under {papers_dir}")
+        from vectora.ingestion.sources import SUPPORTED_SUFFIXES
 
-    manifest = {} if force else load_manifest(settings.manifest_path)
+        kinds = ", ".join(sorted(SUPPORTED_SUFFIXES))
+        raise FileNotFoundError(
+            f"No ingestible documents under {papers_dir} (looking for {kinds})"
+        )
+
+    manifest = {} if force else load_manifest(manifest_path)
     existing = list(read_chunks(output)) if output.exists() and not force else []
     by_paper: dict[str, list[Chunk]] = {}
     for chunk in existing:
@@ -419,7 +490,12 @@ def run_ingestion(
 
         try:
             chunks = chunks_for_pdf(
-                pdf, settings, encode=encode, report=report, seen_hashes=seen_hashes
+                pdf,
+                settings,
+                encode=encode,
+                report=report,
+                seen_hashes=seen_hashes,
+                images_dir=images_dir,
             )
         except Exception as exc:
             log.error("ingestion failed", extra={"file": pdf.name, "err": str(exc)})
@@ -442,7 +518,7 @@ def run_ingestion(
     all_chunks = [c for pid in sorted(fresh) for c in fresh[pid]]
     report.chunks_emitted = len(all_chunks)
     write_chunks(all_chunks, output)
-    save_manifest(manifest, settings.manifest_path)
+    save_manifest(manifest, manifest_path)
     log.info("ingestion complete", extra={"chunks": len(all_chunks), "out": str(output)})
     return report
 
@@ -453,6 +529,7 @@ def run_ingestion(
 def repair_chunks(
     settings: Settings,
     *,
+    corpus: Any = None,
     source: Path | None = None,
     output: Path | None = None,
 ) -> IngestionReport:
@@ -474,7 +551,12 @@ def repair_chunks(
     Re-ingesting from the PDFs is still strictly better; run this when you
     do not have them.
     """
-    source = source or settings.chunks_path
+    if source is None:
+        if corpus is None:
+            from vectora.corpus import CorpusContext
+
+            corpus = CorpusContext.build(settings)
+        source = corpus.chunks
     output = output or source
     report = IngestionReport()
 

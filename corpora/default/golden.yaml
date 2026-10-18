@@ -1,4 +1,8 @@
-# Golden set for retrieval evaluation.
+# Golden set for the `default` corpus (the original vitamin D measurement papers).
+#
+# This set is corpus-specific and lives with its corpus. For a new corpus, copy
+# evaluation/golden.template.yaml to corpora/<name>/golden.yaml, or draft one with
+# `vectora golden generate`.
 #
 # Each case names a question and what a correct retrieval must surface. There
 # are two ways to specify that, and you can use both:

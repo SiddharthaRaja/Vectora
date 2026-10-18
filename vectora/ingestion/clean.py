@@ -253,9 +253,20 @@ def score_quality(
         return Quality(0.0, ("empty",))
 
     tokens = max(len(stripped) // 4, len(stripped.split()))
-    letters = sum(c.isalpha() for c in stripped)
-    alpha_ratio = letters / len(stripped)
-    words = stripped.split()
+
+    # A text chunk may legitimately contain a markdown table — a Results
+    # section that states its numbers in a grid, for instance. Judging the
+    # whole chunk by prose rules then fails it on letter ratio and digit
+    # density and discards the surrounding prose too. So the character-ratio
+    # rules are applied to the prose part, while the size rules still see
+    # the whole chunk.
+    prose = _without_table_rows(stripped)
+    table_rows = len(_TABLE_ROW.findall(stripped)) + len(_TABLE_SPAN.findall(stripped))
+    measured = prose if len(prose) >= 80 else stripped
+
+    letters = sum(c.isalpha() for c in measured)
+    alpha_ratio = letters / max(len(measured), 1)
+    words = measured.split()
     word_count = len(words)
 
     if chunk_type == "table":
@@ -286,6 +297,16 @@ def score_quality(
     if sum(1 for ln in stripped.split("\n") if _REFERENCE_LINE.match(ln.strip())) >= 3:
         return Quality(0.0, ("reference_list",))
 
+    if table_rows >= 2 and word_count < 12 and len(prose) < 80:
+        # Essentially a bare table that arrived through the text path. The
+        # table rules are the right ones for it.
+        return score_quality(
+            stripped,
+            min_tokens=min_tokens,
+            min_alpha_ratio=min_alpha_ratio,
+            chunk_type="table",
+        )
+
     # ── soft penalties ────────────────────────────────────────────────────
     score = 1.0
     if not re.search(r"[.!?]", stripped):
@@ -295,7 +316,7 @@ def score_quality(
         score -= 0.15
         reasons.append("letter_sparse")
 
-    digits = sum(c.isdigit() for c in stripped) / len(stripped)
+    digits = sum(c.isdigit() for c in measured) / max(len(measured), 1)
     if digits > 0.30:
         score -= 0.20
         reasons.append("digit_heavy")
@@ -341,6 +362,29 @@ def glued_ratio(text: str) -> float:
         return 0.0
     glued = sum(len(m.group(0)) for m in _GLUED_RUN.finditer(text))
     return glued / len(text)
+
+
+#: A markdown or extracted table row: starts and ends with a pipe.
+_TABLE_ROW = re.compile(r"^\s*\|.*\|\s*$")
+#: A run of pipe-delimited cells, with or without the line breaks. Chunking
+#: joins lines with spaces, so by the time a chunk is scored a table is
+#: usually one long inline run rather than a set of rows — matching only
+#: whole lines would miss every table that survived chunking.
+_TABLE_SPAN = re.compile(r"(?:\|[^|\n]{0,80}){2,}\|")
+
+
+def _without_table_rows(text: str) -> str:
+    """The prose part of a chunk, with any tabular markup removed.
+
+    A chunk that mixes prose with a results grid should be judged on its
+    prose: the grid's pipes, dashes and digits are not evidence that the
+    text is debris, and failing the chunk on them discards the surrounding
+    prose as well.
+    """
+    without_rows = "\n".join(
+        ln for ln in text.split("\n") if ln.strip() and not _TABLE_ROW.match(ln)
+    )
+    return _TABLE_SPAN.sub(" ", without_rows).strip()
 
 
 def is_excluded_section(section: str) -> bool:

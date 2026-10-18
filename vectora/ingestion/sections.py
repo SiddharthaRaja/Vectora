@@ -22,6 +22,8 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+from vectora.ingestion.clean import is_excluded_section
+
 #: Canonical section names and the variants papers use for them. Matching is
 #: on the normalised key, so "MATERIALS AND METHODS" and "2.1. Materials and
 #: methods" both land on "Methods" and filters stay predictable.
@@ -230,6 +232,10 @@ def split_into_sections(pages: list[dict]) -> list[Section]:
         page_num = int(page.get("page_num") or 0)
         lines = (page.get("text") or "").split("\n")
 
+        # The most recent indexable section this page passed through. Used
+        # only when the page ends inside a section we never index.
+        last_indexable = None if is_excluded_section(current.name) else current
+
         for i, line in enumerate(lines):
             nxt = lines[i + 1] if i + 1 < len(lines) else None
             heading = classify_line(line, next_line=nxt)
@@ -237,14 +243,25 @@ def split_into_sections(pages: list[dict]) -> list[Section]:
                 if not current.is_empty:
                     sections.append(current)
                 current = Section(name=heading, page=page_num)
+                if not is_excluded_section(current.name):
+                    last_indexable = current
             else:
                 current.text += line + "\n"
 
+        # Tables and images attach to the section that occupies the page.
+        # Normally that is the one open at the end of it — a table on page 5
+        # belongs to whatever section page 5 is in. The exception is a page
+        # that ends inside a section we never index: a results table on a
+        # page whose last lines are the reference list would otherwise be
+        # labelled, and then discarded, as reference material.
+        target = current
+        if is_excluded_section(current.name) and last_indexable is not None:
+            target = last_indexable
         for md in page.get("tables", []) or []:
             if md:
-                current.tables.append((page_num, md))
+                target.tables.append((page_num, md))
         for path in page.get("image_paths", []) or []:
-            current.images.append((page_num, path))
+            target.images.append((page_num, path))
 
     if not current.is_empty:
         sections.append(current)

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vectora"
-version = "2.0.0"
+version = "3.0.0"
 description = "Retrieval-augmented question answering over research papers"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -44,6 +44,10 @@ pdf = ["weasyprint>=62.0"]
 metrics = ["prometheus-client>=0.20"]
 caption = ["anthropic>=0.30"]
 eval = ["pyyaml>=6.0"]
+tracing = [
+  "opentelemetry-sdk>=1.24",
+  "opentelemetry-exporter-otlp-proto-http>=1.24",
+]
 dev = [
   "pytest>=8.0",
   "pytest-asyncio>=0.23",
@@ -54,14 +58,14 @@ dev = [
   "pyyaml>=6.0",
 ]
 all = [
-  "vectora[ingest,pdf,metrics,eval]",
+  "vectora[ingest,pdf,metrics,eval,tracing]",
 ]
 
 [project.scripts]
 vectora = "vectora.cli:entrypoint"
 
 [tool.setuptools.packages.find]
-include = ["vectora*"]
+include = ["vectora*", "evaluation*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -46,8 +46,14 @@ from vectora.models import (
 )
 from vectora.observability import QUESTIONS, Stopwatch, get_logger
 from vectora.retrieval import Retriever
+from vectora.tracing import question_span, set_attributes, span
 
 log = get_logger(__name__)
+
+#: Passage text included with each streamed source. Enough to read the
+#: relevant part in the UI without making the sources frame large enough to
+#: delay the first token.
+_STREAM_TEXT_CHARS = 3000
 
 
 def build_context(chunks: Sequence[RetrievedChunk]) -> str:
@@ -123,10 +129,11 @@ class RAGEngine:
         usage = Usage()
         watch = Stopwatch()
 
-        with watch.stage("route"):
+        with watch.stage("route"), span("generation.route") as route_span:
             query_type, how = await classify(
                 query, llm=self.llm, settings=self.settings, usage=usage
             )
+            set_attributes(route_span, query_type=query_type.value, routed_by=how)
 
         chunks, diag = await self.retriever.retrieve(
             query,
@@ -144,9 +151,10 @@ class RAGEngine:
         if not ok:
             if not self.retriever.store.exists():
                 reason = "no_corpus"
-            fallback = await guards.build_fallback(
-                query, chunks, reason=reason, llm=self.llm, usage=usage
-            )
+            with span("generation.fallback", reason=reason):
+                fallback = await guards.build_fallback(
+                    query, chunks, reason=reason, llm=self.llm, usage=usage
+                )
             return _Prepared(
                 query=query,
                 query_type=query_type,
@@ -187,7 +195,11 @@ class RAGEngine:
     ) -> Answer:
         """Resolve citations and optionally grade grounding."""
         profile = self.settings.profile(prepared.mode)
-        answer_text, primary = cite.citations_from_markers(raw_answer, prepared.chunks)
+        with span("generation.citations", sources=len(prepared.chunks)) as cite_span:
+            answer_text, primary = cite.citations_from_markers(
+                raw_answer, prepared.chunks
+            )
+            set_attributes(cite_span, cited=len(primary))
 
         tasks: dict[str, asyncio.Task] = {}
         if profile.check_faithfulness:
@@ -204,7 +216,10 @@ class RAGEngine:
 
         grounding = None
         if tasks:
-            results = await asyncio.gather(*tasks.values(), return_exceptions=True)
+            with span("generation.verify", checks=len(tasks)):
+                results = await asyncio.gather(
+                    *tasks.values(), return_exceptions=True
+                )
             named = dict(zip(tasks.keys(), results, strict=True))
             value = named.get("grounding")
             if value is not None and not isinstance(value, BaseException):
@@ -264,16 +279,40 @@ class RAGEngine:
             raise ValueError("empty query")
         mode = mode or self.settings.default_mode
 
-        prepared = await self._prepare(
-            query, mode=mode, history=history or [], filters=filters, top_k=top_k
+        corpus_name = getattr(
+            getattr(self.retriever, "hint", None), "document_kind", "documents"
         )
-        if prepared.fallback is not None:
-            return self._fallback_answer(prepared)
-        if self.llm is None:
-            raise LLMError("no OpenAI client configured; cannot generate an answer")
+        with question_span(mode.value, "pending", corpus_name) as root:
+            prepared = await self._prepare(
+                query, mode=mode, history=history or [], filters=filters, top_k=top_k
+            )
+            set_attributes(
+                root,
+                query_type=prepared.query_type.value,
+                chunks_retrieved=len(prepared.chunks),
+                refused=prepared.fallback is not None,
+            )
+            if prepared.fallback is not None:
+                return self._fallback_answer(prepared)
+            if self.llm is None:
+                raise LLMError(
+                    "no OpenAI client configured; cannot generate an answer"
+                )
 
-        raw = await self.llm.answer(prepared.messages, usage=prepared.usage)
-        return await self._finalise(prepared, raw)
+            with span("generation.answer", model=self.settings.answer_model):
+                raw = await self.llm.answer(
+                    prepared.messages, usage=prepared.usage
+                )
+            answer = await self._finalise(prepared, raw)
+            set_attributes(
+                root,
+                cost_usd=round(answer.usage.cost_usd, 6),
+                llm_calls=answer.usage.calls,
+                tokens=answer.usage.total_tokens,
+                citations=len(answer.citations),
+                grounding=answer.grounding.score if answer.grounding else None,
+            )
+            return answer
 
     async def stream(
         self,
@@ -315,18 +354,34 @@ class RAGEngine:
             yield {"type": "fallback", **answer.wire()}
             return
 
+        # The passage text and per-stage scores go out with the sources, so a
+        # reader can inspect what the answer was built from while it is still
+        # being written. Text is capped: this is a live stream, not a bulk
+        # export, and a 20-chunk payload of full passages would stall the
+        # first token behind several hundred kilobytes.
         yield {
             "type": "sources",
             "count": len(prepared.chunks),
             "sources": [
                 {
                     "index": i + 1,
+                    "paper_id": rc.chunk.paper_id,
                     "title": rc.chunk.title,
                     "authors": rc.chunk.authors,
                     "year": rc.chunk.year,
+                    "doi": rc.chunk.doi,
                     "section": rc.chunk.section,
                     "page": rc.chunk.page,
+                    "chunk_type": rc.chunk.chunk_type,
+                    "quality": rc.chunk.quality,
                     "score": round(rc.score, 4),
+                    "fused_score": rc.fused_score,
+                    "dense_score": rc.dense_score,
+                    "sparse_score": rc.sparse_score,
+                    "rerank_score": rc.rerank_score,
+                    "matched_variants": rc.matched_variants,
+                    "text": rc.chunk.content[:_STREAM_TEXT_CHARS],
+                    "truncated": len(rc.chunk.content) > _STREAM_TEXT_CHARS,
                 }
                 for i, rc in enumerate(prepared.chunks)
             ],

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <opensearch:totalResults>2841</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <opensearch:itemsPerPage>2</opensearch:itemsPerPage>
+  <entry>
+    <id>http://arxiv.org/abs/2004.04906v3</id>
+    <updated>2020-09-30T17:21:11Z</updated>
+    <published>2020-04-10T07:04:11Z</published>
+    <title>Dense Passage Retrieval for Open-Domain
+  Question Answering</title>
+    <summary>  Open-domain question answering relies on efficient passage retrieval to
+select candidate contexts.
+</summary>
+    <author><name>Vladimir Karpukhin</name></author>
+    <author><name>Barlas Oguz</name></author>
+    <author><name>Sewon Min</name></author>
+    <arxiv:doi>10.18653/v1/2020.emnlp-main.550</arxiv:doi>
+    <link href="http://arxiv.org/abs/2004.04906v3" rel="alternate" type="text/html"/>
+    <link title="pdf" href="http://arxiv.org/pdf/2004.04906v3" rel="related" type="application/pdf"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2007.01282v2</id>
+    <updated>2021-02-01T10:00:00Z</updated>
+    <published>2020-07-02T18:30:00Z</published>
+    <title>Leveraging Passage Retrieval with Generative Models</title>
+    <summary>  Generative models for open domain question answering.
+</summary>
+    <author><name>Gautier Izacard</name></author>
+    <author><name>Edouard Grave</name></author>
+    <link href="http://arxiv.org/abs/2007.01282v2" rel="alternate" type="text/html"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+  </entry>
+</feed>

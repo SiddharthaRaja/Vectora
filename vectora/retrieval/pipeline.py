@@ -33,9 +33,10 @@ from vectora.llm import LLMClient
 from vectora.models import RetrievalDiagnostics, RetrievedChunk, Usage, estimate_tokens
 from vectora.observability import RETRIEVED, STAGE_SECONDS, Stopwatch, get_logger
 from vectora.retrieval.diversify import cap_per_paper, deduplicate, mmr
-from vectora.retrieval.expansion import Expansion, contextualise, expand
+from vectora.retrieval.expansion import CorpusHint, Expansion, contextualise, expand
 from vectora.retrieval.fusion import RankedList, reciprocal_rank_fusion
 from vectora.store import QdrantStore, SparseIndex
+from vectora.tracing import set_attributes, span
 
 log = get_logger(__name__)
 
@@ -60,6 +61,7 @@ class Retriever:
         encoder: Encoder,
         reranker: Reranker | None = None,
         llm: LLMClient | None = None,
+        corpus: object | None = None,
     ) -> None:
         self.settings = settings
         self.store = store
@@ -67,6 +69,8 @@ class Retriever:
         self.encoder = encoder
         self.reranker = reranker or Reranker(settings)
         self.llm = llm
+        # What the corpus is, in its own words, for the expansion prompts.
+        self.hint = CorpusHint.from_profile(corpus)
 
     # ── stages ────────────────────────────────────────────────────────────
 
@@ -217,15 +221,22 @@ class Retriever:
         filters: dict[str, Any] | None = None,
         history: list[dict[str, str]] | None = None,
         usage: Usage | None = None,
+        profile_override: Any = None,
     ) -> tuple[list[RetrievedChunk], RetrievalDiagnostics]:
         """Retrieve chunks for one question.
 
         Returns the chunks and a diagnostics record. Never raises for a
         retrieval-quality reason: an empty list is a valid result that the
         answer stage turns into a fallback.
+
+        ``profile_override`` replaces the mode's stage plan for this call
+        only. It exists for the ablation harness, which needs to turn one
+        stage off without mutating shared configuration — the thing the
+        previous mode-switching code got wrong by assigning to a module
+        global.
         """
         mode = mode or self.settings.default_mode
-        profile = self.settings.profile(mode)
+        profile = profile_override or self.settings.profile(mode)
         route = self.settings.route(query_type)
         effective_k = top_k or route.top_k
         lambda_ = route.mmr_lambda if mmr_lambda is None else mmr_lambda
@@ -236,7 +247,7 @@ class Retriever:
             diag.degraded.append("sparse_index_unavailable")
 
         # 1. Resolve follow-ups.
-        with watch.stage("contextualise"):
+        with watch.stage("contextualise"), span("retrieval.contextualise"):
             search_query, rewritten = await contextualise(
                 query,
                 history or [],
@@ -246,7 +257,11 @@ class Retriever:
             )
 
         # 2. Expand.
-        with watch.stage("expand"):
+        with watch.stage("expand"), span(
+            "retrieval.expand",
+            rewrites_requested=profile.rewrite_variants,
+            hyde_requested=profile.use_hyde,
+        ) as expand_span:
             expansion = await expand(
                 search_query,
                 settings=self.settings,
@@ -254,8 +269,15 @@ class Retriever:
                 llm=self.llm,
                 rewrite_variants=profile.rewrite_variants,
                 use_hyde=profile.use_hyde,
+                hint=self.hint,
                 usage=usage,
             )
+        set_attributes(
+            expand_span,
+            variants_produced=len(expansion.variants),
+            hyde_used=expansion.hyde_used,
+            vectors=len(expansion.dense_vectors),
+        )
         diag.variants = expansion.variants
         diag.hyde_used = expansion.hyde_used
         diag.degraded.extend(expansion.degraded)
@@ -263,13 +285,21 @@ class Retriever:
             diag.variants = [f"(standalone) {search_query}", *diag.variants]
 
         # 3. Dense and sparse, concurrently.
-        with watch.stage("search"):
+        with watch.stage("search"), span(
+            "retrieval.search",
+            dense_limit=profile.dense_candidates,
+            sparse_limit=profile.sparse_candidates,
+            sparse_available=self.sparse.ready,
+        ) as search_span:
             dense_lists, sparse_lists = await asyncio.gather(
                 self._dense(expansion, limit=profile.dense_candidates, filters=filters),
                 self._sparse(expansion, limit=profile.sparse_candidates, filters=filters),
             )
         diag.dense_hits = sum(len(rl.chunks) for rl in dense_lists)
         diag.sparse_hits = sum(len(rl.chunks) for rl in sparse_lists)
+        set_attributes(
+            search_span, dense_hits=diag.dense_hits, sparse_hits=diag.sparse_hits
+        )
 
         if not dense_lists and not sparse_lists:
             diag.elapsed_ms = watch.timings
@@ -277,18 +307,30 @@ class Retriever:
             return [], diag
 
         # 4. Fuse.
-        with watch.stage("fuse"):
+        with watch.stage("fuse"), span(
+            "retrieval.fuse",
+            rrf_k=self.settings.rrf_k,
+            lists=len(dense_lists) + len(sparse_lists),
+        ) as fuse_span:
             fused = reciprocal_rank_fusion(
                 [*dense_lists, *sparse_lists], k=self.settings.rrf_k
             )
+            set_attributes(fuse_span, pool=len(fused))
         diag.fused_pool = len(fused)
 
         # 5. Rerank a pool large enough for MMR to have a real choice.
         pool_size = max(effective_k * profile.rerank_pool_multiplier, effective_k + 6)
         if profile.use_reranker:
-            with watch.stage("rerank"):
+            with watch.stage("rerank"), span(
+                "retrieval.rerank", pool=min(len(fused), max(pool_size * 2, 24))
+            ) as rerank_span:
                 candidates = await self._rerank(
                     fused[: max(pool_size * 2, 24)], search_query, limit=pool_size
+                )
+                set_attributes(
+                    rerank_span,
+                    kept=len(candidates),
+                    top_score=candidates[0].rerank_score if candidates else None,
                 )
             diag.reranked = any(rc.is_reranked for rc in candidates)
             if not diag.reranked:
@@ -298,7 +340,9 @@ class Retriever:
 
         # 6. Diversify.
         if profile.use_mmr and len(candidates) > effective_k:
-            with watch.stage("mmr"):
+            with watch.stage("mmr"), span(
+                "retrieval.mmr", lambda_=lambda_, pool=len(candidates)
+            ):
                 candidates = await self._diversify(
                     candidates, search_query, top_k=effective_k, lambda_=lambda_
                 )
@@ -307,7 +351,7 @@ class Retriever:
             candidates = candidates[:effective_k]
 
         # 7. Dedup, cap per paper, fit the budget.
-        with watch.stage("postprocess"):
+        with watch.stage("postprocess"), span("retrieval.postprocess"):
             candidates = deduplicate(
                 candidates,
                 encode=lambda texts: self.encoder.encode(texts, progress=False),

@@ -51,9 +51,17 @@ class CollectionStats:
 class QdrantStore:
     """Thin, explicit wrapper over the Qdrant client."""
 
-    def __init__(self, settings: Settings, client: Any | None = None) -> None:
+    def __init__(
+        self,
+        settings: Settings,
+        client: Any | None = None,
+        *,
+        collection: str | None = None,
+    ) -> None:
         self.settings = settings
-        self.collection = settings.qdrant_collection
+        # The collection comes from the active corpus, not from settings, so
+        # two corpora cannot end up sharing one collection.
+        self.collection = collection or settings.qdrant_collection or "vectora_default"
         self._client = client
         self._ensured = False
 
@@ -121,8 +129,7 @@ class QdrantStore:
                     f"Collection '{self.collection}' has {dim}-dim vectors but "
                     f"{self.settings.embedding_model} produces "
                     f"{self.settings.embedding_dim}. Re-index with "
-                    f"`vectora index --recreate`, or point "
-                    f"VECTORA_QDRANT_COLLECTION at a different collection."
+                    f"`vectora index --recreate`, or use a different corpus."
                 )
             self._ensured = True
             return

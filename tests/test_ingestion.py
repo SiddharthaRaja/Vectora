@@ -12,7 +12,12 @@ import pytest
 
 from vectora.ingestion import clean, metadata
 from vectora.ingestion.chunking import enforce_size, semantic_chunk, split_sentences
-from vectora.ingestion.sections import canonicalise, classify_line, split_into_sections
+from vectora.ingestion.sections import (
+    Section,
+    canonicalise,
+    classify_line,
+    split_into_sections,
+)
 from vectora.models import Chunk
 
 # ── metadata ──────────────────────────────────────────────────────────────
@@ -271,6 +276,27 @@ class TestSectionDetection:
         assert "Methods" in by_name and "Results" in by_name
         assert by_name["Methods"].tables[0][0] == 1
         assert by_name["Results"].tables[0][0] == 2
+
+    def test_a_table_is_not_discarded_with_the_reference_list(self):
+        """A page whose last lines are the reference list must not drag its
+        results table in with it: the table would be labelled, and then
+        dropped, as reference material."""
+        pages = [
+            {
+                "page_num": 1,
+                "text": (
+                    "RESULTS\n" + "Prose reporting the measurements. " * 10
+                    + "\nREFERENCES\n[1] Smith J. A title. J. 2019;4:1-8."
+                ),
+                "tables": ["| Method | MAP |\n| --- | --- |\n| RRF | 0.291 |"],
+                "image_paths": [],
+            }
+        ]
+        sections = split_into_sections(pages)
+        by_name = {s.name: s for s in sections}
+        assert "Results" in by_name
+        assert by_name["Results"].tables, "the table must stay with Results"
+        assert not by_name.get("References", Section("x", 1)).tables
 
     def test_runt_sections_merge_back(self):
         pages = [

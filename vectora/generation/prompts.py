@@ -66,7 +66,7 @@ causal         asks why something happens, or what causes or affects what
 comparative    asks to compare, contrast, or choose between two or more things
 exploratory    asks for an overview, a summary, the state of the field, or main themes
 
-Judge by what the asker needs, not by the wording. "What is the LOD of this assay?" is factual, not definitional. "How does vitamin D affect bone density?" is causal. When two fit, choose the narrower one."""
+Judge by what the asker needs, not by the wording. "What is the default timeout?" is factual, not definitional. "Why does batching improve throughput?" is causal. "What is a cross-encoder?" is definitional. When two fit, choose the narrower one."""
 
 
 #: Citation attribution. Run after the answer so the model is mapping its own

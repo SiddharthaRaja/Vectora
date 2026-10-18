@@ -37,13 +37,13 @@ _INDEX_VERSION = 2
 
 _TOKEN = re.compile(r"[a-z0-9]+(?:[-/.][a-z0-9]+)*")
 #: Kept deliberately small. Scientific queries lean on words a generic stop
-#: list would remove ("a" in "vitamin A"), and BM25 already discounts terms
-#: that appear everywhere.
+#: list would remove ("a" in "plan A", "it" in an acronym), and BM25 already
+#: discounts terms that appear everywhere.
 _STOPWORDS = frozenset(
     ["the", "of", "and", "to", "in", "is", "are", "was", "were", "be", "been", "being", "for", "on", "with", "as", "by", "that", "this", "these", "those", "it", "its", "from", "at", "an", "or", "if", "then", "than", "so", "such", "we", "our", "they", "their", "there", "here", "which", "who", "whom", "what", "when", "where", "how", "about", "into", "over", "under"]
 )
 #: Hyphenated and slashed scientific terms are also indexed as their parts,
-#: so "LC-MS/MS" is findable as "lc", "ms", "lcmsms" and the whole token.
+#: so "GPT-4/turbo" is findable as "gpt", "4", "turbo", "gpt4turbo" and whole.
 _SPLITTABLE = re.compile(r"[-/.]")
 
 
@@ -82,9 +82,11 @@ class SparseIndex:
     actually searchable) or from ``chunks.jsonl``.
     """
 
-    def __init__(self, settings: Settings) -> None:
+    def __init__(self, settings: Settings, *, path: Path | None = None) -> None:
         self.settings = settings
-        self.path = settings.bm25_index_path
+        self.path = path or settings.bm25_index_path or (
+            settings.corpora_dir / "default" / "bm25.pkl"
+        )
         self._bm25 = None
         self._chunks: list[Chunk] = []
         self.built_at: float | None = None
@@ -195,7 +197,7 @@ class SparseIndex:
 
         if not sourced:
             path = chunks_path or self.settings.chunks_path
-            if path.exists():
+            if path is not None and path.exists():
                 from vectora.ingestion.pipeline import read_chunks
 
                 sourced = list(read_chunks(path))  # type: ignore[arg-type]
