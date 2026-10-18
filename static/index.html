@@ -20,6 +20,9 @@
     --accent:    #c8b99a;
     --accent-dim:#6b5f4e;
     --danger:    #b05c5c;
+    --ok:        #5a8a5a;
+    --dense:     #5a8aaa;
+    --sparse:    #8a7a5a;
     --mono:      'DM Mono', monospace;
     --serif:     'DM Serif Display', serif;
   }
@@ -48,7 +51,6 @@
   .new-chat-btn:hover { border-color: var(--border-hi); color: var(--accent); }
   .new-chat-btn .plus { font-size: 16px; line-height: 1; color: var(--accent); }
 
-  /* Sessions list */
   .sessions-label { padding: 16px 20px 8px; font-size: 9px; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
   .sessions { flex: 1; overflow-y: auto; padding: 0 8px 16px; }
@@ -70,13 +72,17 @@
   .session-item:hover .session-del { opacity: 1; }
   .session-del:hover { color: var(--danger); }
 
-  /* Sidebar bottom */
   .sidebar-bottom { padding: 14px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
   .status-row { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--muted); }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); transition: background .3s; }
-  .dot.ok { background: #5a8a5a; }  .dot.err { background: var(--danger); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted);
+    transition: background .3s; flex-shrink: 0; }
+  .dot.ok { background: var(--ok); }  .dot.err { background: var(--danger); }
+  .dot.warn { background: #8a7a3a; }
 
-  /* Settings toggle */
+  .corpus-row { margin-top: 8px; font-size: 10px; color: var(--muted);
+    display: flex; flex-direction: column; gap: 2px; }
+  .corpus-name { color: var(--accent-dim); }
+
   .settings-toggle { width: 100%; background: none; border: none; color: var(--muted);
     font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
     padding: 8px 0 0; cursor: pointer; text-align: left; transition: color .15s; }
@@ -89,19 +95,23 @@
     border-radius: 3px; width: 100%; outline: none; transition: border-color .15s; }
   .settings-panel input:focus, .settings-panel select:focus { border-color: var(--accent-dim); }
   .settings-panel input::placeholder { color: var(--muted); }
+  .settings-panel label { font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; gap: 6px; cursor: pointer; }
   select option { background: var(--surface); }
 
   /* ── Main ── */
   .main { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
   .header { border-bottom: 1px solid var(--border); padding: 18px 36px;
-    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0; gap: 20px; }
   .header-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 400px; }
+    color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
   /* ── Messages ── */
   .messages { flex: 1; overflow-y: auto; padding: 36px 40px;
-    display: flex; flex-direction: column; gap: 36px; scroll-behavior: smooth; }
+    display: flex; flex-direction: column; gap: 36px; }
   .messages::-webkit-scrollbar { width: 4px; }
   .messages::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
 
@@ -111,31 +121,54 @@
   .empty-icon { font-family: var(--serif); font-style: italic; font-size: 44px;
     color: var(--border-hi); line-height: 1; }
   .empty-hint { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .empty-examples { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .empty-example { font-size: 11px; color: var(--muted-hi); cursor: pointer;
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: 4px;
+    transition: border-color .15s, color .15s; }
+  .empty-example:hover { border-color: var(--accent-dim); color: var(--accent); }
 
   .msg { display: flex; flex-direction: column; gap: 5px;
-    animation: slide-up .22s ease both; max-width: 720px; }
+    animation: slide-up .22s ease both; max-width: 760px; }
   .msg.user { align-self: flex-end; align-items: flex-end; }
-  .msg.assistant { align-self: flex-start; align-items: flex-start; }
+  .msg.assistant { align-self: flex-start; align-items: flex-start; width: 100%; }
   .msg-role { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
   .msg-bubble { padding: 14px 18px; border-radius: 6px; line-height: 1.75; font-size: 13px; }
   .msg.user .msg-bubble { background: var(--surface); border: 1px solid var(--border); color: var(--accent); }
-  .msg.assistant .msg-bubble { border: 1px solid var(--border); color: var(--text); max-width: 660px; }
+  .msg.assistant .msg-bubble { border: 1px solid var(--border); color: var(--text); max-width: 700px; }
   .msg.assistant .msg-bubble p { margin-bottom: 9px; }
   .msg.assistant .msg-bubble p:last-child { margin-bottom: 0; }
+  .msg-bubble code { background: var(--surface2); padding: 1px 5px; border-radius: 3px;
+    font-size: 12px; color: var(--accent); }
+  .msg-bubble table { border-collapse: collapse; margin: 10px 0; font-size: 11.5px; width: 100%; }
+  .msg-bubble th, .msg-bubble td { border: 1px solid var(--border);
+    padding: 5px 9px; text-align: left; }
+  .msg-bubble th { color: var(--muted); font-weight: 400; background: var(--surface); }
+
+  /* Inline citation markers become clickable */
+  .cite-ref { color: var(--accent); cursor: pointer; font-size: 11px;
+    padding: 0 1px; border-radius: 2px; transition: background .12s; }
+  .cite-ref:hover { background: var(--accent-dim); color: var(--bg); }
+
+  /* streaming caret */
+  .caret { display: inline-block; width: 7px; height: 14px; vertical-align: text-bottom;
+    background: var(--accent); margin-left: 2px; animation: blink 1s step-end infinite; }
 
   .citations { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 5px; }
   .cite-label { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--muted); margin-bottom: 3px; }
   .cite-item { font-size: 11px; color: var(--muted); line-height: 1.5; padding-left: 10px;
-    border-left: 2px solid var(--accent-dim); transition: border-color .15s, color .15s; }
+    border-left: 2px solid var(--accent-dim); transition: border-color .15s, color .15s;
+    cursor: pointer; }
   .cite-item:hover { border-color: var(--accent); color: var(--text); }
   .cite-title { color: var(--accent); }
   .cite-doi { font-size: 10px; color: var(--accent-dim); text-decoration: none; }
   .cite-doi:hover { color: var(--accent); text-decoration: underline; }
+  .cite-quote { display: block; font-size: 10.5px; color: var(--muted-hi);
+    font-style: italic; margin-top: 2px; }
 
   .thinking { display: flex; align-items: center; gap: 10px; color: var(--muted);
-    font-size: 11px; letter-spacing: 0.06em; padding: 10px 0; animation: fade-in .3s ease both; }
+    font-size: 11px; letter-spacing: 0.06em; padding: 4px 0; animation: fade-in .3s ease both; }
   .dots { display: flex; gap: 4px; }
   .dots span { width: 4px; height: 4px; border-radius: 50%; background: var(--muted);
     animation: pulse 1.2s ease-in-out infinite; }
@@ -144,6 +177,94 @@
 
   .msg-error { font-size: 12px; color: var(--danger); border: 1px solid #3a1f1f;
     background: #1a0f0f; padding: 11px 15px; border-radius: 5px; }
+  .msg-error .req-id { display: block; margin-top: 6px; font-size: 10px; color: var(--muted); }
+
+  /* ── Sources strip (shown while the answer streams) ── */
+  .sources-strip { margin-bottom: 10px; border: 1px solid var(--border);
+    border-radius: 5px; background: var(--surface); overflow: hidden; }
+  .sources-head { display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+    font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer; user-select: none; }
+  .sources-head:hover { color: var(--text); }
+  .sources-head .chev { transition: transform .15s; font-size: 10px; }
+  .sources-strip.open .chev { transform: rotate(90deg); }
+  .sources-body { display: none; border-top: 1px solid var(--border); padding: 4px 0; }
+  .sources-strip.open .sources-body { display: block; }
+  .source-chip { display: flex; gap: 9px; padding: 6px 12px; font-size: 11px;
+    cursor: pointer; transition: background .12s; align-items: baseline; }
+  .source-chip:hover { background: var(--surface2); }
+  .source-num { color: var(--accent); flex-shrink: 0; width: 20px; }
+  .source-meta { flex: 1; min-width: 0; }
+  .source-name { color: var(--muted-hi); white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; }
+  .source-where { font-size: 10px; color: var(--muted); }
+  .source-score { font-size: 10px; color: var(--accent-dim); flex-shrink: 0; }
+
+  /* ── Diagnostics ── */
+  .diag { margin-top: 12px; border: 1px solid var(--border); border-radius: 5px;
+    background: var(--surface); overflow: hidden; }
+  .diag-head { display: flex; align-items: center; gap: 10px; padding: 7px 12px;
+    font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer; user-select: none; flex-wrap: wrap; }
+  .diag-head:hover { color: var(--text); }
+  .diag-head .chev { transition: transform .15s; font-size: 10px; }
+  .diag.open .chev { transform: rotate(90deg); }
+  .diag-quick { margin-left: auto; display: flex; gap: 12px; color: var(--muted); }
+  .diag-body { display: none; border-top: 1px solid var(--border); padding: 12px; }
+  .diag.open .diag-body { display: block; }
+
+  .diag-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px; margin-bottom: 14px; }
+  .diag-stat { display: flex; flex-direction: column; gap: 1px; }
+  .diag-stat .k { font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); }
+  .diag-stat .v { font-size: 13px; color: var(--text); font-variant-numeric: tabular-nums; }
+  .diag-stat .v.dense { color: var(--dense); }
+  .diag-stat .v.sparse { color: var(--sparse); }
+
+  .stage-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden;
+    background: var(--surface2); margin-bottom: 6px; }
+  .stage-seg { height: 100%; }
+  .stage-legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 10px; color: var(--muted); }
+  .stage-legend .sw { display: inline-block; width: 7px; height: 7px;
+    border-radius: 2px; margin-right: 4px; }
+
+  .diag-variants { margin-top: 12px; }
+  .diag-variants .vlabel { font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px; }
+  .diag-variants .vitem { font-size: 11px; color: var(--muted-hi); padding: 2px 0 2px 10px;
+    border-left: 2px solid var(--border); }
+  .diag-degraded { margin-top: 10px; font-size: 10.5px; color: #8a7a3a;
+    border: 1px solid #3a3410; background: #16140a; border-radius: 4px; padding: 7px 10px; }
+
+  /* ── Source drawer ── */
+  .drawer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    opacity: 0; pointer-events: none; transition: opacity .18s; z-index: 40; }
+  .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+  .drawer { position: fixed; top: 0; right: 0; width: min(560px, 92vw); height: 100%;
+    background: var(--bg); border-left: 1px solid var(--border); z-index: 50;
+    transform: translateX(100%); transition: transform .2s ease;
+    display: flex; flex-direction: column; }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head { padding: 20px 24px 14px; border-bottom: 1px solid var(--border);
+    flex-shrink: 0; display: flex; align-items: flex-start; gap: 14px; }
+  .drawer-head h3 { font-family: var(--serif); font-size: 16px; font-weight: 400;
+    color: var(--accent); line-height: 1.3; flex: 1; }
+  .drawer-close { background: none; border: none; color: var(--muted);
+    font-size: 20px; cursor: pointer; line-height: 1; padding: 0 2px; }
+  .drawer-close:hover { color: var(--text); }
+  .drawer-sub { padding: 0 24px 14px; border-bottom: 1px solid var(--border);
+    font-size: 11px; color: var(--muted); flex-shrink: 0; }
+  .drawer-scores { display: flex; flex-wrap: wrap; gap: 14px; padding: 12px 24px;
+    border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .drawer-score { font-size: 10px; color: var(--muted); }
+  .drawer-score b { display: block; font-size: 12px; color: var(--text);
+    font-weight: 400; font-variant-numeric: tabular-nums; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 18px 24px 40px;
+    font-size: 12.5px; line-height: 1.8; color: var(--text); white-space: pre-wrap; }
+  .drawer-body::-webkit-scrollbar { width: 4px; }
+  .drawer-body::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+  .drawer-body mark { background: var(--accent-dim); color: var(--text); }
 
   /* ── Input ── */
   .input-area { border-top: 1px solid var(--border); padding: 20px 40px; flex-shrink: 0; }
@@ -161,9 +282,10 @@
   .send-btn:hover:not(:disabled) { opacity: .85; }
   .send-btn:active:not(:disabled) { transform: scale(.97); }
   .send-btn:disabled { opacity: .3; cursor: not-allowed; }
-  .input-hint { margin-top: 7px; font-size: 10px; color: var(--muted); }
+  .send-btn.stop { background: var(--danger); color: var(--text); }
+  .input-hint { margin-top: 7px; font-size: 10px; color: var(--muted);
+    display: flex; justify-content: space-between; gap: 12px; }
 
-  /* ── No session state ── */
   .no-session { margin: auto; text-align: center; color: var(--muted);
     display: flex; flex-direction: column; align-items: center; gap: 14px; }
   .no-session-icon { font-family: var(--serif); font-style: italic;
@@ -174,28 +296,22 @@
     border-radius: 4px; cursor: pointer; transition: border-color .15s; margin-top: 4px; }
   .start-btn:hover { border-color: var(--accent-dim); }
 
-
-  /* ── Mode toggle ── */
   .mode-toggle { display: flex; align-items: center; gap: 4px; }
   .mode-btn { background: none; border: 1px solid var(--border); color: var(--muted);
     font-family: var(--mono); font-size: 10px; padding: 3px 10px; border-radius: 3px;
     cursor: pointer; transition: all .15s; white-space: nowrap; }
   .mode-btn:hover { border-color: var(--border-hi); color: var(--text); }
-  .mode-btn.active.fast     { border-color: #2a4a2a; color: #5a8a5a; background: rgba(90,138,90,0.07); }
+  .mode-btn.active.fast     { border-color: #2a4a2a; color: var(--ok); background: rgba(90,138,90,0.07); }
   .mode-btn.active.balanced { border-color: var(--accent-dim); color: var(--accent); background: rgba(200,185,154,0.07); }
   .mode-btn.active.deep     { border-color: #2a2a4a; color: #7a7aaa; background: rgba(122,122,170,0.07); }
 
-
-
-  /* ── Export button ── */
   .export-btn { background: none; border: 1px solid var(--border); color: var(--muted);
     font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
     padding: 4px 12px; border-radius: 3px; cursor: pointer; transition: all .15s;
     white-space: nowrap; }
-  .export-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
+  .export-btn:hover:not(:disabled) { border-color: var(--accent-dim); color: var(--accent); }
   .export-btn:disabled { opacity: .4; cursor: not-allowed; }
 
-  /* ── Query type pill ── */
   .qtype-pill { display: inline-block; font-size: 9px; letter-spacing: 0.12em;
     text-transform: uppercase; padding: 2px 8px; border-radius: 2px;
     border: 1px solid var(--border); color: var(--muted); margin-bottom: 8px; }
@@ -206,18 +322,17 @@
   .qtype-pill.exploratory    { color: #8aaa7a; border-color: #2a4a1a; }
   .qtype-pill.causal         { color: #aa7a7a; border-color: #4a1a1a; }
 
-  /* ── Faithfulness badge ── */
   .faith-badge { display: inline-flex; align-items: center; gap: 6px;
     font-size: 10px; letter-spacing: 0.08em; padding: 4px 10px;
     border-radius: 3px; margin-bottom: 10px; border: 1px solid; }
-  .faith-badge.faithful         { color: #5a8a5a; border-color: #2a4a2a; background: #0d1f0d; }
+  .faith-badge.faithful         { color: var(--ok); border-color: #2a4a2a; background: #0d1f0d; }
   .faith-badge.mostly-faithful  { color: #8a7a3a; border-color: #4a3a10; background: #1a160a; }
   .faith-badge.partially        { color: #8a5a2a; border-color: #4a2a10; background: #1a100a; }
   .faith-badge.unfaithful       { color: var(--danger); border-color: #3a1f1f; background: #1a0f0f; }
   .faith-badge .faith-score     { font-weight: 400; }
   .faith-detail { margin-top: 8px; padding: 10px 12px; border-radius: 4px;
     border: 1px solid #252525; background: #111; font-size: 11px;
-    color: var(--muted); display: none; cursor: default; }
+    color: var(--muted); display: none; }
   .faith-detail.open { display: block; }
   .faith-detail .unsupported-label { color: #b05c5c; font-size: 9px;
     letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
@@ -229,8 +344,6 @@
     transition: color .15s; }
   .faith-toggle:hover { color: var(--text); }
 
-
-  /* ── Fallback card ── */
   .fallback-card { border: 1px solid #3a2a1a; background: #150f0a;
     border-radius: 6px; padding: 16px 18px; font-size: 12px; color: var(--muted); }
   .fallback-title { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
@@ -242,15 +355,32 @@
     font-size: 11px; color: #7a6a5a; cursor: pointer; transition: color .15s, border-color .15s; }
   .fallback-item:hover { color: var(--accent); border-color: var(--accent-dim); }
 
+  .banner { margin: 0 40px 0; margin-top: 16px; border: 1px solid #3a3410;
+    background: #16140a; color: #8a7a3a; border-radius: 5px; padding: 10px 14px;
+    font-size: 11px; display: flex; gap: 10px; align-items: flex-start; }
+  .banner.hidden { display: none; }
+  .banner code { background: #0e0e0e; padding: 1px 5px; border-radius: 3px; color: var(--accent); }
+
   @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes slide-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes pulse { 0%,80%,100% { opacity: .25; transform: scale(.8); } 40% { opacity: 1; transform: scale(1); } }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  @media (max-width: 760px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .messages, .input-area { padding-left: 18px; padding-right: 18px; }
+    .header { padding: 14px 18px; }
+    .banner { margin-left: 18px; margin-right: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-top">
       <div class="logo">Vectora <span>Research Assistant</span></div>
@@ -259,413 +389,868 @@
       </button>
     </div>
 
-    <div class="sessions-label">Recent</div>
-    <div class="sessions" id="sessions-list"></div>
+    <div class="sessions-label">Conversations</div>
+    <div class="sessions" id="sessions"></div>
 
     <div class="sidebar-bottom">
-      <div class="status-row">
-        <div class="dot" id="status-dot"></div>
-        <span id="status-text">Connecting...</span>
-      </div>
-      <button class="settings-toggle" onclick="toggleSettings()">⚙ Settings</button>
+      <div class="status-row"><span class="dot" id="status-dot"></span><span id="status-text">connecting…</span></div>
+      <div class="corpus-row" id="corpus-row"></div>
+      <button class="settings-toggle" onclick="toggleSettings()">Filters ▾</button>
       <div class="settings-panel hidden" id="settings-panel">
-        <input type="text" id="filter-year" placeholder="Filter by year">
-        <input type="text" id="filter-paper" placeholder="Filter by paper ID">
+        <input type="text" id="filter-year" placeholder="Year, e.g. 2023" maxlength="4">
+        <select id="filter-paper"><option value="">All documents</option></select>
+        <label><input type="checkbox" id="opt-stream" checked> Stream the answer</label>
       </div>
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="main">
-    <header class="header">
-      <div class="header-title" id="header-title">Select or start a chat</div>
-      <button class="export-btn" id="export-btn" onclick="exportPDF()" disabled title="Export conversation as PDF">↓ PDF</button>
-    </header>
+    <div class="header">
+      <div class="header-title" id="header-title">No conversation</div>
+      <div class="header-right">
+        <div class="mode-toggle">
+          <button class="mode-btn fast"     data-mode="fast"     onclick="setMode(this)" title="One vector search, no LLM expansion, no reranking. Fastest and cheapest.">Fast</button>
+          <button class="mode-btn balanced active" data-mode="balanced" onclick="setMode(this)" title="Query expansion, hybrid retrieval, cross-encoder reranking.">Balanced</button>
+          <button class="mode-btn deep"     data-mode="deep"     onclick="setMode(this)" title="Wider pool, plus a grounding check and verified quotes.">Deep</button>
+        </div>
+        <button class="export-btn" id="export-btn" onclick="exportPDF()" disabled title="Export this conversation as a PDF">↓ PDF</button>
+      </div>
+    </div>
+
+    <div class="banner hidden" id="banner"></div>
 
     <div class="messages" id="messages">
-      <div class="no-session" id="no-session">
-        <div class="no-session-icon">∴</div>
-        <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase">No chat selected</div>
-        <button class="start-btn" onclick="newChat()">+ Start new chat</button>
+      <div class="no-session">
+        <div class="no-session-icon">V</div>
+        <div>No conversation selected</div>
+        <button class="start-btn" onclick="newChat()">Start one</button>
       </div>
     </div>
 
     <div class="input-area">
       <div class="input-row">
-        <textarea id="query-input" placeholder="Ask a question about the research..."
-          rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)" disabled></textarea>
-        <button class="send-btn" id="send-btn" onclick="sendQuery()" disabled>Send</button>
+        <textarea id="input" rows="1" placeholder="Ask a question about the corpus…" disabled
+          oninput="autoGrow(this)" onkeydown="onKey(event)"></textarea>
+        <button class="send-btn" id="send-btn" onclick="onSend()" disabled>Ask</button>
       </div>
-      <div class="input-footer">
-        <span class="input-hint">Enter · Shift+Enter new line</span>
-        <div style="display:flex;align-items:center;gap:12px">
-          <div class="mode-toggle">
-            <button class="mode-btn fast"     data-mode="fast"     onclick="setMode(this)" title="~3-4s · no HyDE, no reranker">Fast</button>
-            <button class="mode-btn balanced active" data-mode="balanced" onclick="setMode(this)" title="~6-8s · HyDE + reranker">Balanced</button>
-            <button class="mode-btn deep"     data-mode="deep"     onclick="setMode(this)" title="~10-14s · full pipeline + faithfulness">Deep</button>
-          </div></div>
+      <div class="input-hint">
+        <span>Enter to send · Shift+Enter for a new line</span>
+        <span id="usage-hint"></span>
       </div>
     </div>
   </main>
 </div>
 
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-label="Source passage">
+  <div class="drawer-head">
+    <h3 id="drawer-title">Source</h3>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">×</button>
+  </div>
+  <div class="drawer-sub" id="drawer-sub"></div>
+  <div class="drawer-scores" id="drawer-scores"></div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
 <script>
-  // ── State ──
-  let currentSessionId = null;
+'use strict';
 
-  const messagesEl  = document.getElementById('messages');
-  const inputEl     = document.getElementById('query-input');
-  const sendBtn     = document.getElementById('send-btn');
-  const headerTitle = document.getElementById('header-title');
-  const statusDot   = document.getElementById('status-dot');
-  const statusText  = document.getElementById('status-text');
+// ── state ────────────────────────────────────────────────────────────────
+let currentSessionId = null;
+let sending = false;
+let abortController = null;
+// Sources for the answer being streamed, and per-message, so a citation
+// stays clickable after the conversation has moved on.
+let liveSources = [];
+const sourcesByMessage = new Map();
+let messageSeq = 0;
 
-  // ── Mode toggle ──
-  function setMode(btn) {
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
-  function getMode() {
-    const active = document.querySelector('.mode-btn.active');
-    return active ? active.dataset.mode : 'balanced';
-  }
+const STAGE_COLORS = {
+  contextualise: '#4a4a5a', expand: '#8a7a5a', search: '#5a8aaa',
+  fuse: '#6b5f4e',          rerank: '#7a7aaa', mmr: '#7a8a5a',
+  postprocess: '#4a5a4a',   route: '#5a5a5a',
+};
 
+// ── helpers ──────────────────────────────────────────────────────────────
+const $ = (id) => document.getElementById(id);
 
-  // ── Export ──
-  async function exportPDF() {
-    if (!currentSessionId) return;
-    const btn = document.getElementById('export-btn');
-    const orig = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = 'Exporting...';
-    try {
-      const res = await fetch(`/sessions/${currentSessionId}/export/pdf`);
-      if (!res.ok) {
-        const err = await res.json();
-        alert('Export failed: ' + (err.error || 'Unknown error'));
-        return;
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
+/** Minimal markdown: paragraphs, inline code, bold, and pipe tables.
+ *  Deliberately small — the answers are prose with citations, and a full
+ *  markdown parser is a dependency plus an XSS surface for no gain. */
+function renderMarkdown(text) {
+  const blocks = String(text || '').split(/\n{2,}/);
+  return blocks.map((block) => {
+    const lines = block.split('\n');
+    if (lines.length >= 2 && /^\s*\|.*\|\s*$/.test(lines[0])) {
+      const rows = lines.filter((l) => /\|/.test(l) && !/^\s*\|[\s:|-]+\|\s*$/.test(l));
+      if (rows.length >= 2) {
+        const cells = (l) => l.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
+        const head = cells(rows[0]);
+        const body = rows.slice(1).map(cells);
+        return '<table><thead><tr>' + head.map((h) => `<th>${inline(h)}</th>`).join('') +
+          '</tr></thead><tbody>' +
+          body.map((r) => '<tr>' + r.map((c) => `<td>${inline(c)}</td>`).join('') + '</tr>').join('') +
+          '</tbody></table>';
       }
-      // Trigger browser download
-      const blob = await res.blob();
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href     = url;
-      a.download = res.headers.get('Content-Disposition')
-        ?.match(/filename="([^"]+)"/)?.[1] || 'vectora_export.pdf';
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      alert('Export failed: ' + e.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = orig;
+    }
+    return `<p>${inline(block).replace(/\n/g, '<br>')}</p>`;
+  }).join('');
+}
+
+function inline(s) {
+  let out = esc(s);
+  out = out.replace(/`([^`]+)`/g, '<code>$1</code>');
+  out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  // Citation markers become clickable, including grouped forms like [1][3].
+  out = out.replace(/\[(\d{1,2})\]/g,
+    (_m, n) => `<span class="cite-ref" data-src="${n}" title="Show this source">[${n}]</span>`);
+  return out;
+}
+
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 150) + 'px';
+}
+
+function onKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend(); }
+}
+
+function toggleSettings() { $('settings-panel').classList.toggle('hidden'); }
+
+function setMode(btn) {
+  document.querySelectorAll('.mode-btn').forEach((b) => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function getMode() {
+  const active = document.querySelector('.mode-btn.active');
+  return active ? active.dataset.mode : 'balanced';
+}
+
+function scrollDown(force) {
+  const box = $('messages');
+  // Don't yank the view if the reader has scrolled up to read something.
+  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 140;
+  if (force || atBottom) box.scrollTop = box.scrollHeight;
+}
+
+// ── boot ─────────────────────────────────────────────────────────────────
+async function boot() {
+  await checkHealth();
+  await loadSessions();
+  await loadCorpus();
+  const stored = localStorage.getItem('vectora.session');
+  if (stored) {
+    const ok = await selectSession(stored, true);
+    if (!ok) localStorage.removeItem('vectora.session');
+  }
+}
+
+async function checkHealth() {
+  try {
+    const res = await fetch('/ready');
+    const body = await res.json();
+    const dot = $('status-dot');
+    const text = $('status-text');
+    if (body.can_answer) {
+      dot.className = 'dot ok'; text.textContent = 'ready';
+    } else {
+      dot.className = 'dot warn'; text.textContent = 'degraded';
+    }
+    const warnings = body.warnings || [];
+    if (warnings.length) {
+      const banner = $('banner');
+      banner.innerHTML = '<span>⚠</span><div>' +
+        warnings.map((w) => esc(w).replace(/`([^`]+)`/g, '<code>$1</code>')).join('<br>') +
+        '</div>';
+      banner.classList.remove('hidden');
+    }
+    if (body.corpus) {
+      $('corpus-row').innerHTML =
+        `<div>corpus <span class="corpus-name">${esc(body.corpus.name)}</span></div>` +
+        `<div>${esc(body.corpus.documents || 0)} ${esc(body.corpus.kind || 'documents')}` +
+        ` · ${esc((body.vector_store || {}).vectors || 0)} chunks</div>`;
+    }
+  } catch {
+    $('status-dot').className = 'dot err';
+    $('status-text').textContent = 'offline';
+  }
+}
+
+async function loadCorpus() {
+  try {
+    const res = await fetch('/papers');
+    if (!res.ok) return;
+    const body = await res.json();
+    const select = $('filter-paper');
+    (body.paper_ids || []).forEach((id) => {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = id.length > 40 ? id.slice(0, 38) + '…' : id;
+      select.appendChild(opt);
+    });
+  } catch { /* filters are optional */ }
+}
+
+// ── sessions ─────────────────────────────────────────────────────────────
+async function loadSessions() {
+  try {
+    const res = await fetch('/sessions');
+    const list = await res.json();
+    const box = $('sessions');
+    box.innerHTML = '';
+    list.forEach((s) => {
+      const row = document.createElement('div');
+      row.className = 'session-item' + (s.id === currentSessionId ? ' active' : '');
+      row.onclick = () => selectSession(s.id);
+      row.innerHTML =
+        `<span class="session-title">${esc(s.title)}</span>` +
+        `<button class="session-del" title="Delete">×</button>`;
+      row.querySelector('.session-del').onclick = (e) => {
+        e.stopPropagation(); deleteSession(s.id);
+      };
+      box.appendChild(row);
+    });
+  } catch { /* sidebar is not load-bearing */ }
+}
+
+async function newChat() {
+  try {
+    const res = await fetch('/sessions', { method: 'POST' });
+    const s = await res.json();
+    await loadSessions();
+    await selectSession(s.id);
+  } catch {
+    alertBanner('Could not start a conversation. Is the server running?');
+  }
+}
+
+async function selectSession(sid, quiet) {
+  const res = await fetch(`/sessions/${sid}/messages`);
+  if (!res.ok) { if (!quiet) alertBanner('That conversation no longer exists.'); return false; }
+  currentSessionId = sid;
+  localStorage.setItem('vectora.session', sid);
+  sourcesByMessage.clear();
+
+  document.querySelectorAll('.session-item').forEach((el) => el.classList.remove('active'));
+  await loadSessions();
+
+  $('input').disabled = false;
+  $('send-btn').disabled = false;
+  $('export-btn').disabled = false;
+
+  const msgs = await res.json();
+  const box = $('messages');
+  box.innerHTML = '';
+  if (!msgs.length) {
+    box.innerHTML =
+      `<div class="empty-state">
+         <div class="empty-icon">V</div>
+         <div class="empty-hint">Ask the corpus a question</div>
+         <div class="empty-examples">
+           <div class="empty-example" onclick="useSuggestion(this.textContent)">What methods does this corpus describe?</div>
+           <div class="empty-example" onclick="useSuggestion(this.textContent)">Summarise the main findings</div>
+         </div>
+       </div>`;
+  } else {
+    msgs.forEach((m) => {
+      if (m.role === 'user') return addUser(m.content);
+      renderAssistant({
+        answer: m.content,
+        citations: m.citations || [],
+        faithfulness: (m.metadata || {}).grounding || null,
+        query_type: (m.metadata || {}).query_type || null,
+        usage: (m.metadata || {}).usage || null,
+        fallback: null,
+        diagnostics: null,
+      }, null);
+    });
+  }
+  const title = document.querySelector('.session-item.active .session-title');
+  $('header-title').textContent = title ? title.textContent : 'Conversation';
+  scrollDown(true);
+  $('input').focus();
+  return true;
+}
+
+async function deleteSession(sid) {
+  await fetch(`/sessions/${sid}`, { method: 'DELETE' });
+  if (sid === currentSessionId) {
+    currentSessionId = null;
+    localStorage.removeItem('vectora.session');
+    $('messages').innerHTML =
+      `<div class="no-session"><div class="no-session-icon">V</div>
+       <div>No conversation selected</div>
+       <button class="start-btn" onclick="newChat()">Start one</button></div>`;
+    $('input').disabled = true; $('send-btn').disabled = true; $('export-btn').disabled = true;
+    $('header-title').textContent = 'No conversation';
+  }
+  await loadSessions();
+}
+
+function alertBanner(text) {
+  const banner = $('banner');
+  banner.innerHTML = `<span>⚠</span><div>${esc(text)}</div>`;
+  banner.classList.remove('hidden');
+}
+
+function useSuggestion(text) {
+  const input = $('input');
+  input.value = text;
+  autoGrow(input);
+  input.focus();
+}
+
+// ── rendering ────────────────────────────────────────────────────────────
+function clearEmpty() {
+  const empty = document.querySelector('.empty-state, .no-session');
+  if (empty) empty.remove();
+}
+
+function addUser(text) {
+  clearEmpty();
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `<div class="msg-role">You</div>
+    <div class="msg-bubble">${renderMarkdown(text)}</div>`;
+  $('messages').appendChild(el);
+  scrollDown(true);
+}
+
+/** The assistant message shell, built before any token arrives so status,
+ *  sources and then text can fill it in as the stream progresses. */
+function openAssistant() {
+  clearEmpty();
+  const id = ++messageSeq;
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.dataset.msg = String(id);
+  el.innerHTML =
+    `<div class="msg-role">Vectora</div>
+     <div class="msg-sources" data-role="sources"></div>
+     <div class="msg-bubble" data-role="bubble">
+       <div class="thinking" data-role="status">
+         <span>retrieving</span><span class="dots"><span></span><span></span><span></span></span>
+       </div>
+       <div data-role="text"></div>
+     </div>
+     <div data-role="after"></div>`;
+  $('messages').appendChild(el);
+  scrollDown(true);
+  return { id, el };
+}
+
+function setStatus(el, label) {
+  const status = el.querySelector('[data-role="status"]');
+  if (status) status.querySelector('span').textContent = label;
+}
+
+function clearStatus(el) {
+  const status = el.querySelector('[data-role="status"]');
+  if (status) status.remove();
+}
+
+function renderSourcesStrip(el, sources, msgId) {
+  if (!sources || !sources.length) return;
+  sourcesByMessage.set(msgId, sources);
+  const host = el.querySelector('[data-role="sources"]');
+  const strip = document.createElement('div');
+  strip.className = 'sources-strip';
+  strip.innerHTML =
+    `<div class="sources-head"><span class="chev">›</span>
+       <span>${sources.length} source${sources.length === 1 ? '' : 's'} retrieved</span></div>
+     <div class="sources-body"></div>`;
+  strip.querySelector('.sources-head').onclick = () => strip.classList.toggle('open');
+  const body = strip.querySelector('.sources-body');
+  sources.forEach((s) => {
+    const chip = document.createElement('div');
+    chip.className = 'source-chip';
+    const where = [s.section, s.page ? `p.${s.page}` : ''].filter(Boolean).join(' · ');
+    chip.innerHTML =
+      `<span class="source-num">[${s.index}]</span>
+       <span class="source-meta">
+         <span class="source-name">${esc(s.title || s.paper_id || 'Untitled')}</span>
+         <span class="source-where">${esc(where || '—')}${s.year ? ' · ' + esc(s.year) : ''}</span>
+       </span>
+       <span class="source-score">${(s.score ?? 0).toFixed(3)}</span>`;
+    chip.onclick = () => openDrawer(s);
+    body.appendChild(chip);
+  });
+  host.appendChild(strip);
+}
+
+function appendToken(el, text) {
+  const target = el.querySelector('[data-role="text"]');
+  if (!target) return;
+  target.dataset.raw = (target.dataset.raw || '') + text;
+  // Re-render the accumulated text each tick. The answers are short enough
+  // that this is cheaper than incremental markdown parsing, and it means a
+  // table or a citation marker renders correctly the moment it completes.
+  target.innerHTML = renderMarkdown(target.dataset.raw) + '<span class="caret"></span>';
+  scrollDown(false);
+}
+
+function finishTokens(el) {
+  const target = el.querySelector('[data-role="text"]');
+  if (!target) return;
+  target.innerHTML = renderMarkdown(target.dataset.raw || '');
+}
+
+/** Everything that follows the answer text: grounding, citations,
+ *  diagnostics. Used by both the streaming path and history replay. */
+function renderAssistant(payload, el, msgId) {
+  let host, textTarget;
+  if (el) {
+    host = el.querySelector('[data-role="after"]');
+    textTarget = el.querySelector('[data-role="text"]');
+  } else {
+    clearEmpty();
+    const wrap = document.createElement('div');
+    wrap.className = 'msg assistant';
+    const id = ++messageSeq;
+    wrap.dataset.msg = String(id);
+    msgId = id;
+    wrap.innerHTML = `<div class="msg-role">Vectora</div>
+      <div class="msg-bubble"><div data-role="text"></div></div><div data-role="after"></div>`;
+    $('messages').appendChild(wrap);
+    el = wrap;
+    host = wrap.querySelector('[data-role="after"]');
+    textTarget = wrap.querySelector('[data-role="text"]');
+  }
+
+  if (payload.fallback) {
+    const f = payload.fallback;
+    textTarget.innerHTML = '';
+    const card = document.createElement('div');
+    card.className = 'fallback-card';
+    let html = `<div class="fallback-title">${f.reason === 'no_results'
+      ? 'Nothing relevant found' : 'Not confident enough to answer'}</div>`;
+    html += `<div class="fallback-msg">${esc(f.message || '')}</div>`;
+    if ((f.suggestions || []).length) {
+      html += '<div class="fallback-section-label">Try asking instead</div>';
+      f.suggestions.forEach((s) => {
+        html += `<div class="fallback-item" data-q="${esc(s)}">${esc(s)}</div>`;
+      });
+    }
+    if ((f.related_topics || []).length) {
+      html += '<div class="fallback-section-label">What the corpus does cover</div>';
+      f.related_topics.slice(0, 6).forEach((t) => {
+        html += `<div class="fallback-item">${esc(t)}</div>`;
+      });
+    }
+    card.innerHTML = html;
+    card.querySelectorAll('.fallback-item[data-q]').forEach((item) => {
+      item.onclick = () => useSuggestion(item.dataset.q);
+    });
+    textTarget.appendChild(card);
+  } else if (!el.querySelector('[data-role="text"]').dataset.raw) {
+    // History replay: no streaming happened, so render the text now.
+    textTarget.innerHTML = renderMarkdown(payload.answer || '');
+  }
+
+  // Query type pill, placed above the text.
+  if (payload.query_type && payload.query_type !== 'unknown') {
+    const pill = document.createElement('div');
+    pill.className = `qtype-pill ${payload.query_type}`;
+    pill.textContent = payload.query_type;
+    pill.title = 'How the router classified the question, which set the retrieval shape';
+    el.querySelector('.msg-bubble').prepend(pill);
+  }
+
+  // Grounding badge.
+  const f = payload.faithfulness;
+  if (f && typeof f.score === 'number') {
+    const cls = { FAITHFUL: 'faithful', MOSTLY_FAITHFUL: 'mostly-faithful',
+      PARTIALLY_FAITHFUL: 'partially', UNFAITHFUL: 'unfaithful',
+      grounded: 'faithful', mostly_grounded: 'mostly-faithful',
+      partly_grounded: 'partially', ungrounded: 'unfaithful' }[f.verdict] || 'partially';
+    const icon = { faithful: '✓', 'mostly-faithful': '~', partially: '!', unfaithful: '✗' }[cls];
+    const badge = document.createElement('div');
+    badge.className = `faith-badge ${cls}`;
+    badge.innerHTML = `<span class="faith-score">${icon} ${f.score}% grounded</span>` +
+      (f.summary ? `<span>— ${esc(f.summary)}</span>` : '');
+    const unsupported = f.unsupported_claims || [];
+    if (unsupported.length) {
+      const toggle = document.createElement('button');
+      toggle.className = 'faith-toggle';
+      toggle.textContent = `${unsupported.length} flagged ▾`;
+      const detail = document.createElement('div');
+      detail.className = 'faith-detail';
+      detail.innerHTML = '<div class="unsupported-label">Not supported by the sources</div>' +
+        unsupported.map((c) => `<div class="claim">${esc(c)}</div>`).join('');
+      toggle.onclick = () => detail.classList.toggle('open');
+      badge.appendChild(toggle);
+      host.appendChild(badge);
+      host.appendChild(detail);
+    } else {
+      host.appendChild(badge);
     }
   }
 
-  // ── Init ──
-  async function init() {
-    await checkHealth();
+  // References.
+  const citations = payload.citations || [];
+  if (citations.length) {
+    const box = document.createElement('div');
+    box.className = 'citations';
+    let html = '<div class="cite-label">References</div>';
+    const seen = new Set();
+    citations.forEach((c) => {
+      const key = c.paper_id || c.title;
+      if (seen.has(key)) return;
+      seen.add(key);
+      const who = (c.authors || '').split(',')[0].trim() || 'Unknown';
+      const where = [c.section, c.page ? `p.${c.page}` : ''].filter(Boolean).join(', ');
+      html += `<div class="cite-item" data-src="${c.index || ''}">` +
+        (c.index ? `[${c.index}] ` : '') +
+        `<span class="cite-title">${esc(c.title || 'Untitled')}</span>` +
+        ` · ${esc(who)} et al. (${esc(c.year || 'n.d.')})` +
+        (where ? ` · ${esc(where)}` : '') +
+        (c.doi ? ` · <a class="cite-doi" href="https://doi.org/${esc(c.doi)}" target="_blank" rel="noopener">${esc(c.doi)}</a>` : '') +
+        (c.quote ? `<span class="cite-quote">“${esc(c.quote)}”</span>` : '') +
+        `</div>`;
+    });
+    box.innerHTML = html;
+    box.querySelectorAll('.cite-item[data-src]').forEach((item) => {
+      item.onclick = () => showSource(msgId, item.dataset.src);
+    });
+    el.querySelector('.msg-bubble').appendChild(box);
+  }
+
+  if (payload.diagnostics) renderDiagnostics(host, payload.diagnostics, payload.usage);
+  else if (payload.usage && payload.usage.cost_usd) renderUsageOnly(host, payload.usage);
+
+  // Inline [n] markers.
+  el.querySelectorAll('.cite-ref').forEach((ref) => {
+    ref.onclick = () => showSource(msgId, ref.dataset.src);
+  });
+
+  scrollDown(false);
+}
+
+function renderUsageOnly(host, usage) {
+  const line = document.createElement('div');
+  line.className = 'diag';
+  line.innerHTML = `<div class="diag-head"><span>usage</span><span class="diag-quick">
+    <span>${usage.calls || 0} calls</span>
+    <span>${usage.total_tokens || 0} tok</span>
+    <span>$${(usage.cost_usd || 0).toFixed(5)}</span></span></div>`;
+  host.appendChild(line);
+}
+
+function renderDiagnostics(host, d, usage) {
+  const box = document.createElement('div');
+  box.className = 'diag';
+  const timings = d.elapsed_ms || {};
+  const total = timings.total || 0;
+
+  box.innerHTML =
+    `<div class="diag-head">
+       <span class="chev">›</span><span>retrieval</span>
+       <span class="diag-quick">
+         <span>${total ? total.toFixed(0) + ' ms' : '—'}</span>
+         <span>${d.returned ?? 0} chunks</span>
+         ${usage ? `<span>$${(usage.cost_usd || 0).toFixed(5)}</span>` : ''}
+       </span>
+     </div>
+     <div class="diag-body"></div>`;
+  box.querySelector('.diag-head').onclick = () => box.classList.toggle('open');
+
+  const body = box.querySelector('.diag-body');
+  const stat = (k, v, cls) =>
+    `<div class="diag-stat"><span class="k">${k}</span><span class="v ${cls || ''}">${v}</span></div>`;
+  body.innerHTML =
+    `<div class="diag-grid">
+       ${stat('mode', esc(d.mode || '—'))}
+       ${stat('dense hits', d.dense_hits ?? 0, 'dense')}
+       ${stat('lexical hits', d.sparse_hits ?? 0, 'sparse')}
+       ${stat('fused pool', d.fused_pool ?? 0)}
+       ${stat('returned', d.returned ?? 0)}
+       ${stat('top score', d.top_score != null ? Number(d.top_score).toFixed(3) : '—')}
+       ${stat('reranked', d.reranked ? 'yes' : 'no')}
+       ${stat('diversified', d.diversified ? 'yes' : 'no')}
+     </div>`;
+
+  // Stage timing bar.
+  const stages = Object.entries(timings)
+    .filter(([k, v]) => k !== 'total' && k !== 'routed_by' && typeof v === 'number' && v > 0);
+  if (stages.length && total > 0) {
+    const bar = document.createElement('div');
+    bar.className = 'stage-bar';
+    const legend = document.createElement('div');
+    legend.className = 'stage-legend';
+    stages.sort((a, b) => b[1] - a[1]);
+    stages.forEach(([name, ms]) => {
+      const share = Math.max((ms / total) * 100, 0.6);
+      const color = STAGE_COLORS[name] || '#444';
+      const seg = document.createElement('div');
+      seg.className = 'stage-seg';
+      seg.style.width = share + '%';
+      seg.style.background = color;
+      seg.title = `${name}: ${ms.toFixed(0)} ms`;
+      bar.appendChild(seg);
+      const item = document.createElement('span');
+      item.innerHTML = `<span class="sw" style="background:${color}"></span>${esc(name)} ${ms.toFixed(0)}ms`;
+      legend.appendChild(item);
+    });
+    body.appendChild(bar);
+    body.appendChild(legend);
+  }
+
+  if ((d.variants || []).length) {
+    const wrap = document.createElement('div');
+    wrap.className = 'diag-variants';
+    wrap.innerHTML = '<div class="vlabel">Query variants searched</div>' +
+      d.variants.map((v) => `<div class="vitem">${esc(v)}</div>`).join('');
+    body.appendChild(wrap);
+  }
+
+  if ((d.degraded || []).length) {
+    const warn = document.createElement('div');
+    warn.className = 'diag-degraded';
+    warn.textContent = 'Degraded: ' + d.degraded.join(', ') +
+      ' — this answer used fewer stages than the mode implies.';
+    body.appendChild(warn);
+  }
+
+  host.appendChild(box);
+}
+
+// ── source drawer ────────────────────────────────────────────────────────
+function showSource(msgId, index) {
+  const sources = sourcesByMessage.get(msgId) || liveSources;
+  const n = parseInt(index, 10);
+  const match = (sources || []).find((s) => s.index === n);
+  if (match) openDrawer(match);
+}
+
+function openDrawer(source) {
+  $('drawer-title').textContent = source.title || source.paper_id || 'Source';
+  const where = [source.section, source.page ? `page ${source.page}` : ''].filter(Boolean).join(' · ');
+  $('drawer-sub').innerHTML =
+    `${esc(source.authors || 'Unknown authors')}${source.year ? ' · ' + esc(source.year) : ''}` +
+    (where ? `<br>${esc(where)}` : '') +
+    (source.doi ? `<br><a class="cite-doi" href="https://doi.org/${esc(source.doi)}" target="_blank" rel="noopener">${esc(source.doi)}</a>` : '');
+
+  const scores = [];
+  if (source.score != null) scores.push(['final score', Number(source.score).toFixed(4)]);
+  if (source.dense_score != null) scores.push(['dense', Number(source.dense_score).toFixed(3)]);
+  if (source.sparse_score != null) scores.push(['bm25', Number(source.sparse_score).toFixed(2)]);
+  if (source.rerank_score != null) scores.push(['rerank', Number(source.rerank_score).toFixed(2)]);
+  if (source.quality != null) scores.push(['chunk quality', Number(source.quality).toFixed(2)]);
+  $('drawer-scores').innerHTML = scores.length
+    ? scores.map(([k, v]) => `<div class="drawer-score">${esc(k)}<b>${esc(v)}</b></div>`).join('')
+    : '<div class="drawer-score">No scores recorded for this source.</div>';
+
+  $('drawer-body').textContent = source.text || source.content ||
+    'The passage text was not returned with this answer. Streamed answers include it; replayed history does not.';
+  $('drawer').classList.add('open');
+  $('drawer-backdrop').classList.add('open');
+}
+
+function closeDrawer() {
+  $('drawer').classList.remove('open');
+  $('drawer-backdrop').classList.remove('open');
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDrawer();
+});
+
+// ── sending ──────────────────────────────────────────────────────────────
+function filters() {
+  const out = {};
+  const year = $('filter-year').value.trim();
+  const paper = $('filter-paper').value;
+  if (/^\d{4}$/.test(year)) out.year = year;
+  if (paper) out.paper_id = paper;
+  return out;
+}
+
+function setSending(on) {
+  sending = on;
+  const btn = $('send-btn');
+  btn.disabled = false;
+  btn.textContent = on ? 'Stop' : 'Ask';
+  btn.classList.toggle('stop', on);
+  $('input').disabled = on;
+}
+
+function onSend() {
+  if (sending) {
+    if (abortController) abortController.abort();
+    return;
+  }
+  send();
+}
+
+async function send() {
+  const input = $('input');
+  const query = input.value.trim();
+  if (!query || !currentSessionId) return;
+
+  input.value = ''; autoGrow(input);
+  addUser(query);
+  setSending(true);
+
+  const body = { query, mode: getMode(), ...filters() };
+  const streaming = $('opt-stream').checked;
+  const { id, el } = openAssistant();
+  liveSources = [];
+
+  try {
+    if (streaming) await streamAnswer(id, el, body);
+    else await bufferedAnswer(id, el, body);
+  } catch (err) {
+    if (err && err.name === 'AbortError') {
+      clearStatus(el);
+      finishTokens(el);
+      const note = document.createElement('div');
+      note.className = 'msg-error';
+      note.textContent = 'Stopped. The partial answer above was not saved.';
+      el.querySelector('[data-role="after"]').appendChild(note);
+    } else {
+      showError(el, err);
+    }
+  } finally {
+    setSending(false);
+    abortController = null;
     await loadSessions();
+    $('input').focus();
+  }
+}
+
+/** Read the SSE stream. One JSON object per `data:` line, terminated by
+ *  `[DONE]`. Parsed by hand rather than with EventSource because
+ *  EventSource cannot issue a POST. */
+async function streamAnswer(msgId, el, body) {
+  abortController = new AbortController();
+  const res = await fetch(`/sessions/${currentSessionId}/chat/stream`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: abortController.signal,
+  });
+  if (!res.ok) {
+    let detail = `${res.status} ${res.statusText}`;
+    try { const j = await res.json(); detail = j.error || j.detail || detail; } catch {}
+    throw new Error(detail);
   }
 
-  async function checkHealth() {
-    try {
-      const r = await fetch('/health');
-      if (r.ok) { statusDot.className = 'dot ok'; statusText.textContent = 'Connected'; }
-      else throw new Error();
-    } catch { statusDot.className = 'dot err'; statusText.textContent = 'Offline'; }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let started = false;
+  let finished = false;
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+    for (const line of lines) {
+      if (!line.startsWith('data:')) continue;
+      const payload = line.slice(5).trim();
+      if (!payload || payload === '[DONE]') continue;
+
+      let event;
+      try { event = JSON.parse(payload); } catch { continue; }
+
+      if (event.type === 'status') {
+        setStatus(el, event.stage === 'generating' ? 'writing' :
+          event.stage === 'verifying' ? 'checking the answer' : event.stage);
+      } else if (event.type === 'sources') {
+        liveSources = event.sources || [];
+        renderSourcesStrip(el, liveSources, msgId);
+      } else if (event.type === 'token') {
+        if (!started) { clearStatus(el); started = true; }
+        appendToken(el, event.text || '');
+      } else if (event.type === 'done') {
+        finished = true;
+        clearStatus(el);
+        finishTokens(el);
+        renderAssistant(event, el, msgId);
+      } else if (event.type === 'fallback') {
+        finished = true;
+        clearStatus(el);
+        renderAssistant(event, el, msgId);
+      } else if (event.type === 'error') {
+        finished = true;
+        throw new Error(event.message || 'The server reported an error.');
+      }
+    }
   }
 
-  // ── Sessions ──
-  async function loadSessions() {
-    const res  = await fetch('/sessions');
-    const list = await res.json();
-    renderSessions(list);
+  if (!finished) {
+    // The connection closed without a terminal event. Keep whatever text
+    // arrived and say so, rather than leaving a half-answer looking complete.
+    clearStatus(el);
+    finishTokens(el);
+    const note = document.createElement('div');
+    note.className = 'msg-error';
+    note.textContent = 'The connection closed before the answer finished. ' +
+      'Any text above is incomplete.';
+    el.querySelector('[data-role="after"]').appendChild(note);
   }
+}
 
-  function renderSessions(list) {
-    const el = document.getElementById('sessions-list');
-    el.innerHTML = '';
-    if (!list.length) {
-      el.innerHTML = '<div style="padding:8px 12px;font-size:10px;color:var(--muted)">No chats yet</div>';
+async function bufferedAnswer(msgId, el, body) {
+  abortController = new AbortController();
+  const res = await fetch(`/sessions/${currentSessionId}/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: abortController.signal,
+  });
+  const payload = await res.json();
+  if (!res.ok) throw new Error(payload.error || payload.detail || 'Request failed');
+  clearStatus(el);
+  el.querySelector('[data-role="text"]').innerHTML = renderMarkdown(payload.answer || '');
+  renderAssistant(payload, el, msgId);
+}
+
+function showError(el, err) {
+  clearStatus(el);
+  finishTokens(el);
+  const box = document.createElement('div');
+  box.className = 'msg-error';
+  box.textContent = String((err && err.message) || err || 'Something went wrong.');
+  el.querySelector('[data-role="after"]').appendChild(box);
+  scrollDown(false);
+}
+
+// ── export ───────────────────────────────────────────────────────────────
+async function exportPDF() {
+  if (!currentSessionId) return;
+  const btn = $('export-btn');
+  const original = btn.textContent;
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    const res = await fetch(`/sessions/${currentSessionId}/export/pdf`);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      alertBanner(body.error || 'Could not export this conversation.');
       return;
     }
-    list.forEach(s => {
-      const item = document.createElement('div');
-      item.className = 'session-item' + (s.id === currentSessionId ? ' active' : '');
-      item.dataset.id = s.id;
-      item.innerHTML = `
-        <div class="session-title" title="${esc(s.title)}">${esc(s.title)}</div>
-        <button class="session-del" onclick="deleteSession(event,'${s.id}')" title="Delete">×</button>`;
-      item.addEventListener('click', () => loadSession(s.id, s.title));
-      el.appendChild(item);
-    });
+    const blob = await res.blob();
+    const name = (res.headers.get('Content-Disposition') || '')
+      .match(/filename="([^"]+)"/)?.[1] || 'vectora.pdf';
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name; a.click();
+    URL.revokeObjectURL(url);
+  } finally {
+    btn.disabled = false; btn.textContent = original;
   }
+}
 
-  async function newChat() {
-    const res     = await fetch('/sessions', { method: 'POST' });
-    const session = await res.json();
-    await loadSessions();
-    await loadSession(session.id, session.title);
-    inputEl.focus();
-  }
-
-  async function loadSession(sid, title) {
-    currentSessionId = sid;
-    headerTitle.textContent = title;
-
-    // Mark active in sidebar
-    document.querySelectorAll('.session-item').forEach(el => {
-      el.classList.toggle('active', el.dataset.id === sid);
-    });
-
-    // Enable input and export
-    inputEl.disabled = false;
-    sendBtn.disabled = false;
-    document.getElementById('export-btn').disabled = false;
-
-    // Load messages
-    const res  = await fetch(`/sessions/${sid}/messages`);
-    const msgs = await res.json();
-
-    messagesEl.innerHTML = '';
-    if (!msgs.length) {
-      messagesEl.innerHTML = `
-        <div class="empty-state" style="margin:auto;text-align:center;color:var(--muted);
-          display:flex;flex-direction:column;align-items:center;gap:12px">
-          <div class="empty-icon">∴</div>
-          <div class="empty-hint">Ask anything about your papers</div>
-        </div>`;
-    } else {
-      msgs.forEach(m => renderMessage(m.role, m.content, m.citations || [], null, null, null));
-    }
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-    inputEl.focus();
-  }
-
-  async function deleteSession(e, sid) {
-    e.stopPropagation();
-    await fetch(`/sessions/${sid}`, { method: 'DELETE' });
-    if (currentSessionId === sid) {
-      currentSessionId = null;
-      headerTitle.textContent = 'Select or start a chat';
-      inputEl.disabled = true;
-      sendBtn.disabled = true;
-      messagesEl.innerHTML = `
-        <div class="no-session" id="no-session">
-          <div class="no-session-icon">∴</div>
-          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase">No chat selected</div>
-          <button class="start-btn" onclick="newChat()">+ Start new chat</button>
-        </div>`;
-    }
-    await loadSessions();
-  }
-
-  // ── Render helpers ──
-  function renderMessage(role, content, citations, faithfulness, queryType, fallback) {
-    // Remove empty state if present
-    const empty = messagesEl.querySelector('.empty-state, .no-session');
-    if (empty) empty.remove();
-
-    const msg    = document.createElement('div');
-    msg.className = `msg ${role}`;
-
-    const roleEl = document.createElement('div');
-    roleEl.className = 'msg-role';
-    roleEl.textContent = role === 'user' ? 'You' : 'Assistant';
-
-    const bubble = document.createElement('div');
-    bubble.className = 'msg-bubble';
-
-    if (role === 'user') {
-      bubble.textContent = content;
-    } else {
-      bubble.innerHTML = content.split('\n\n').filter(p => p.trim())
-        .map(p => `<p>${esc(p).replace(/\n/g,'<br>')}</p>`).join('');
-
-      // Fallback card — check for fallback object (triggered flag or just presence)
-      const isFallback = fallback && (fallback.triggered === true || fallback.reason);
-      if (isFallback) {
-        bubble.innerHTML = '';  // wipe any text set above
-        const fc = document.createElement('div');
-        fc.className = 'fallback-card';
-        const isNoResult = fallback.reason === 'no_results';
-        const icon  = isNoResult ? '⊘' : '⚠';
-        const title = isNoResult ? 'Nothing found' : 'Low confidence';
-        let html = `<div class="fallback-title">${icon} ${title}</div>`;
-        html += `<div class="fallback-msg">${esc(fallback.message || 'No relevant content found. Try rephrasing your question.')}</div>`;
-        const sugs = fallback.suggestions || [];
-        if (sugs.length) {
-          html += `<div class="fallback-section-label">Try rephrasing</div>`;
-          sugs.forEach(s => {
-            html += `<div class="fallback-item" onclick="useSuggestion(${JSON.stringify(s)})">${esc(s)}</div>`;
-          });
-        }
-        const topics = fallback.related_topics || [];
-        if (topics.length) {
-          html += `<div class="fallback-section-label">Related content in your papers</div>`;
-          topics.forEach(t => {
-            html += `<div class="fallback-item">${esc(t)}</div>`;
-          });
-        }
-        fc.innerHTML = html;
-        bubble.appendChild(fc);
-        msg.appendChild(roleEl);
-        msg.appendChild(bubble);
-        messagesEl.appendChild(msg);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-        return;  // skip citations/badge rendering
-      }
-
-      // Query type pill
-      if (queryType && queryType !== 'unknown') {
-        const pill = document.createElement('div');
-        pill.className = `qtype-pill ${queryType}`;
-        pill.textContent = queryType;
-        bubble.insertBefore(pill, bubble.firstChild);
-      }
-
-      // Faithfulness badge
-      if (faithfulness) {
-        const verdictClass = {
-          'FAITHFUL':           'faithful',
-          'MOSTLY_FAITHFUL':    'mostly-faithful',
-          'PARTIALLY_FAITHFUL': 'partially',
-          'UNFAITHFUL':         'unfaithful',
-        }[faithfulness.verdict] || 'partially';
-
-        const icons = {
-          'faithful': '✓', 'mostly-faithful': '~',
-          'partially': '!', 'unfaithful': '✗'
-        };
-
-        const badgeId   = 'faith-' + Math.random().toString(36).slice(2);
-        const detailId  = 'faith-d-' + Math.random().toString(36).slice(2);
-        const hasDetail = faithfulness.unsupported_claims && faithfulness.unsupported_claims.length > 0;
-
-        const badgeHtml = `
-          <div class="faith-badge ${verdictClass}">
-            <span>${icons[verdictClass]} ${faithfulness.score}% faithful</span>
-            <span class="faith-score">— ${esc(faithfulness.summary)}</span>
-            ${hasDetail ? `<button class="faith-toggle" onclick="toggleFaith('${detailId}')">details</button>` : ''}
-          </div>
-          ${hasDetail ? `
-          <div class="faith-detail" id="${detailId}">
-            <div class="unsupported-label">Unsupported claims</div>
-            ${faithfulness.unsupported_claims.map(c => `<div class="claim">✗ ${esc(c)}</div>`).join('')}
-          </div>` : ''}`;
-
-        const faithEl = document.createElement('div');
-        faithEl.innerHTML = badgeHtml;
-        bubble.insertBefore(faithEl, bubble.firstChild);
-      }
-
-      if (citations && citations.length) {
-        const cb = document.createElement('div');
-        cb.className = 'citations';
-        cb.innerHTML = `<div class="cite-label">References</div>`;
-        citations.forEach(c => {
-          const author = c.authors ? c.authors.split(',')[0].trim() : 'Unknown';
-          const year   = c.year || 'n.d.';
-          const doi    = c.doi
-            ? `<a class="cite-doi" href="https://doi.org/${c.doi}" target="_blank"> · ${c.doi}</a>`
-            : '';
-          cb.innerHTML += `<div class="cite-item">
-            <span class="cite-title">${esc(c.title||'Untitled')}</span>
-            · ${esc(author)} et al. (${year}) · ${esc(c.section||'')} p.${c.page||'?'}${doi}
-          </div>`;
-        });
-        bubble.appendChild(cb);
-      }
-    }
-
-    msg.appendChild(roleEl);
-    msg.appendChild(bubble);
-    messagesEl.appendChild(msg);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  function appendThinking() {
-    const el = document.createElement('div');
-    el.className = 'thinking'; el.id = 'thinking';
-    el.innerHTML = `<div class="dots"><span></span><span></span><span></span></div><span>Retrieving & generating</span>`;
-    messagesEl.appendChild(el);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-  function removeThinking() { document.getElementById('thinking')?.remove(); }
-
-  // ── Send ──
-  async function sendQuery() {
-    if (!currentSessionId) return;
-    const query = inputEl.value.trim();
-    if (!query) return;
-
-    inputEl.value = ''; inputEl.style.height = 'auto';
-    sendBtn.disabled = true; inputEl.disabled = true;
-
-    renderMessage('user', query, []);
-    appendThinking();
-
-    try {
-      const payload = {
-        query,
-        mode:     getMode(),
-        year:     document.getElementById('filter-year').value.trim() || null,
-        paper_id: document.getElementById('filter-paper').value.trim() || null,
-      };
-      const res  = await fetch(`/sessions/${currentSessionId}/chat`, {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      removeThinking();
-
-      if (data.error) {
-        const errEl = document.createElement('div');
-        errEl.className = 'msg assistant';
-        errEl.innerHTML = `<div class="msg-role">Assistant</div><div class="msg-error">${esc(data.error)}</div>`;
-        messagesEl.appendChild(errEl);
-      } else {
-        renderMessage('assistant', data.answer, data.citations || [], data.faithfulness || null, data.query_type || null, data.fallback || null);
-        // Update session title in sidebar
-        await loadSessions();
-        // Re-mark active
-        document.querySelectorAll('.session-item').forEach(el => {
-          el.classList.toggle('active', el.dataset.id === currentSessionId);
-        });
-      }
-    } catch {
-      removeThinking();
-      const errEl = document.createElement('div');
-      errEl.className = 'msg assistant';
-      errEl.innerHTML = `<div class="msg-role">Assistant</div><div class="msg-error">Could not reach the server.</div>`;
-      messagesEl.appendChild(errEl);
-    } finally {
-      sendBtn.disabled = false; inputEl.disabled = false; inputEl.focus();
-    }
-  }
-
-  // ── Helpers ──
-  function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendQuery(); } }
-  function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 150) + 'px'; }
-  function toggleSettings() { document.getElementById('settings-panel').classList.toggle('hidden'); }
-  function useSuggestion(text) {
-    if (!currentSessionId) return;
-    inputEl.value = text;
-    autoResize(inputEl);
-    inputEl.focus();
-  }
-
-  function toggleFaith(id) {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('open');
-  }
-
-  function esc(str) {
-    return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  init();
+boot();
 </script>
 </body>
 </html>
