@@ -17,6 +17,13 @@ Metrics, per mode:
 * **nDCG@k** — rank-weighted, so improving the ordering shows up even when
   the set of retrieved chunks is unchanged.
 
+What counts as "relevant" is the strictest thing the case specifies. A case
+with ``relevant_evidence`` (the paragraphs annotators marked as supporting
+the answer, as QASPER provides) only counts a chunk that contains one of
+those paragraphs — finding the right paper but the wrong section is a miss.
+``paper_recall`` is reported alongside, so the gap between "found the paper"
+and "found the passage" is visible rather than hidden in one number.
+
 Negative cases are scored separately: a system that answers "who is the
 president" from a vitamin D corpus is broken no matter how good its recall
 is, and that failure is invisible to the metrics above.
@@ -33,6 +40,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from evaluation.textmatch import overlap, shingles
 from vectora.config import QueryType, SearchMode, Settings
 from vectora.models import RetrievedChunk
 from vectora.observability import configure_logging, get_logger, request_context
@@ -52,13 +60,34 @@ class Case:
     must_contain: list[str] = field(default_factory=list)
     relevant_papers: list[str] = field(default_factory=list)
     relevant_chunks: list[str] = field(default_factory=list)
+    #: Annotator-marked evidence paragraphs. When present, a chunk is only
+    #: relevant if it contains one of them (see :mod:`evaluation.textmatch`).
+    relevant_evidence: list[str] = field(default_factory=list)
+    #: Reference answers, for answer token F1. All annotators' answers.
+    reference_answers: list[str] = field(default_factory=list)
     notes: str = ""
+    _evidence_shingles: list[set] | None = field(default=None, repr=False, compare=False)
+
+    def evidence_hit(self, rc: RetrievedChunk, threshold: float = 0.5) -> bool:
+        if self._evidence_shingles is None:
+            self._evidence_shingles = [shingles(e) for e in self.relevant_evidence if e.strip()]
+        chunk = shingles(rc.chunk.content)
+        return any(overlap(chunk, ev) >= threshold for ev in self._evidence_shingles)
+
+    def paper_hit(self, rc: RetrievedChunk) -> bool:
+        return bool(self.relevant_papers) and rc.chunk.paper_id in self.relevant_papers
 
     def is_relevant(self, rc: RetrievedChunk) -> bool:
-        """Whether one retrieved chunk counts as relevant for this case."""
+        """Whether one retrieved chunk counts as relevant for this case.
+
+        Evidence, when given, is the whole test: a chunk from the right paper
+        that does not contain the evidence is not relevant.
+        """
         if self.relevant_chunks and rc.chunk.chunk_id in self.relevant_chunks:
             return True
-        if self.relevant_papers and rc.chunk.paper_id in self.relevant_papers:
+        if self.relevant_evidence:
+            return self.evidence_hit(rc)
+        if self.paper_hit(rc):
             return True
         if self.must_contain:
             haystack = f"{rc.chunk.content}\n{rc.chunk.title}\n{rc.chunk.section}".lower()
@@ -84,6 +113,9 @@ class CaseResult:
     top_score: float | None
     degraded: list[str] = field(default_factory=list)
     titles: list[str] = field(default_factory=list)
+    #: Positions of chunks from a relevant paper, regardless of evidence.
+    #: ``None`` when the case names no papers.
+    paper_positions: list[int] | None = None
 
     @property
     def hit(self) -> bool:
@@ -127,6 +159,14 @@ class ModeReport:
         return self._mean([r.precision for r in self.results])
 
     @property
+    def paper_recall(self) -> float | None:
+        """Share of cases where any chunk from the right paper came back."""
+        scored = [r for r in self.results if r.paper_positions is not None]
+        if not scored:
+            return None
+        return self._mean([1.0 if r.paper_positions else 0.0 for r in scored])
+
+    @property
     def mrr(self) -> float:
         return self._mean([r.reciprocal_rank for r in self.results])
 
@@ -166,6 +206,9 @@ class ModeReport:
             "mode": self.mode.value,
             "cases": len(self.results),
             "recall": round(self.recall, 4),
+            "paper_recall": (
+                round(self.paper_recall, 4) if self.paper_recall is not None else None
+            ),
             "precision": round(self.precision, 4),
             "mrr": round(self.mrr, 4),
             "ndcg": round(self.ndcg, 4),
@@ -199,7 +242,9 @@ def load_dataset(path: Path) -> tuple[list[Case], list[NegativeCase]]:
             query_type=QueryType(c["query_type"]) if c.get("query_type") else None,
             must_contain=list(c.get("must_contain") or []),
             relevant_papers=list(c.get("relevant_papers") or []),
-            relevant_chunks=list(c.get("relevant_chunks") or []),
+            relevant_chunks=[str(x) for x in c.get("relevant_chunks") or []],
+            relevant_evidence=[str(x) for x in c.get("relevant_evidence") or []],
+            reference_answers=[str(x) for x in c.get("reference_answers") or []],
             notes=str(c.get("notes") or ""),
         )
         for c in data.get("cases", [])
@@ -241,6 +286,11 @@ async def evaluate_mode(
         elapsed = (time.perf_counter() - start) * 1000
 
         positions = [i for i, rc in enumerate(chunks, start=1) if case.is_relevant(rc)]
+        paper_positions = (
+            [i for i, rc in enumerate(chunks, start=1) if case.paper_hit(rc)]
+            if case.relevant_papers
+            else None
+        )
         report.results.append(
             CaseResult(
                 case_id=case.id,
@@ -251,6 +301,7 @@ async def evaluate_mode(
                 top_score=diag.top_score,
                 degraded=diag.degraded,
                 titles=[rc.chunk.title[:60] for rc in chunks[:3]],
+                paper_positions=paper_positions,
             )
         )
 
@@ -280,13 +331,14 @@ async def evaluate_mode(
 def render(reports: Sequence[ModeReport]) -> str:
     lines = ["", "=" * 86, "  RETRIEVAL EVALUATION", "=" * 86, ""]
     header = (
-        f"  {'mode':<10} {'recall':>7} {'prec':>7} {'MRR':>7} {'nDCG':>7} "
+        f"  {'mode':<10} {'recall':>7} {'paper':>7} {'prec':>7} {'MRR':>7} {'nDCG':>7} "
         f"{'p50 ms':>8} {'p95 ms':>8} {'neg ok':>7}"
     )
     lines += [header, "  " + "-" * 82]
     for r in reports:
+        paper = f"{r.paper_recall:>7.3f}" if r.paper_recall is not None else f"{'-':>7}"
         lines.append(
-            f"  {r.mode.value:<10} {r.recall:>7.3f} {r.precision:>7.3f} "
+            f"  {r.mode.value:<10} {r.recall:>7.3f} {paper} {r.precision:>7.3f} "
             f"{r.mrr:>7.3f} {r.ndcg:>7.3f} {r.median_latency_ms:>8.0f} "
             f"{r.p95_latency_ms:>8.0f} {r.rejection_rate:>7.0%}"
         )

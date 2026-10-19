@@ -199,7 +199,13 @@ class RAGEngine:
             answer_text, primary = cite.citations_from_markers(
                 raw_answer, prepared.chunks
             )
-            set_attributes(cite_span, cited=len(primary))
+            raw_markers = cite.parse_markers(raw_answer)
+            invalid_markers = [
+                n for n in raw_markers if not 1 <= n <= len(prepared.chunks)
+            ]
+            set_attributes(
+                cite_span, cited=len(primary), invalid=len(invalid_markers)
+            )
 
         tasks: dict[str, asyncio.Task] = {}
         if profile.check_faithfulness:
@@ -243,6 +249,8 @@ class RAGEngine:
             grounding=grounding,
             diagnostics=prepared.diagnostics,
             usage=prepared.usage,
+            raw_citation_markers=raw_markers,
+            invalid_citation_markers=invalid_markers,
         )
 
     def _fallback_answer(self, prepared: _Prepared) -> Answer:

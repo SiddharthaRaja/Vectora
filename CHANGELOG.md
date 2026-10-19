@@ -2,6 +2,59 @@
 
 Notable changes per release. Dates are UTC.
 
+## Unreleased — measuring what the milestones ask for
+
+### Fixed: concurrent searches corrupted embedded Qdrant (50c59bc, now tested)
+
+- **Symptom.** In run 2 (Colab T4) the ablation baseline scored 0.239 recall
+  where the identical eval run scored 0.591, cosine scores of ~2.4e13 appeared,
+  and numpy overflow warnings came from `qdrant_client/local`.
+- **Cause.** qdrant-client's local (embedded) mode normalises the stored vector
+  matrix *in place* during every cosine search. Balanced and deep modes run one
+  dense search per query variant concurrently via `asyncio.to_thread`, so two
+  threads wrote to the same matrix at once. Run 1 used fast mode (one search per
+  query) and never hit it.
+- **Fix.** `QdrantStore` serialises `query_points` and `upsert` with a lock in
+  embedded mode only; a Qdrant server handles its own concurrency.
+- **Regression tests** (`tests/test_qdrant_concurrency.py`): a fake client that
+  makes overlap certain shows 8 concurrent entries without the lock and 1 with
+  it; server mode stays parallel; real embedded Qdrant under 8 threads returns
+  only valid cosines. The original corruption is timing-dependent and was only
+  partly reproduced outside Colab (scores of 9 and 560 from concurrent
+  normalisation of a non-unit matrix), so the test pins the invariant instead.
+- **Recommendation.** Embedded mode is for laptops and notebooks. Anything
+  serving concurrent users should use the Qdrant server (`docker compose up`),
+  where the lock is not taken.
+- **Consequence.** The run-2 ablation table is invalid and must be re-run.
+
+### New evaluation metrics
+
+- **Evidence-level retrieval recall.** Golden cases can carry
+  `relevant_evidence` (QASPER's annotator-marked paragraphs). A chunk only
+  counts if it contains one (6-word shingle overlap ≥ 0.5 of the smaller text),
+  so "right paper, wrong section" is now a miss. `paper_recall` is reported
+  alongside.
+- **Answer token F1 and token recall** against every annotator's answer
+  (`reference_answers`), SQuAD-normalised, best over references
+  (`evaluation/textmatch.py`).
+- **Pre-strip hallucinated-citation rate.** `Answer` now records the markers
+  the model wrote (`raw_citation_markers`) and those pointing at no source
+  (`invalid_citation_markers`). The old `citation_validity` was measured after
+  stripping and so was 100% by construction; `raw_citation_validity` and
+  `hallucinated_citation_rate` are the real numbers.
+- **Judge agreement** (`evaluation/judge_agreement.py`): export ~30 judged
+  answers with their cited sources to CSV, hand-label faithfulness, get
+  agreement, Cohen's kappa and the confusion matrix.
+
+### QASPER builder
+
+- Title-free queries by default (`--title-prefix` restores the old,
+  recall-inflating behaviour); questions too generic to ask without the title
+  are dropped. Evidence and all reference answers are written per case;
+  placeholder tokens are cleaned from papers and evidence.
+- New `corpora/qasper-300`: 300 papers from train+dev, 365 questions, 8
+  off-corpus negatives.
+
 ## v3.0.0 — 2026-10-11
 
 The corpus becomes a first-class object, and the system's claims become

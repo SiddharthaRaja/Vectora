@@ -13,10 +13,18 @@ drift or flatter:
 
 * ``citation_coverage`` — share of substantive sentences carrying a marker.
   Low coverage means claims are being made without attribution.
-* ``citation_validity`` — share of cited source numbers that were actually
-  in the prompt. Anything below 1.0 means the model invented a reference.
-* ``quote_verifiability`` — share of supplied supporting quotes that really
-  appear in the chunk they are attributed to.
+* ``raw_citation_validity`` — share of the source numbers *the model wrote*
+  that were actually in the prompt, measured before the pipeline strips the
+  invalid ones. This is the hallucinated-citation rate.
+* ``citation_validity`` — the same check on the answer the user receives.
+  The pipeline strips invalid markers, so this is 1.0 by construction; it is
+  kept as a regression check on the stripping, not as a quality score.
+* ``quote_verifiability`` — supporting quotes are verified at generation
+  time and unverifiable ones dropped, so this too is 1.0 by construction.
+  The interesting number is ``quotes_dropped``.
+* ``token_f1`` / ``token_recall`` — overlap with the annotators' reference
+  answers, SQuAD-normalised, best over references (see
+  :mod:`evaluation.textmatch`). Only cases with references are averaged.
 * ``anchor_recall`` — share of the golden case's expected phrases that
   appear in the answer. A weak proxy for correctness, but a real one: if the
   case says the answer must mention a figure and it does not, something is
@@ -51,6 +59,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from evaluation.textmatch import token_scores
 from vectora.config import SearchMode, Settings
 from vectora.observability import configure_logging, get_logger, request_context
 
@@ -93,12 +102,20 @@ class AnswerScore:
     anchor_recall: float = 0.0
     citations: int = 0
     invalid_citations: int = 0
+    raw_citation_validity: float | None = None
+    raw_markers: int = 0
+    hallucinated_markers: int = 0
+    token_f1: float | None = None
+    token_recall: float | None = None
 
     groundedness: int | None = None
     relevance: int | None = None
     completeness: int | None = None
 
     answer_chars: int = 0
+    #: Kept so answers can be hand-labelled (evaluation/judge_agreement.py).
+    answer_text: str = ""
+    cited_chunk_ids: list[str] = field(default_factory=list)
     latency_ms: float = 0.0
     cost_usd: float = 0.0
     llm_calls: int = 0
@@ -134,6 +151,12 @@ class AnswerReport:
         )
 
     @property
+    def hallucinated_rate(self) -> float:
+        """Invalid markers / all markers the model wrote, pooled over answers."""
+        raw = sum(s.raw_markers for s in self.answered)
+        return sum(s.hallucinated_markers for s in self.answered) / raw if raw else 0.0
+
+    @property
     def total_cost(self) -> float:
         return sum(s.cost_usd for s in self.scores)
 
@@ -151,7 +174,17 @@ class AnswerReport:
             "refused": len(self.scores) - len(self.answered),
             "mechanical": {
                 "citation_coverage": round(self._mean("citation_coverage"), 4),
+                "raw_citation_validity": round(self._mean("raw_citation_validity"), 4),
+                "hallucinated_citation_rate": round(self.hallucinated_rate, 4),
+                "answers_with_hallucinated_citation": sum(
+                    1 for s in self.answered if s.hallucinated_markers
+                ),
                 "citation_validity": round(self._mean("citation_validity"), 4),
+                "token_f1": round(self._mean("token_f1"), 4),
+                "token_recall": round(self._mean("token_recall"), 4),
+                "cases_with_reference": sum(
+                    1 for s in self.answered if s.token_f1 is not None
+                ),
                 "quote_verifiability": round(self._mean("quote_verifiability"), 4),
                 "anchor_recall": round(self._mean("anchor_recall"), 4),
                 "refusal_accuracy": round(self.refusal_accuracy, 4),
@@ -184,10 +217,16 @@ class AnswerReport:
             "  Mechanical (computed from the text — trust these first)",
             f"    citation coverage      {self._mean('citation_coverage'):.1%}"
             "   share of substantive sentences with a marker",
+            f"    raw citation validity  {self._mean('raw_citation_validity'):.1%}"
+            "   markers the model wrote that pointed at a real source",
+            f"    hallucinated markers   {self.hallucinated_rate:.1%}"
+            "   (stripped before the user sees the answer)",
             f"    citation validity      {self._mean('citation_validity'):.1%}"
-            "   cited sources that were really in the prompt",
-            f"    quote verifiability    {self._mean('quote_verifiability'):.1%}"
-            "   supplied quotes found in their source",
+            "   after stripping — 100% by construction",
+            f"    answer token F1        {self._mean('token_f1'):.1%}"
+            "   vs annotators' answers (best reference)",
+            f"    answer token recall    {self._mean('token_recall'):.1%}"
+            "   share of the reference the answer contains",
             f"    anchor recall          {self._mean('anchor_recall'):.1%}"
             "   expected phrases present in the answer",
             f"    refusal accuracy       {self.refusal_accuracy:.1%}"
@@ -204,15 +243,15 @@ class AnswerReport:
             f"    median latency         {self.median_latency:.0f} ms",
         ]
 
-        invalid = [s for s in self.scores if s.invalid_citations]
+        invalid = [s for s in self.scores if s.hallucinated_markers or s.invalid_citations]
         if invalid:
             lines += [
                 "",
-                "  Answers citing a source that was not provided:",
+                "  Answers where the model cited a source that was not provided:",
             ]
             for s in invalid[:6]:
                 lines.append(
-                    f"    {s.invalid_citations} invalid in: {s.query[:54]}"
+                    f"    {s.hallucinated_markers or s.invalid_citations} invalid in: {s.query[:50]}"
                 )
 
         wrong = [s for s in self.scores if not s.correct_refusal_behaviour]
@@ -270,6 +309,7 @@ async def score_case(
     expected_refusal: bool,
     mode: SearchMode,
     judge: bool,
+    references: list[str] | None = None,
 ) -> AnswerScore:
     """Answer one question and score the result."""
     import time
@@ -295,6 +335,8 @@ async def score_case(
     score.answered = True
     score.refused = result.fallback is not None
     score.answer_chars = len(result.answer)
+    score.answer_text = result.answer
+    score.cited_chunk_ids = [c.chunk_id for c in result.citations]
     score.cost_usd = result.usage.cost_usd
     score.llm_calls = result.usage.calls
 
@@ -313,6 +355,18 @@ async def score_case(
     score.citations = len(result.citations)
     score.citation_coverage = citation_coverage(result.answer)
     score.anchor_recall = anchor_recall(result.answer, anchors)
+
+    if references:
+        score.token_f1, score.token_recall = token_scores(result.answer, references)
+
+    # Pre-strip validity: what the model actually wrote.
+    raw = list(getattr(result, "raw_citation_markers", []) or [])
+    bad = list(getattr(result, "invalid_citation_markers", []) or [])
+    score.raw_markers = len(raw)
+    score.hallucinated_markers = len(bad)
+    score.raw_citation_validity = 1.0 - len(bad) / len(raw) if raw else 1.0
+    if bad:
+        score.notes.append(f"model cited absent sources (stripped): {sorted(bad)}")
 
     # Citation validity: the pipeline strips invalid markers before the
     # answer is returned, so a surviving marker pointing nowhere would be a
@@ -414,6 +468,7 @@ async def run(
                     expected_refusal=False,
                     mode=mode,
                     judge=judge,
+                    references=list(case.reference_answers) or None,
                 )
             )
         for j, negative in enumerate(negatives, start=len(cases) + 1):

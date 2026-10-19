@@ -338,6 +338,12 @@ class Answer(BaseModel):
     fallback: Fallback | None = None
     diagnostics: RetrievalDiagnostics | None = None
     usage: Usage = Field(default_factory=Usage)
+    #: Source numbers the model wrote, before invalid ones were stripped.
+    #: ``answer`` only ever carries valid markers, so measuring citation
+    #: hallucination needs the raw list.
+    raw_citation_markers: list[int] = Field(default_factory=list)
+    #: The subset of ``raw_citation_markers`` that pointed at no source.
+    invalid_citation_markers: list[int] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=utcnow)
 
     def wire(self) -> dict[str, Any]:

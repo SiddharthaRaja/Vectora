@@ -18,19 +18,28 @@ Two decisions worth knowing about:
   as PDFs. That tests retrieval and generation on clean text. To test PDF
   parsing as well, pass --pdf: the arXiv PDF of each paper is downloaded
   instead (slower, and some papers will fail to parse — which is the point).
-* QASPER questions assume you know which paper they are about ("What datasets
-  do they use?"). Across a 40-paper corpus that is ambiguous, so every query is
-  prefixed with the paper's title. Retrieval is then scored on whether chunks
-  from that paper come back (relevant_papers). The gold answer is kept in
-  `notes` so you can read it next to Vectora's answer.
+* Queries are title-free by default: users do not type the paper's title, and
+  Vectora run 2 showed the title prefix doing most of retrieval's work (recall
+  1.00 with it, 0.55 without). Many QASPER questions only make sense with the
+  title ("What is the baseline?"), so questions with fewer than three specific
+  words are dropped. Pass --title-prefix for the old behaviour.
+* Each case carries `relevant_evidence` (the paragraphs the annotators marked,
+  figure/table-only evidence skipped) so retrieval is scored on finding the
+  passage, not just the paper, and `reference_answers` (every annotator's
+  answer) for answer token F1. `relevant_papers` is still written, so
+  paper-level recall is reported alongside.
+* QASPER's placeholder tokens (BIBREF12, INLINEFORM0, TABREF3, ...) are cleaned
+  out of the papers and the evidence alike. --keep-placeholders turns that off.
 
-Questions every annotator marked unanswerable become negative cases: the paper
-is in the corpus, but it does not contain the answer, so Vectora should decline.
-That is the hardest kind of negative — "in-domain but unasked".
+With --title-prefix, questions every annotator marked unanswerable become
+negative cases: the paper is in the corpus but does not contain the answer.
+Without the title those questions are ambiguous — another paper may well answer
+"what datasets do they use" — so title-free sets use fixed off-corpus negatives.
 
 Usage (from the repo root, with the venv active):
 
     python scripts/qasper_corpus.py                      # 40 papers, dev split
+    python scripts/qasper_corpus.py --corpus qasper-300 --split all --papers 300
     python scripts/qasper_corpus.py --papers 20 --questions-per-paper 2
     python scripts/qasper_corpus.py --source path/to/qasper-train-dev-v0.3.tgz
     python scripts/qasper_corpus.py --pdf                # arXiv PDFs instead of .md
@@ -115,6 +124,47 @@ def matches_topic(paper: dict, keywords: list[str]) -> bool:
     return any(re.search(rf"\b{re.escape(k)}", text) for k in keywords)
 
 
+# ── cleaning ────────────────────────────────────────────────────────────────
+
+# No \b: tokens are often glued to the word before ("worldwideBIBREF0").
+PLACEHOLDERS = [
+    (re.compile(r"\s*BIBREF\d+(\s*,\s*BIBREF\d+)*"), ""),
+    (re.compile(r"(INLINEFORM|DISPLAYFORM)\d+"), "[formula]"),
+    (re.compile(r"TABREF\d+"), "the table"),
+    (re.compile(r"FIGREF\d+"), "the figure"),
+    (re.compile(r"SECREF\d+"), "a later section"),
+]
+CLEAN = True
+
+
+def clean(text: str) -> str:
+    if not CLEAN:
+        return text
+    for rx, rep in PLACEHOLDERS:
+        text = rx.sub(rep, text)
+    return text
+
+
+# Words that say nothing about *which* paper a question is about.
+GENERIC = set("""a an and the of for in on to with from by at as is are was were be been
+what which who whom whose how why when where do does did done they their them it its
+this that these those there here you your we our use used uses using than then
+paper papers author authors proposed propose approach approaches method methods model
+models system systems baseline baselines dataset datasets data result results
+performance perform performs work task tasks experiment experiments evaluate evaluated
+evaluation compare compared comparison improve improvement improvements state art
+previous existing best better new size big large many much number kind kinds type
+types other others some any all only also well same different between over under
+show shown much more most less used test testing train training set sets metric
+metrics score scores accuracy f1 language languages english text corpus corpora
+""".split())  # noqa: SIM905
+
+
+def specific_words(question: str) -> int:
+    words = re.findall(r"[a-z][a-z0-9-]+", question.lower())
+    return sum(1 for w in words if w not in GENERIC)
+
+
 # ── answers ─────────────────────────────────────────────────────────────────
 
 
@@ -135,6 +185,43 @@ def gold_answer(qa: dict) -> tuple[str | None, bool]:
         if a.get("yes_no") is not None:
             return ("Yes" if a["yes_no"] else "No"), False
     return None, False
+
+
+def all_answers(qa: dict) -> list[str]:
+    """Every annotator's answer, deduplicated: references for token F1."""
+    out: list[str] = []
+    for a in qa.get("answers", []):
+        a = a.get("answer", {})
+        if a.get("unanswerable"):
+            continue
+        if a.get("free_form_answer"):
+            text = a["free_form_answer"].strip()
+        elif a.get("extractive_spans"):
+            text = " ".join(s.strip() for s in a["extractive_spans"] if s.strip())
+        elif a.get("yes_no") is not None:
+            text = "Yes" if a["yes_no"] else "No"
+        else:
+            continue
+        text = clean(text).strip()
+        if text and text not in out:
+            out.append(text)
+    return out
+
+
+def text_evidence(qa: dict) -> list[str]:
+    """Annotator-marked evidence paragraphs, union over annotators, cleaned."""
+    out: list[str] = []
+    for a in qa.get("answers", []):
+        a = a.get("answer", {})
+        if a.get("unanswerable"):
+            continue
+        for e in a.get("evidence") or []:
+            if not e.strip() or e.startswith("FLOAT SELECTED"):
+                continue
+            e = clean(e).strip()
+            if e and e not in out:
+                out.append(e)
+    return out
 
 
 def has_text_evidence(qa: dict) -> bool:
@@ -166,7 +253,7 @@ def paper_markdown(pid: str, paper: dict) -> str:
     title = (paper.get("title") or pid).strip()
     out = ["---", f"title: {title}", f"description: arXiv {pid}", "---", "", f"# {title}", ""]
     if paper.get("abstract"):
-        out += ["## Abstract", "", paper["abstract"].strip(), ""]
+        out += ["## Abstract", "", clean(paper["abstract"].strip()), ""]
     for section in paper.get("full_text", []):
         name = (section.get("section_name") or "").replace(" ::: ", " — ").strip()
         paras = [p.strip() for p in section.get("paragraphs", []) if p and p.strip()]
@@ -175,7 +262,7 @@ def paper_markdown(pid: str, paper: dict) -> str:
         if name:
             out += [f"## {name}", ""]
         for p in paras:
-            out += [p, ""]
+            out += [clean(p), ""]
     return "\n".join(out)
 
 
@@ -199,15 +286,17 @@ def download_pdf(pid: str, dest: Path) -> bool:
     return True
 
 
-def write_golden(path: Path, cases: list[dict], negatives: list[dict], split: str) -> None:
+def write_golden(
+    path: Path, cases: list[dict], negatives: list[dict], split: str, titled: bool
+) -> None:
     lines = [
         "# Golden set generated from QASPER (CC BY 4.0) by scripts/qasper_corpus.py.",
-        f"# Split: {split}. Each query is prefixed with its paper's title because QASPER",
-        "# questions assume the reader knows which paper they are about.",
+        f"# Split: {split}. Queries are "
+        + ("prefixed with the paper's title." if titled else "title-free (as a user would ask)."),
         "#",
-        "# Retrieval is scored with relevant_papers. `notes` holds the annotators' answer",
-        "# so you can compare it with Vectora's. Negative cases are questions every",
-        "# annotator marked unanswerable from that paper: Vectora should decline them.",
+        "# Retrieval is scored on relevant_evidence (the annotators' evidence paragraphs);",
+        "# relevant_papers gives paper-level recall alongside. reference_answers holds",
+        "# every annotator's answer, for token F1. Negative cases should be declined.",
         "",
         "cases:",
     ]
@@ -217,9 +306,14 @@ def write_golden(path: Path, cases: list[dict], negatives: list[dict], split: st
             f"    query: {yaml_str(c['query'])}",
             "    relevant_papers:",
             f"      - {yaml_str(c['paper'])}",
-            f"    notes: {yaml_str(c['notes'])}",
-            "",
         ]
+        if c.get("evidence"):
+            lines.append("    relevant_evidence:")
+            lines += [f"      - {yaml_str(e)}" for e in c["evidence"]]
+        if c.get("references"):
+            lines.append("    reference_answers:")
+            lines += [f"      - {yaml_str(r)}" for r in c["references"]]
+        lines += [f"    notes: {yaml_str(c['notes'])}", ""]
     lines += ["negative_cases:"]
     for n in negatives:
         lines += [
@@ -233,6 +327,20 @@ def write_golden(path: Path, cases: list[dict], negatives: list[dict], split: st
 
 
 # ── main ────────────────────────────────────────────────────────────────────
+
+
+#: Off-corpus negatives: some plainly unrelated, some adjacent to NLP but not
+#: about any paper, which is where a weak refusal guard fails.
+OFF_CORPUS = [
+    "What is the boiling point of water at the top of Mount Everest?",
+    "Who won the 2018 FIFA World Cup?",
+    "How do I reset a forgotten Windows password?",
+    "What is the recommended daily intake of vitamin D for adults?",
+    "How does a car's catalytic converter work?",
+    "What year did the Berlin Wall fall?",
+    "Which GPU should I buy for gaming at 1440p?",
+    "How do I cook risotto without it going gluey?",
+]
 
 
 STOPWORDS = set("""a an and the of for in on to with from by via at as is are using
@@ -270,7 +378,15 @@ def main() -> None:
     ap.add_argument("--source", type=Path, help="Local QASPER .tgz or split .json")
     ap.add_argument("--pdf", action="store_true", help="Download arXiv PDFs instead of .md")
     ap.add_argument("--force", action="store_true", help="Overwrite an existing golden.yaml")
+    ap.add_argument("--title-prefix", action="store_true",
+                    help='Prefix queries with the paper title (old behaviour; inflates recall)')
+    ap.add_argument("--min-specific-words", type=int, default=3,
+                    help="Title-free only: drop questions with fewer specific words")
+    ap.add_argument("--keep-placeholders", action="store_true",
+                    help="Keep QASPER's BIBREF/INLINEFORM/... tokens")
     args = ap.parse_args()
+    global CLEAN
+    CLEAN = not args.keep_placeholders
     keywords = [k.strip().lower() for k in args.topic.split(",") if k.strip()]
 
     # Works whether or not Vectora is pip-installed: the repo root is one up.
@@ -322,6 +438,7 @@ def main() -> None:
     cases: list[dict] = []
     negatives: list[dict] = []
     written = 0
+    dropped_generic = 0
     for pid in usable:
         if written >= args.papers:
             break
@@ -340,10 +457,10 @@ def main() -> None:
         for qa in paper.get("qas", []):
             answer, unanswerable = gold_answer(qa)
             question = qa["question"].strip()
-            query = f'In the paper "{title}": {question}'
+            query = f'In the paper "{title}": {question}' if args.title_prefix else question
             qid = qa.get("question_id", stable_rank(question, 0))[:10]
             if unanswerable:
-                if len(negatives) < args.max_negatives:
+                if args.title_prefix and len(negatives) < args.max_negatives:
                     negatives.append({
                         "id": f"neg-{qid}",
                         "query": query,
@@ -351,20 +468,24 @@ def main() -> None:
                     })
                 continue
             if answer and has_text_evidence(qa) and taken < args.questions_per_paper:
+                if not args.title_prefix and specific_words(question) < args.min_specific_words:
+                    dropped_generic += 1
+                    continue
                 cases.append({
                     "id": f"q-{qid}",
                     "query": query,
                     "paper": stem,
-                    "notes": f"Gold answer: {answer[:400]}",
+                    "evidence": text_evidence(qa),
+                    "references": all_answers(qa),
+                    "notes": f"Gold answer: {clean(answer)[:400]}",
                 })
                 taken += 1
 
-    negatives.append({
-        "id": "off-topic",
-        "query": "What is the boiling point of water at the top of Mount Everest?",
-        "notes": "Plainly outside the corpus.",
-    })
-    write_golden(profile.golden_path, cases, negatives, args.split)
+    for i, q in enumerate(OFF_CORPUS, start=1):
+        negatives.append({"id": f"off-corpus-{i}", "query": q, "notes": "Outside the corpus."})
+    write_golden(profile.golden_path, cases, negatives, args.split, args.title_prefix)
+    if dropped_generic:
+        print(f"Dropped {dropped_generic} questions too generic to ask without the title.")
     registry.refresh_counts(profile)
 
     print(f"\nCorpus '{profile.name}':")
