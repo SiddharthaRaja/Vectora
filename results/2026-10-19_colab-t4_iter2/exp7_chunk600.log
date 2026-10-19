@@ -1,0 +1,206 @@
+
+$ vectora corpus create exp7-chunk600 -d "exp7 chunk600" --kind "NLP research papers"
+
+Created corpus 'exp7-chunk600'
+  documents   /content/Vectora/corpora/exp7-chunk600/papers
+  chunks      /content/Vectora/corpora/exp7-chunk600/chunks.jsonl
+  collection  vectora_exp7_chunk600
+  golden set  /content/Vectora/corpora/exp7-chunk600/golden.yaml
+
+Next: add documents to the documents folder, or
+  vectora fetch arxiv --preset nlp --corpus exp7-chunk600
+
+
+$ vectora ingest
+
+Ingesting corpus 'exp7-chunk600' from /content/Vectora/corpora/exp7-chunk600/papers
+
+Ingesting:   0%|          | 0/40 [00:00<?, ?pdf/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 103/103 [00:00<00:00, 4710.80it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Ingesting:   2%|▎         | 1/40 [00:10<06:39, 10.25s/pdf]Ingesting:   5%|▌         | 2/40 [00:10<02:48,  4.43s/pdf]Ingesting:   8%|▊         | 3/40 [00:10<01:31,  2.48s/pdf]Ingesting:  10%|█         | 4/40 [00:10<00:55,  1.54s/pdf]Ingesting:  15%|█▌        | 6/40 [00:11<00:26,  1.27pdf/s]Ingesting:  18%|█▊        | 7/40 [00:11<00:20,  1.61pdf/s]Ingesting:  22%|██▎       | 9/40 [00:11<00:12,  2.43pdf/s]Ingesting:  25%|██▌       | 10/40 [00:11<00:11,  2.72pdf/s]Ingesting:  28%|██▊       | 11/40 [00:12<00:10,  2.84pdf/s]Ingesting:  30%|███       | 12/40 [00:12<00:08,  3.46pdf/s]Ingesting:  32%|███▎      | 13/40 [00:12<00:07,  3.66pdf/s]Ingesting:  35%|███▌      | 14/40 [00:12<00:07,  3.67pdf/s]Ingesting:  38%|███▊      | 15/40 [00:12<00:05,  4.17pdf/s]Ingesting:  40%|████      | 16/40 [00:13<00:05,  4.03pdf/s]Ingesting:  42%|████▎     | 17/40 [00:13<00:05,  4.54pdf/s]Ingesting:  45%|████▌     | 18/40 [00:13<00:04,  4.72pdf/s]Ingesting:  48%|████▊     | 19/40 [00:13<00:04,  5.19pdf/s]Ingesting:  50%|█████     | 20/40 [00:13<00:04,  4.46pdf/s]Ingesting:  52%|█████▎    | 21/40 [00:14<00:04,  3.92pdf/s]Ingesting:  55%|█████▌    | 22/40 [00:14<00:04,  3.79pdf/s]Ingesting:  57%|█████▊    | 23/40 [00:14<00:03,  4.54pdf/s]Ingesting:  60%|██████    | 24/40 [00:14<00:03,  5.21pdf/s]Ingesting:  65%|██████▌   | 26/40 [00:15<00:02,  5.34pdf/s]Ingesting:  68%|██████▊   | 27/40 [00:15<00:02,  5.34pdf/s]Ingesting:  70%|███████   | 28/40 [00:15<00:02,  5.21pdf/s]Ingesting:  72%|███████▎  | 29/40 [00:15<00:02,  4.72pdf/s]Ingesting:  75%|███████▌  | 30/40 [00:16<00:02,  3.99pdf/s]Ingesting:  78%|███████▊  | 31/40 [00:16<00:02,  4.35pdf/s]Ingesting:  80%|████████  | 32/40 [00:16<00:01,  5.14pdf/s]Ingesting:  82%|████████▎ | 33/40 [00:16<00:01,  5.34pdf/s]Ingesting:  85%|████████▌ | 34/40 [00:16<00:01,  4.67pdf/s]Ingesting:  88%|████████▊ | 35/40 [00:17<00:00,  5.44pdf/s]Ingesting:  90%|█████████ | 36/40 [00:17<00:00,  6.11pdf/s]Ingesting:  92%|█████████▎| 37/40 [00:17<00:00,  5.77pdf/s]Ingesting:  98%|█████████▊| 39/40 [00:17<00:00,  6.50pdf/s]Ingesting: 100%|██████████| 40/40 [00:17<00:00,  6.23pdf/s]Ingesting: 100%|██████████| 40/40 [00:17<00:00,  2.25pdf/s]
+
+==============================================================
+  INGESTION REPORT
+==============================================================
+  papers processed   40
+  papers skipped     0  (unchanged)
+  papers failed      0
+  chunks emitted     3128
+  chunks dropped     52
+  by type            text 3128
+
+  dropped because:
+        23  excluded_section:Acknowledgements
+         8  too_short(18<48)
+         4  too_short(17<48)
+         4  excluded_section:Abbreviations
+         3  too_short(19<48)
+         3  too_short(11<48)
+         3  low_alpha(0.58)
+         3  low_alpha(0.62)
+         3  too_short(21<48)
+         2  too_short(14<48)
+         2  too_short(10<48)
+         2  too_short(23<48)
+
+  metadata not extractable, fallback used (papers):
+        40  doi
+        23  authors
+        11  year
+
+  low-confidence metadata — worth eyeballing:
+    0.25  1702.01517
+    0.25  1803.07771
+    0.25  1809.01202
+    0.25  1809.02279
+    0.25  1809.02286
+    0.25  1908.06006
+    0.25  1909.08167
+==============================================================
+
+Next: vectora index --corpus exp7-chunk600
+
+
+$ vectora index --recreate
+
+Loaded 3128 chunks for corpus 'exp7-chunk600' from /content/Vectora/corpora/exp7-chunk600/chunks.jsonl
+/content/Vectora/vectora/store/qdrant_store.py:145: UserWarning: Payload indexes have no effect in the local Qdrant. Please use server Qdrant if you need payload indexes.
+  self.client.create_payload_index(
+Indexing:   0%|          | 0/7 [00:00<?, ?batch/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 103/103 [00:00<00:00, 4982.51it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Indexing:  14%|█▍        | 1/7 [00:14<01:26, 14.44s/batch]Indexing:  29%|██▊       | 2/7 [00:18<00:42,  8.48s/batch]Indexing:  43%|████▎     | 3/7 [00:23<00:26,  6.61s/batch]Indexing:  57%|█████▋    | 4/7 [00:27<00:17,  5.83s/batch]Indexing:  71%|███████▏  | 5/7 [00:32<00:10,  5.37s/batch]Indexing:  86%|████████▌ | 6/7 [00:37<00:05,  5.20s/batch]Indexing: 100%|██████████| 7/7 [00:38<00:00,  3.79s/batch]Indexing: 100%|██████████| 7/7 [00:38<00:00,  5.44s/batch]
+
+Upserted 3128 points.  collection=vectora_exp7_chunk600 vectors=3128 papers=40 dim=384 distance=cosine
+Building the lexical (BM25) index…
+Lexical index built over 3128 chunks.
+
+Next: vectora serve --corpus exp7-chunk600
+
+
+$ vectora eval --mode fast --output /content/drive/MyDrive/vectora_results/iter2_2026-10-18_2219/exp7_chunk600.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 5438.17it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 4852.33it/s]
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-940873658e answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-547be35cff answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-38e2f07ba9 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4d7ff4e5d0 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-7e161d9fac answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-028910d643 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b512ab8de2 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-6ad92aad46 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4fdc707fae answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b04098f750 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-11e376f98d answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-speech answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-mt answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-ner answered=True
+
+Loaded 88 cases and 21 negatives from golden.yaml (corpus 'exp7-chunk600')
+  evaluating fast…
+
+======================================================================================
+  RETRIEVAL EVALUATION
+======================================================================================
+
+  mode        recall    prec     MRR    nDCG   p50 ms   p95 ms  neg ok
+  ----------------------------------------------------------------------------------
+  fast         0.545   0.336   0.450   0.469       31       48     33%
+
+  fast missed 40:
+    q-f1f1dcc67b: what datasets were used in evaluation?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-0ad4359e3e: Which baselines did they compare against?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-eda4869c67: Which dataset do they use?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-ecc63972b2: How do they encourage understanding of literature as part of t
+      got: Opinion Recommendation using Neural Memory Model
+    q-589be705a5: What data did they use?
+      got: Automating Political Bias Prediction
+    q-6e962f1f23: What is the state of the art?
+      got: Basic tasks of sentiment analysis
+    q-d8cecea477: Which metrics are they evaluating with?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-578d0b23cb: What datasets are used in training?
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-609fbe6273: What are the datasets used
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-c35806cf68: What were their best results on the benchmark datasets?
+      got: Basic tasks of sentiment analysis
+    q-f7d0fa5201: What were the baselines?
+      got: Generating Narrative Text in a Switching Dynamical System
+    q-3d34a02cee: what classifiers were used in this paper?
+      got: Automating Political Bias Prediction
+    q-96992460cf: what are their evaluation metrics?
+      got: Automating Political Bias Prediction
+    q-4e4d377b14: What dataset is used?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-828ce5faed: What metrics are considered?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-0b9021cefc: What are the other models they compare to?
+      got: Causal Explanation Analysis on Social Media
+    q-2d307b4374: How long are the datasets?
+      got: Learning to Detect Opinion Snippet for Aspect-Based Sentimen
+    q-4cbe5a36b4: What baselines did they consider?
+      got: Generating Narrative Text in a Switching Dynamical System
+    q-a4d1152204: What types of social media did they consider?
+      got: Crowdsourcing for Beyond Polarity Sentiment Analysis A Pure 
+    q-37edc25e39: What was the baseline?
+      got: Multilingual Sentiment Analysis: An RNN-Based Framework for 
+    q-876700622b: What dataset did they use?
+      got: Automating Political Bias Prediction
+    q-e9d9bb87a5: How much do they outperform previous state-of-the-art?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-cc5d390391: Which sentiment analysis tasks are addressed?
+      got: AraNet: A Deep Learning Toolkit for Arabic Social Media
+    q-8fc14714eb: what sentiment sources do they compare with?
+      got: Multilingual Sentiment Analysis: An RNN-Based Framework for 
+    q-c012219011: What classifier do they use?
+      got: Transfer Learning Between Related Tasks Using Expected Label
+    q-5816ebf15e: What model are the text features used in to provide prediction
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-a6950c22c7: Which dataset(s) do they use to train the model?
+      got: Cost-Sensitive BERT for Generalisable Sentence Classificatio
+    q-3a6e843c6c: What are the state of the art models?
+      got: Basic tasks of sentiment analysis
+    q-fabf6fdcfb: Which benchmark datasets are used?
+      got: Aspect Term Extraction with History Attention and Selective 
+    q-b984612cea: Does their model have more parameters than other models?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-b0a1862828: What metrics are used in evaluation?
+      got: Automating Political Bias Prediction
+    q-72ce05546c: Which natural language(s) are studied in this paper?
+      got: Cell-aware Stacked LSTMs for Modeling Sentences
+    q-cd06d775f4: Which sentiment class is the most accurately predicted by ELS 
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-aa979aed5a: Do they report results only on English datasets?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-41bff17f7d: What metrics are used for evaluation?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-6dfad97356: How do they incorporate lexicon into the neural network?
+      got: Utilizing BERT for Aspect-Based Sentiment Analysis via Const
+    q-59a5959a6a: What is the source of their lexicon?
+      got: Crowdsourcing for Beyond Polarity Sentiment Analysis A Pure 
+    q-e2e31ab279: What was their performance?
+      got: A Deeper Look into Sarcastic Tweets Using Deep Convolutional
+    q-2555ca85ff: Which datasets are used for evaluation?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-0aa46c1325: What are the baselines?
+      got: Generating Narrative Text in a Switching Dynamical System
+
+======================================================================================
+
+Wrote /content/drive/MyDrive/vectora_results/iter2_2026-10-18_2219/exp7_chunk600.json
+

@@ -1,0 +1,51 @@
+prompt eval duration: 61.852ms
+prompt eval rate:     258.68 tokens/s
+eval count:           105 token(s)
+eval duration:        3.131904s
+eval rate:            33.53 tokens/s
+[?25l[?25hprompt eval duration: 14.330587s
+prompt eval rate:     1.47 tokens/s
+eval count:           116 token(s)
+eval duration:        3.691045s
+eval rate:            31.43 tokens/s
+[?25l[?25hprompt eval duration: 148.19ms
+prompt eval rate:     107.97 tokens/s
+eval count:           151 token(s)
+eval duration:        4.629642s
+eval rate:            32.62 tokens/s
+[?25l[?25hprompt eval duration: 12.153866s
+prompt eval rate:     1.81 tokens/s
+eval count:           95 token(s)
+eval duration:        1.664422s
+eval rate:            57.08 tokens/s
+[?25l[?25hprompt eval duration: 141.865ms
+prompt eval rate:     281.96 tokens/s
+eval count:           67 token(s)
+eval duration:        969.94ms
+eval rate:            69.08 tokens/s
+[?25l[?25hprompt eval duration: 256.983999ms
+prompt eval rate:     155.65 tokens/s
+eval count:           87 token(s)
+eval duration:        2.939527s
+eval rate:            29.60 tokens/s
+[?25l[?25hprompt eval duration: 174.318ms
+prompt eval rate:     120.47 tokens/s
+eval count:           120 token(s)
+eval duration:        4.331136s
+eval rate:            27.71 tokens/s
+[?25l[?25hprompt eval duration: 158.451ms
+prompt eval rate:     100.98 tokens/s
+eval count:           88 token(s)
+eval duration:        2.944432s
+eval rate:            29.89 tokens/s
+[?25l[?25hprompt eval duration: 164.85ms
+prompt eval rate:     133.45 tokens/s
+eval count:           83 token(s)
+eval duration:        1.65031s
+eval rate:            50.29 tokens/s
+[?25l[?25hprompt eval duration: 141.108ms
+prompt eval rate:     283.47 tokens/s
+eval count:           68 token(s)
+eval duration:        1.090512s
+eval rate:            62.36 tokens/s
+[?25l[?25h

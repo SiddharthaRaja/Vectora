@@ -1,0 +1,304 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 4191.94it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights:  70%|███████   | 74/105 [00:00<00:00, 731.23it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 774.68it/s]
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-940873658e answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-547be35cff answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-38e2f07ba9 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4d7ff4e5d0 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-7e161d9fac answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-028910d643 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b512ab8de2 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-6ad92aad46 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4fdc707fae answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b04098f750 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-11e376f98d answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-speech answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-mt answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-ner answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-940873658e answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-547be35cff answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-38e2f07ba9 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4d7ff4e5d0 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-7e161d9fac answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-028910d643 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-f08a66665f answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b512ab8de2 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-6ad92aad46 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4fdc707fae answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b04098f750 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-11e376f98d answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-speech answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-mt answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-ner answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-940873658e answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-547be35cff answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-38e2f07ba9 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4d7ff4e5d0 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-7e161d9fac answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-028910d643 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-f08a66665f answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b512ab8de2 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-6ad92aad46 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4fdc707fae answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b04098f750 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-11e376f98d answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-speech answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-mt answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-ner answered=True
+
+Loaded 88 cases and 21 negatives from golden_notitle.yaml (corpus 'qasper-sentiment')
+  evaluating fast…
+  evaluating balanced…
+  evaluating deep…
+
+======================================================================================
+  RETRIEVAL EVALUATION
+======================================================================================
+
+  mode        recall    prec     MRR    nDCG   p50 ms   p95 ms  neg ok
+  ----------------------------------------------------------------------------------
+  fast         0.523   0.326   0.446   0.459       36       52     33%
+  balanced     0.602   0.340   0.487   0.506     4685     6237     29%
+  deep         0.580   0.339   0.468   0.484     2184     2864     29%
+
+  fast missed 42:
+    q-f1f1dcc67b: what datasets were used in evaluation?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-0ad4359e3e: Which baselines did they compare against?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-eda4869c67: Which dataset do they use?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-ecc63972b2: How do they encourage understanding of literature as part of t
+      got: Opinion Recommendation using Neural Memory Model
+    q-589be705a5: What data did they use?
+      got: Automating Political Bias Prediction
+    q-6e962f1f23: What is the state of the art?
+      got: Incorporating Structured Commonsense Knowledge in Story Comp
+    q-d8cecea477: Which metrics are they evaluating with?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-2419b38624: Did they experiment on all the tasks?
+      got: Weighed Domain-Invariant Representation Learning for Cross-d
+    q-578d0b23cb: What datasets are used in training?
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-609fbe6273: What are the datasets used
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-c2eb743c9d: Which models did they experiment with?
+      got: Multitask Learning for Fine-Grained Twitter Sentiment Analys
+    q-c35806cf68: What were their best results on the benchmark datasets?
+      got: Basic tasks of sentiment analysis
+    q-f7d0fa5201: What were the baselines?
+      got: Generating Narrative Text in a Switching Dynamical System
+    q-3d34a02cee: what classifiers were used in this paper?
+      got: Automating Political Bias Prediction
+    q-4e4d377b14: What dataset is used?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-828ce5faed: What metrics are considered?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-0b9021cefc: What are the other models they compare to?
+      got: Causal Explanation Analysis on Social Media
+    q-2d307b4374: How long are the datasets?
+      got: RobBERT: a Dutch RoBERTa-based Language Model
+    q-4cbe5a36b4: What baselines did they consider?
+      got: Generating Narrative Text in a Switching Dynamical System
+    q-a4d1152204: What types of social media did they consider?
+      got: Crowdsourcing for Beyond Polarity Sentiment Analysis A Pure 
+    q-37edc25e39: What was the baseline?
+      got: A Deeper Look into Sarcastic Tweets Using Deep Convolutional
+    q-876700622b: What dataset did they use?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-e9d9bb87a5: How much do they outperform previous state-of-the-art?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-cc5d390391: Which sentiment analysis tasks are addressed?
+      got: AraNet: A Deep Learning Toolkit for Arabic Social Media
+    q-8fc14714eb: what sentiment sources do they compare with?
+      got: Multilingual Sentiment Analysis: An RNN-Based Framework for 
+    q-c012219011: What classifier do they use?
+      got: Transfer Learning Between Related Tasks Using Expected Label
+    q-5816ebf15e: What model are the text features used in to provide prediction
+      got: VAIS Hate Speech Detection System: A Deep Learning based App
+    q-a6950c22c7: Which dataset(s) do they use to train the model?
+      got: Cost-Sensitive BERT for Generalisable Sentence Classificatio
+    q-3a6e843c6c: What are the state of the art models?
+      got: Dynamic Compositionality in Recursive Neural Networks with S
+    q-fabf6fdcfb: Which benchmark datasets are used?
+      got: Aspect Term Extraction with History Attention and Selective 
+    q-602396d1f5: By how much do they outperform BiLSTMs in Sentiment Analysis?
+      got: Basic tasks of sentiment analysis
+    q-b984612cea: Does their model have more parameters than other models?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-b0a1862828: What metrics are used in evaluation?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-72ce05546c: Which natural language(s) are studied in this paper?
+      got: Cell-aware Stacked LSTMs for Modeling Sentences
+    q-cd06d775f4: Which sentiment class is the most accurately predicted by ELS 
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-aa979aed5a: Do they report results only on English datasets?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-41bff17f7d: What metrics are used for evaluation?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-6dfad97356: How do they incorporate lexicon into the neural network?
+      got: Utilizing BERT for Aspect-Based Sentiment Analysis via Const
+    q-59a5959a6a: What is the source of their lexicon?
+      got: Crowdsourcing for Beyond Polarity Sentiment Analysis A Pure 
+    q-e2e31ab279: What was their performance?
+      got: Opinion Recommendation using Neural Memory Model
+    q-2555ca85ff: Which datasets are used for evaluation?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-0aa46c1325: What are the baselines?
+      got: Generating Narrative Text in a Switching Dynamical System
+
+  balanced missed 35:
+    q-f1f1dcc67b: what datasets were used in evaluation?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-0ad4359e3e: Which baselines did they compare against?
+      got: Multilingual Sentiment Analysis: An RNN-Based Framework for 
+    q-eda4869c67: Which dataset do they use?
+      got: Learning to Detect Opinion Snippet for Aspect-Based Sentimen
+    q-589be705a5: What data did they use?
+      got: $\rho$-hot Lexicon Embedding-based Two-level LSTM for Sentim
+    q-6e962f1f23: What is the state of the art?
+      got: A Deeper Look into Sarcastic Tweets Using Deep Convolutional
+    q-578d0b23cb: What datasets are used in training?
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-609fbe6273: What are the datasets used
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-f7d0fa5201: What were the baselines?
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+    q-3d34a02cee: what classifiers were used in this paper?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-96992460cf: what are their evaluation metrics?
+      got: Recurrently Controlled Recurrent Networks
+    q-4e4d377b14: What dataset is used?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-828ce5faed: What metrics are considered?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-0b9021cefc: What are the other models they compare to?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-2d307b4374: How long are the datasets?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-fe90eec1e3: What are the sources of the data?
+      got: Automating Political Bias Prediction
+    q-4cbe5a36b4: What baselines did they consider?
+      got: Opinion Recommendation using Neural Memory Model
+    q-37edc25e39: What was the baseline?
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+    q-e431661f17: By how much did they improve?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-876700622b: What dataset did they use?
+      got: Learning to Detect Opinion Snippet for Aspect-Based Sentimen
+    q-e9d9bb87a5: How much do they outperform previous state-of-the-art?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-cc5d390391: Which sentiment analysis tasks are addressed?
+      got: Basic tasks of sentiment analysis
+    q-8fc14714eb: what sentiment sources do they compare with?
+      got: A Deeper Look into Sarcastic Tweets Using Deep Convolutional
+    q-c012219011: What classifier do they use?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-a6950c22c7: Which dataset(s) do they use to train the model?
+      got: Cost-Sensitive BERT for Generalisable Sentence Classificatio
+    q-fabf6fdcfb: Which benchmark datasets are used?
+      got: Recurrently Controlled Recurrent Networks
+    q-b984612cea: Does their model have more parameters than other models?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-b0a1862828: What metrics are used in evaluation?
+      got: Recurrently Controlled Recurrent Networks
+    q-72ce05546c: Which natural language(s) are studied in this paper?
+      got: Examining Gender and Race Bias in Two Hundred Sentiment Anal
+    q-aa979aed5a: Do they report results only on English datasets?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-b03e8e9a0c: What baselines are used?
+      got: Incorporating Structured Commonsense Knowledge in Story Comp
+    q-6dfad97356: How do they incorporate lexicon into the neural network?
+      got: Opinion Recommendation using Neural Memory Model
+    q-59a5959a6a: What is the source of their lexicon?
+      got: Crowdsourcing for Beyond Polarity Sentiment Analysis A Pure 
+    q-e2e31ab279: What was their performance?
+      got: Incorporating Structured Commonsense Knowledge in Story Comp
+    q-2555ca85ff: Which datasets are used for evaluation?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-0aa46c1325: What are the baselines?
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+
+  deep missed 37:
+    q-0ad4359e3e: Which baselines did they compare against?
+      got: Multilingual Sentiment Analysis: An RNN-Based Framework for 
+    q-eda4869c67: Which dataset do they use?
+      got: Learning to Detect Opinion Snippet for Aspect-Based Sentimen
+    q-ecc63972b2: How do they encourage understanding of literature as part of t
+      got: Crowdsourcing for Beyond Polarity Sentiment Analysis A Pure 
+    q-589be705a5: What data did they use?
+      got: $\rho$-hot Lexicon Embedding-based Two-level LSTM for Sentim
+    q-d8cecea477: Which metrics are they evaluating with?
+      got: Recurrently Controlled Recurrent Networks
+    q-0b92fb692f: What are the performance results?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-578d0b23cb: What datasets are used in training?
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-609fbe6273: What are the datasets used
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-f7d0fa5201: What were the baselines?
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+    q-3d34a02cee: what classifiers were used in this paper?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-96992460cf: what are their evaluation metrics?
+      got: Recurrently Controlled Recurrent Networks
+    q-4e4d377b14: What dataset is used?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-828ce5faed: What metrics are considered?
+      got: We Built a Fake News&Click-bait Filter: What Happened Next W
+    q-0b9021cefc: What are the other models they compare to?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-2d307b4374: How long are the datasets?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-fe90eec1e3: What are the sources of the data?
+      got: Automating Political Bias Prediction
+    q-4cbe5a36b4: What baselines did they consider?
+      got: Opinion Recommendation using Neural Memory Model
+    q-37edc25e39: What was the baseline?
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+    q-e431661f17: By how much did they improve?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-876700622b: What dataset did they use?
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-e9d9bb87a5: How much do they outperform previous state-of-the-art?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-cc5d390391: Which sentiment analysis tasks are addressed?
+      got: Basic tasks of sentiment analysis
+    q-8fc14714eb: what sentiment sources do they compare with?
+      got: A Deeper Look into Sarcastic Tweets Using Deep Convolutional
+    q-c012219011: What classifier do they use?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-a6950c22c7: Which dataset(s) do they use to train the model?
+      got: Cost-Sensitive BERT for Generalisable Sentence Classificatio
+    q-3a6e843c6c: What are the state of the art models?
+      got: Cell-aware Stacked LSTMs for Modeling Sentences
+    q-fabf6fdcfb: Which benchmark datasets are used?
+      got: Recurrently Controlled Recurrent Networks
+    q-b984612cea: Does their model have more parameters than other models?
+      got: Adapt or Get Left Behind: Domain Adaptation through BERT Lan
+    q-b0a1862828: What metrics are used in evaluation?
+      got: Recurrently Controlled Recurrent Networks
+    q-72ce05546c: Which natural language(s) are studied in this paper?
+      got: Examining Gender and Race Bias in Two Hundred Sentiment Anal
+    q-aa979aed5a: Do they report results only on English datasets?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-b03e8e9a0c: What baselines are used?
+      got: Incorporating Structured Commonsense Knowledge in Story Comp
+    q-6dfad97356: How do they incorporate lexicon into the neural network?
+      got: Opinion Recommendation using Neural Memory Model
+    q-59a5959a6a: What is the source of their lexicon?
+      got: Crowdsourcing for Beyond Polarity Sentiment Analysis A Pure 
+    q-e2e31ab279: What was their performance?
+      got: BB_twtr at SemEval-2017 Task 4: Twitter Sentiment Analysis w
+    q-2555ca85ff: Which datasets are used for evaluation?
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-0aa46c1325: What are the baselines?
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+
+======================================================================================
+
+Wrote /content/drive/MyDrive/vectora_results/iter2_2026-10-18_2219/exp1_B_raw_notitle.json
+

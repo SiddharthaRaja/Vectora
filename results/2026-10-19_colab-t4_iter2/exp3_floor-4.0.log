@@ -1,0 +1,160 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 4571.04it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 4147.34it/s]
+/usr/local/lib/python3.13/dist-packages/qdrant_client/local/distances.py:143: RuntimeWarning: overflow encountered in divide
+  vectors /= np.where(vectors_norm != 0.0, vectors_norm, EPSILON)
+/usr/local/lib/python3.13/dist-packages/numpy/linalg/_linalg.py:2832: RuntimeWarning: overflow encountered in multiply
+  s = (x.conj() * x).real
+/usr/local/lib/python3.13/dist-packages/qdrant_client/local/distances.py:143: RuntimeWarning: invalid value encountered in divide
+  vectors /= np.where(vectors_norm != 0.0, vectors_norm, EPSILON)
+
+Scoring 88 questions and 21 negatives in balanced mode.
+This makes 218-ish OpenAI calls, roughly $0.076 on gpt-4o-mini.
+
+  [1/109] Do the authors give any examples of major events which draw th
+  [2/109] Which tweets are used to output the daily sentiment signal?
+  [3/109] What is the baseline machine learning prediction approach?
+  [4/109] How are aspects identified in aspect extraction?
+  [5/109] How is the expectation regularization loss defined?
+  [6/109] How is Super Character method modified to handle tabular data 
+  [7/109] which non-english language had the best performance?
+  [8/109] which non-english language was the had the worst results?
+  [9/109] what datasets were used in evaluation?
+  [10/109] Which baselines did they compare against?
+  [11/109] Which dataset do they use?
+  [12/109] How do they encourage understanding of literature as part of t
+  [13/109] How do they compare lexicons?
+  [14/109] What data did they use?
+  [15/109] What is the state of the art?
+  [16/109] What language tasks did they experiment on?
+  [17/109] Which metrics are they evaluating with?
+  [18/109] Was the introduced LSTM+CNN model trained on annotated data in
+  [19/109] By how much does their model outperform the baseline in the cr
+  [20/109] What are the performance results?
+  [21/109] Did they experiment on all the tasks?
+  [22/109] What models did they compare to?
+  [23/109] What datasets are used in training?
+  [24/109] Which model is used to capture the implicit structure?
+  [25/109] How is the robustness of the model evaluated?
+  [26/109] How is the effectiveness of the model evaluated?
+  [27/109] Which soft-selection approaches are evaluated?
+  [28/109] Is the model evaluated against the baseline also on single-asp
+  [29/109] Which race and gender are given higher sentiment intensity pre
+  [30/109] What criteria are used to select the 8,640 English sentences?
+  [31/109] Do they report results only on English datasets?
+  [32/109] How do the authors define or exemplify 'incorrect words'?
+  [33/109] Do they test their approach on a dataset without incomplete da
+  [34/109] Do they compare to other models appart from HAN?
+  [35/109] What are the datasets used
+  [36/109] Which models did they experiment with?
+  [37/109] What were their best results on the benchmark datasets?
+  [38/109] What were the baselines?
+  [39/109] what classifiers were used in this paper?
+  [40/109] what are their evaluation metrics?
+  [41/109] what types of features were used?
+  [42/109] What dataset is used?
+  [43/109] What metrics are considered?
+  [44/109] What are the other models they compare to?
+  [45/109] How long are the datasets?
+  [46/109] What are the sources of the data?
+  [47/109] What baselines did they consider?
+  [48/109] What types of social media did they consider?
+  [49/109] What was the baseline?
+  [50/109] By how much did they improve?
+  [51/109] What dataset did they use?
+  [52/109] How much do they outperform previous state-of-the-art?
+  [53/109] How do they generate the auxiliary sentence?
+  [54/109] How are different domains weighted in WDIRL?
+  [55/109] How is DIRL evaluated?
+  [56/109] Which sentiment analysis tasks are addressed?
+  [57/109] what sentiment sources do they compare with?
+  [58/109] Is the data all in Vietnamese?
+  [59/109] What classifier do they use?
+  [60/109] What is private dashboard?
+  [61/109] Which countries and languages do the political speeches and ma
+  [62/109] Do changes in policies of the political actors account for all
+  [63/109] What model are the text features used in to provide prediction
+  [64/109] How do they determine the opinion summary?
+  [65/109] Do they explore how useful is the detection history and opinio
+  [66/109] Which dataset(s) do they use to train the model?
+  [67/109] What are the state of the art models?
+  [68/109] Which benchmark datasets are used?
+  [69/109] What are the network's baseline features?
+  [70/109] By how much do they outperform BiLSTMs in Sentiment Analysis?
+  [71/109] Does their model have more parameters than other models?
+  [72/109] How is "propaganda" defined for the purposes of this study?
+  [73/109] What metrics are used in evaluation?
+  [74/109] Which natural language(s) are studied in this paper?
+  [75/109] Who are the crowdworkers?
+  [76/109] Which toolkits do they use?
+  [77/109] Which sentiment class is the most accurately predicted by ELS 
+  [78/109] Do they report results only on English datasets?
+  [79/109] What were the five English subtasks?
+  [80/109] How many CNNs and LSTMs were ensembled?
+  [81/109] What metrics are used for evaluation?
+  [82/109] What baselines are used?
+  [83/109] How do they incorporate lexicon into the neural network?
+  [84/109] What is the source of their lexicon?
+  [85/109] What was their performance?
+  [86/109] Which datasets are used for evaluation?
+  [87/109] Does they focus on any specific product/service domain?
+  [88/109] What are the baselines?
+  [89/109] (negative) What is the optimal trading strategy based on reinfo
+  [90/109] (negative) How much more data does the model trained using XR l
+  [91/109] (negative) Does this implementation on CNN-DSA lead to diminish
+  [92/109] (negative) Which representation learning architecture do they a
+  [93/109] (negative) How many vanilla transformers do they use after appl
+  [94/109] (negative) What languages are the model evaluated on?
+  [95/109] (negative) what are the three reasons everybody hates them?
+  [96/109] (negative) What kernels are used in the support vector machines
+  [97/109] (negative) What is the agreement value for each dataset?
+  [98/109] (negative) How many annotators participated?
+  [99/109] (negative) how many languages exactly is the sentiment lexica f
+  [100/109] (negative) What was the baseline?
+  [101/109] (negative) What is the boiling point of water at the top of Mou
+  [102/109] (negative) How long should I boil an egg for a soft yolk?
+  [103/109] (negative) Who won the 2018 FIFA World Cup?
+  [104/109] (negative) What is the speed of light in a vacuum?
+  [105/109] (negative) How do I calculate compound interest on a fixed depo
+  [106/109] (negative) When did the Roman Empire fall?
+  [107/109] (negative) Which acoustic features work best for speech recogni
+  [108/109] (negative) How is the BLEU score computed for machine translati
+  [109/109] (negative) What tagging scheme is best for nested named entity 
+
+========================================================================
+  ANSWER QUALITY — qasper-sentiment-clean, balanced mode
+========================================================================
+  cases 109   answered 88   refused 21
+
+  Mechanical (computed from the text — trust these first)
+    citation coverage      67.9%   share of substantive sentences with a marker
+    citation validity      100.0%   cited sources that were really in the prompt
+    quote verifiability    100.0%   supplied quotes found in their source
+    anchor recall          100.0%   expected phrases present in the answer
+    refusal accuracy       83.5%   answered when it should, declined when it should
+
+  Judged by a model (indicative — see the module docstring)
+    groundedness           0/100
+    relevance              0/100
+    completeness           0/100
+
+  Cost
+    total                  $0.0200  ($0.00018 per question)
+    median latency         4025 ms
+
+  Wrong answer/refusal decision:
+    refused a fair question: What was the baseline?
+    refused a fair question: Which benchmark datasets are used?
+    refused a fair question: Which natural language(s) are studied in this paper?
+    refused a fair question: Who are the crowdworkers?
+    refused a fair question: Which toolkits do they use?
+    refused a fair question: Do they report results only on English datasets?
+    refused a fair question: What were the five English subtasks?
+    refused a fair question: What is the source of their lexicon?
+========================================================================
+
+Wrote /content/drive/MyDrive/vectora_results/iter2_2026-10-18_2219/exp3_floor-4.0.json
+

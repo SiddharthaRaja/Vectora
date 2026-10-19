@@ -1,0 +1,54 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 5229.36it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 5512.12it/s]
+/usr/local/lib/python3.13/dist-packages/qdrant_client/local/distances.py:143: RuntimeWarning: overflow encountered in divide
+  vectors /= np.where(vectors_norm != 0.0, vectors_norm, EPSILON)
+/usr/local/lib/python3.13/dist-packages/qdrant_client/local/distances.py:143: RuntimeWarning: invalid value encountered in divide
+  vectors /= np.where(vectors_norm != 0.0, vectors_norm, EPSILON)
+/usr/local/lib/python3.13/dist-packages/numpy/linalg/_linalg.py:2832: RuntimeWarning: overflow encountered in multiply
+  s = (x.conj() * x).real
+
+Running 9 configurations over 88 cases and 21 negatives, in balanced mode.
+
+  [1/9] hybrid+rerank+mmr — The shipped balanced configuration
+  [2/9] dense-only — Lexical retrieval off (sparse weight 0)
+  [3/9] sparse-only — Dense retrieval off (dense weight 0)
+  [4/9] no-rerank — Cross-encoder off; fusion order kept
+  [5/9] no-mmr — Diversification off; top-k by score
+  [6/9] no-hyde — Hypothetical document embedding off
+  [7/9] no-rewrite — Query rewriting off; original phrasing only
+  [8/9] no-expansion — Neither HyDE nor rewriting (all LLM expansion off)
+  [9/9] retrieval-only — No expansion, no rerank, no MMR — raw hybrid fusion
+
+========================================================================================================
+  ABLATION — sorted by recall, compared against 'hybrid+rerank+mmr'
+========================================================================================================
+
+  variant               recall     MRR    nDCG    prec   p50ms   p95ms   neg    Δrecall  verdict
+  ----------------------------------------------------------------------------------------------------
+  sparse-only            0.580   0.483   0.499   0.345     201     255   29%     +0.341  better (CI +0.227..+0.455)
+  no-expansion       *   0.580   0.495   0.500   0.361     139     164   29%     +0.341  better (CI +0.227..+0.455)
+  no-hyde                0.545   0.477   0.476   0.336     185     222   29%     +0.307  better (CI +0.205..+0.420)
+  hybrid+rerank+mmr      0.239   0.205   0.210   0.127     217     246   52%    baseline  
+  no-mmr                 0.170   0.156   0.158   0.077     181     219   52%     -0.068  no sig. diff (CI -0.159..+0.023)
+  no-rewrite             0.091   0.078   0.080   0.041     178     199   71%     -0.148  worse (CI -0.239..-0.057)
+  dense-only             0.080   0.072   0.074   0.036     210     245   76%     -0.159  worse (CI -0.239..-0.080)
+  no-rerank              0.045   0.038   0.040   0.027     157     181    0%     -0.193  worse (CI -0.284..-0.102)
+  retrieval-only     *   0.045   0.045   0.045   0.027      30      42    0%     -0.193  worse (CI -0.284..-0.102)
+  ----------------------------------------------------------------------------------------------------
+
+  n = 88 cases, 21 negatives.
+  Δ is the mean paired difference with a 95% bootstrap CI.
+  'no sig. diff' means the interval includes zero — at this sample size
+  the difference is not distinguishable from noise. Add cases to resolve it.
+  '*' marks a variant that changes more than one thing, so its effect
+  cannot be attributed to a single component.
+  'neg' is the share of off-corpus questions correctly refused.
+========================================================================================================
+
+Wrote /content/drive/MyDrive/vectora_results/iter2_2026-10-18_2219/exp5_ablate.json
+      /content/Vectora/corpora/qasper-sentiment-clean/reports/ablation-balanced.md
+

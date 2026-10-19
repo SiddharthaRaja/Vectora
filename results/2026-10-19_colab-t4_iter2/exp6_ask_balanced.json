@@ -1,0 +1,80 @@
+{
+  "answer": "| Dataset | Source [1] | Source [2] | Source [3] | Source [4] | Source [5] | Source [7] |\n|------------------------|------------|------------|------------|------------|------------|------------|\n| Aspect-based sentiment analysis dataset | Yes | No | Yes | No | Yes | No |\n| SemEval 2014 dataset | Yes | Yes | No | Yes | Yes | No |\n\nThe sources indicate that both the \"Aspect-based sentiment analysis dataset\" and the \"SemEval 2014 dataset\" are used for aspect-based sentiment analysis. However, the \"Aspect-based sentiment analysis dataset\" is mentioned in sources [1] and [3], while the \"SemEval 2014 dataset\" is cited in sources [2], [4], [5], and [7]. The \"SemEval 2014 Task datasets\" are specifically for the restaurants and laptops domain [2][4][5].",
+  "citations": [
+    {
+      "index": 1,
+      "chunk_id": "f6cdb691935ccd27",
+      "paper_id": "1710.06536",
+      "title": "Basic tasks of sentiment analysis",
+      "authors": "Sentiment Analysis, Subjectivity Detection, Deep Learning Aspect Extraction, Polarity Distribution, Convolutional Neural Network",
+      "year": "2002",
+      "doi": "",
+      "section": "Introduction",
+      "page": 2,
+      "quote": ""
+    },
+    {
+      "index": 2,
+      "chunk_id": "46504d7d76a4feb7",
+      "paper_id": "1908.11860",
+      "title": "Adapt or Get Left Behind: Domain Adaptation through BERT Language Model Finetuning for Aspect-Target Sentiment Classification",
+      "authors": "Sentiment Analysis (SA) is an active field of research in Natural Language Processing, deals with opinions in text. A typical application of classical SA in an industrial setting would be to classify a document like a product review into positve, negative or neutral sentiment polarity",
+      "year": "2014",
+      "doi": "",
+      "section": "Related Work",
+      "page": 1,
+      "quote": ""
+    },
+    {
+      "index": 4,
+      "chunk_id": "1fbb9661b977b322",
+      "paper_id": "1903.09588",
+      "title": "Utilizing BERT for Aspect-Based Sentiment Analysis via Constructing Auxiliary Sentence",
+      "authors": "",
+      "year": "2014",
+      "doi": "",
+      "section": "Methods",
+      "page": 1,
+      "quote": ""
+    }
+  ],
+  "query_type": "comparative",
+  "mode": "balanced",
+  "faithfulness": null,
+  "fallback": null,
+  "diagnostics": {
+    "mode": "balanced",
+    "query_type": "comparative",
+    "variants": [
+      "Which datasets are commonly utilized for aspect-based sentiment analysis research?",
+      "Can you list the datasets employed in aspect-based sentiment analysis studies?"
+    ],
+    "hyde_used": true,
+    "dense_hits": 200,
+    "sparse_hits": 120,
+    "fused_pool": 98,
+    "reranked": true,
+    "diversified": true,
+    "returned": 8,
+    "top_score": 9.15294,
+    "elapsed_ms": {
+      "route": 1.8,
+      "contextualise": 0.0,
+      "expand": 19439.5,
+      "search": 92.3,
+      "fuse": 1.2,
+      "rerank": 1810.8,
+      "mmr": 121.6,
+      "postprocess": 20.0,
+      "total": 21485.4,
+      "routed_by": 1.0
+    },
+    "degraded": []
+  },
+  "usage": {
+    "prompt_tokens": 1817,
+    "completion_tokens": 433,
+    "calls": 3,
+    "cost_usd": 0.00053235
+  }
+}

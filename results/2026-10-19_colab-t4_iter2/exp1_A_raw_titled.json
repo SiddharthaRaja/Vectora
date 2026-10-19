@@ -1,0 +1,53 @@
+{
+  "corpus": "qasper-sentiment",
+  "dataset": "corpora/qasper-sentiment/golden.yaml",
+  "settings": {
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "rrf_k": 60,
+    "dense_weight": 1.0,
+    "sparse_weight": 0.8
+  },
+  "reports": [
+    {
+      "mode": "fast",
+      "cases": 88,
+      "recall": 1.0,
+      "precision": 0.9198,
+      "mrr": 0.9867,
+      "ndcg": 0.9842,
+      "median_latency_ms": 48.1,
+      "p95_latency_ms": 64.4,
+      "negative_rejection_rate": 0.2857,
+      "misses": []
+    },
+    {
+      "mode": "balanced",
+      "cases": 88,
+      "recall": 0.9886,
+      "precision": 0.8712,
+      "mrr": 0.9555,
+      "ndcg": 0.9538,
+      "median_latency_ms": 5054.1,
+      "p95_latency_ms": 6628.7,
+      "negative_rejection_rate": 0.2857,
+      "misses": [
+        "q-eda4869c67"
+      ]
+    },
+    {
+      "mode": "deep",
+      "cases": 88,
+      "recall": 0.9886,
+      "precision": 0.8769,
+      "mrr": 0.9564,
+      "ndcg": 0.9544,
+      "median_latency_ms": 4120.9,
+      "p95_latency_ms": 5704.7,
+      "negative_rejection_rate": 0.2857,
+      "misses": [
+        "q-eda4869c67"
+      ]
+    }
+  ]
+}

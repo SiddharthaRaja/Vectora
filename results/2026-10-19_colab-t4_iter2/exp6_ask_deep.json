@@ -1,0 +1,103 @@
+{
+  "answer": "| Dataset | Source [1] | Source [2] | Source [3] | Source [4] | Source [5] | Source [7] |\n|------------------------|------------|------------|------------|------------|------------|------------|\n| Aspect-based sentiment analysis dataset | Yes | No | Yes | No | Yes | No |\n| SemEval 2014 dataset | Yes | Yes | No | Yes | Yes | No |\n\nThe sources indicate that both the \"Aspect-based sentiment analysis dataset\" and the \"SemEval 2014 dataset\" are used for aspect-based sentiment analysis. However, the \"Aspect-based sentiment analysis dataset\" is mentioned in sources [1] and [3], while the \"SemEval 2014 dataset\" is referenced in sources [2], [4], [5], and [7].",
+  "citations": [
+    {
+      "index": 1,
+      "chunk_id": "f6cdb691935ccd27",
+      "paper_id": "1710.06536",
+      "title": "Basic tasks of sentiment analysis",
+      "authors": "Sentiment Analysis, Subjectivity Detection, Deep Learning Aspect Extraction, Polarity Distribution, Convolutional Neural Network",
+      "year": "2002",
+      "doi": "",
+      "section": "Introduction",
+      "page": 2,
+      "quote": "For training and evaluation of the proposed approach, we used two corpora: Aspect-based sentiment analysis dataset developed by ; and SemEval 2014 dataset. The dataset consists of training and test sets from two domains, Laptop and Restaurant; see Table the table ."
+    },
+    {
+      "index": 2,
+      "chunk_id": "46504d7d76a4feb7",
+      "paper_id": "1908.11860",
+      "title": "Adapt or Get Left Behind: Domain Adaptation through BERT Language Model Finetuning for Aspect-Target Sentiment Classification",
+      "authors": "Sentiment Analysis (SA) is an active field of research in Natural Language Processing, deals with opinions in text. A typical application of classical SA in an industrial setting would be to classify a document like a product review into positve, negative or neutral sentiment polarity",
+      "year": "2014",
+      "doi": "",
+      "section": "Related Work",
+      "page": 1,
+      "quote": ""
+    },
+    {
+      "index": 4,
+      "chunk_id": "1fbb9661b977b322",
+      "paper_id": "1903.09588",
+      "title": "Utilizing BERT for Aspect-Based Sentiment Analysis via Constructing Auxiliary Sentence",
+      "authors": "",
+      "year": "2014",
+      "doi": "",
+      "section": "Methods",
+      "page": 1,
+      "quote": "We also evaluate our method on SemEval-2014 Task dataset for aspect-based sentiment analysis."
+    }
+  ],
+  "query_type": "comparative",
+  "mode": "deep",
+  "faithfulness": {
+    "score": 80,
+    "verdict": "MOSTLY_FAITHFUL",
+    "supported_claims": [
+      "Aspect-based sentiment analysis dataset is used in Source [1]",
+      "SemEval 2014 dataset is used in Source [1]",
+      "SemEval 2014 dataset is used in Source [4]",
+      "SemEval 2014 dataset is used in Source [5]"
+    ],
+    "unsupported_claims": [
+      "Aspect-based sentiment analysis dataset is used in Source [2]",
+      "Aspect-based sentiment analysis dataset is used in Source [3]",
+      "Aspect-based sentiment analysis dataset is used in Source [6]",
+      "Aspect-based sentiment analysis dataset is used in Source [7]",
+      "Aspect-based sentiment analysis dataset is used in Source [8]",
+      "SemEval 2014 dataset is used in Source [2]",
+      "SemEval 2014 dataset is used in Source [3]",
+      "SemEval 2014 dataset is used in Source [6]",
+      "SemEval 2014 dataset is used in Source [7]",
+      "SemEval 2014 dataset is used in Source [8]"
+    ],
+    "summary": "The answer is partially supported by the sources, as it correctly identifies the use of the 'Aspect-based sentiment analysis dataset' and 'SemEval 2014 dataset' in specific sources, but incorrectly claims their use in other sources."
+  },
+  "fallback": null,
+  "diagnostics": {
+    "mode": "deep",
+    "query_type": "comparative",
+    "variants": [
+      "Which datasets are utilized for aspect-based opinion mining?",
+      "Can you list the datasets employed in aspect-based sentiment analysis tasks?",
+      "What resources are commonly used for evaluating aspect-based polarity classification?"
+    ],
+    "hyde_used": true,
+    "dense_hits": 384,
+    "sparse_hits": 256,
+    "fused_pool": 208,
+    "reranked": true,
+    "diversified": true,
+    "returned": 8,
+    "top_score": 9.15294,
+    "elapsed_ms": {
+      "route": 1.7,
+      "contextualise": 0.0,
+      "expand": 12935.5,
+      "search": 124.0,
+      "fuse": 2.8,
+      "rerank": 1917.5,
+      "mmr": 118.4,
+      "postprocess": 15.4,
+      "total": 15113.6,
+      "routed_by": 1.0
+    },
+    "degraded": []
+  },
+  "usage": {
+    "prompt_tokens": 4642,
+    "completion_tokens": 739,
+    "calls": 4,
+    "cost_usd": 0.0011397
+  }
+}

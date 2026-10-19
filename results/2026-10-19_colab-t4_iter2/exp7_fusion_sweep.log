@@ -1,0 +1,44 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 4661.70it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 8737.61it/s]
+
+Running 7 configurations over 88 cases and 21 negatives, in fast mode.
+
+  [1/7] sweep-baseline — Shipped weights (dense 1.0, sparse 0.8)
+  [2/7] sparse-0.0 — dense 1.0, sparse 0.0
+  [3/7] sparse-0.32 — dense 1.0, sparse 0.32
+  [4/7] sparse-0.64 — dense 1.0, sparse 0.64
+  [5/7] sparse-0.96 — dense 1.0, sparse 0.96
+  [6/7] sparse-1.28 — dense 1.0, sparse 1.28
+  [7/7] sparse-1.6 — dense 1.0, sparse 1.6
+
+========================================================================================================
+  ABLATION — sorted by recall, compared against 'sweep-baseline'
+========================================================================================================
+
+  variant               recall     MRR    nDCG    prec   p50ms   p95ms   neg    Δrecall  verdict
+  ----------------------------------------------------------------------------------------------------
+  sparse-0.96            0.545   0.452   0.467   0.352      29      40   38%     +0.023  no sig. diff (CI +0.000..+0.057)
+  sweep-baseline         0.523   0.446   0.461   0.343      28      40   38%    baseline  
+  sparse-0.0             0.523   0.402   0.426   0.284      29      42   33%     +0.000  no sig. diff (CI -0.068..+0.068)
+  sparse-0.32            0.523   0.439   0.455   0.341      30      41   38%     +0.000  no sig. diff (CI +0.000..+0.000)
+  sparse-0.64            0.523   0.439   0.455   0.343      29      40   38%     +0.000  no sig. diff (CI +0.000..+0.000)
+  sparse-1.28            0.523   0.460   0.464   0.375      29      39   33%     +0.000  no sig. diff (CI -0.057..+0.057)
+  sparse-1.6             0.523   0.460   0.465   0.375      29      40   33%     +0.000  no sig. diff (CI -0.057..+0.057)
+  ----------------------------------------------------------------------------------------------------
+
+  n = 88 cases, 21 negatives.
+  Δ is the mean paired difference with a 95% bootstrap CI.
+  'no sig. diff' means the interval includes zero — at this sample size
+  the difference is not distinguishable from noise. Add cases to resolve it.
+  '*' marks a variant that changes more than one thing, so its effect
+  cannot be attributed to a single component.
+  'neg' is the share of off-corpus questions correctly refused.
+========================================================================================================
+
+Wrote /content/drive/MyDrive/vectora_results/iter2_2026-10-18_2219/exp7_fusion_sweep.json
+      /content/Vectora/corpora/qasper-sentiment-clean/reports/sweep-fast.md
+

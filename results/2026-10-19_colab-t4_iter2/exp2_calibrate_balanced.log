@@ -1,0 +1,25 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 4105.11it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 4172.92it/s]
+
+Calibrating in balanced mode over 88 real and 21 off-topic questions…
+
+Cross-encoder logit of the best chunk
+  on-topic   n=88  min=-3.161  p10=+0.478  median=+4.056  p90=+7.544  max=+9.426
+  off-topic  n=21  min=-11.271  p10=-10.955  median=+2.996  p90=+8.086  max=+9.859
+  suggested  VECTORA_MIN_RERANK_SCORE=-0.776
+             distributions overlap — this floor refuses 4/88 real questions and catches 6/21 off-topic ones
+  current    -4.0
+
+Dense cosine of the best chunk
+  on-topic   n=85  min=+0.506  p10=+0.571  median=+0.660  p90=+0.771  max=+24093682247550.770
+  off-topic  n=21  min=+0.217  p10=+0.240  median=+0.559  p90=+0.708  max=+0.834
+  suggested  VECTORA_MIN_DENSE_SCORE=0.539
+             distributions overlap — this floor refuses 3/85 real questions and catches 9/21 off-topic ones
+  current    0.45
+
+Nothing has been changed. Put the suggested values in .env if they look right, then re-run `vectora eval` to confirm both the recall and the rejection rate moved the way you expected.
+

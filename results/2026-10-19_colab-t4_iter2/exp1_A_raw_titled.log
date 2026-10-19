@@ -1,0 +1,85 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 5130.56it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 4253.61it/s]
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-940873658e answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-547be35cff answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-38e2f07ba9 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4d7ff4e5d0 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-7e161d9fac answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-028910d643 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-f08a66665f answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b512ab8de2 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-6ad92aad46 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4fdc707fae answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b04098f750 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-11e376f98d answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-speech answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-mt answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-ner answered=True
+/usr/local/lib/python3.13/dist-packages/numpy/linalg/_linalg.py:2832: RuntimeWarning: overflow encountered in multiply
+  s = (x.conj() * x).real
+/usr/local/lib/python3.13/dist-packages/qdrant_client/local/distances.py:143: RuntimeWarning: overflow encountered in divide
+  vectors /= np.where(vectors_norm != 0.0, vectors_norm, EPSILON)
+/usr/local/lib/python3.13/dist-packages/qdrant_client/local/distances.py:143: RuntimeWarning: invalid value encountered in divide
+  vectors /= np.where(vectors_norm != 0.0, vectors_norm, EPSILON)
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-940873658e answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-547be35cff answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-38e2f07ba9 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4d7ff4e5d0 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-7e161d9fac answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-028910d643 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-f08a66665f answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b512ab8de2 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-6ad92aad46 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4fdc707fae answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b04098f750 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-11e376f98d answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-speech answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-mt answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-ner answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-940873658e answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-547be35cff answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-38e2f07ba9 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4d7ff4e5d0 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-7e161d9fac answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-028910d643 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-f08a66665f answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b512ab8de2 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-6ad92aad46 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-4fdc707fae answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-b04098f750 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=neg-11e376f98d answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-speech answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-mt answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=adjacent-ner answered=True
+
+Loaded 88 cases and 21 negatives from golden.yaml (corpus 'qasper-sentiment')
+  evaluating fast…
+  evaluating balanced…
+  evaluating deep…
+
+======================================================================================
+  RETRIEVAL EVALUATION
+======================================================================================
+
+  mode        recall    prec     MRR    nDCG   p50 ms   p95 ms  neg ok
+  ----------------------------------------------------------------------------------
+  fast         1.000   0.920   0.987   0.984       48       64     29%
+  balanced     0.989   0.871   0.955   0.954     5054     6629     29%
+  deep         0.989   0.877   0.956   0.954     4121     5705     29%
+
+  balanced missed 1:
+    q-eda4869c67: In the paper "Improving Distributed Representations of Tweets 
+      got: Multitask Learning for Fine-Grained Twitter Sentiment Analys
+
+  deep missed 1:
+    q-eda4869c67: In the paper "Improving Distributed Representations of Tweets 
+      got: Multitask Learning for Fine-Grained Twitter Sentiment Analys
+
+======================================================================================
+
+Wrote /content/drive/MyDrive/vectora_results/iter2_2026-10-18_2219/exp1_A_raw_titled.json
+

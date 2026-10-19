@@ -1,0 +1,75 @@
+{
+  "answer": "| Dataset | Source |\n|---------|--------|\n| SemEval-2014 Task dataset | [3][4][6] |\n| Aspect-based sentiment analysis dataset developed by | [4] |\n| SentiHood dataset | [3] |\n\nThe sources indicate that the SemEval-2014 Task dataset and the Aspect-based sentiment analysis dataset developed by are used for aspect-based sentiment analysis. However, the SentiHood dataset is mentioned only in one source and its exact nature is not clear from the provided information.",
+  "citations": [
+    {
+      "index": 3,
+      "chunk_id": "1fbb9661b977b322",
+      "paper_id": "1903.09588",
+      "title": "Utilizing BERT for Aspect-Based Sentiment Analysis via Constructing Auxiliary Sentence",
+      "authors": "",
+      "year": "2014",
+      "doi": "",
+      "section": "Methods",
+      "page": 1,
+      "quote": ""
+    },
+    {
+      "index": 4,
+      "chunk_id": "f6cdb691935ccd27",
+      "paper_id": "1710.06536",
+      "title": "Basic tasks of sentiment analysis",
+      "authors": "Sentiment Analysis, Subjectivity Detection, Deep Learning Aspect Extraction, Polarity Distribution, Convolutional Neural Network",
+      "year": "2002",
+      "doi": "",
+      "section": "Introduction",
+      "page": 2,
+      "quote": ""
+    },
+    {
+      "index": 6,
+      "chunk_id": "46504d7d76a4feb7",
+      "paper_id": "1908.11860",
+      "title": "Adapt or Get Left Behind: Domain Adaptation through BERT Language Model Finetuning for Aspect-Target Sentiment Classification",
+      "authors": "Sentiment Analysis (SA) is an active field of research in Natural Language Processing, deals with opinions in text. A typical application of classical SA in an industrial setting would be to classify a document like a product review into positve, negative or neutral sentiment polarity",
+      "year": "2014",
+      "doi": "",
+      "section": "Related Work",
+      "page": 1,
+      "quote": ""
+    }
+  ],
+  "query_type": "comparative",
+  "mode": "fast",
+  "faithfulness": null,
+  "fallback": null,
+  "diagnostics": {
+    "mode": "fast",
+    "query_type": "comparative",
+    "variants": [],
+    "hyde_used": false,
+    "dense_hits": 24,
+    "sparse_hits": 24,
+    "fused_pool": 35,
+    "reranked": false,
+    "diversified": false,
+    "returned": 8,
+    "top_score": 0.02951,
+    "elapsed_ms": {
+      "route": 898.0,
+      "contextualise": 0.0,
+      "expand": 10654.4,
+      "search": 21.3,
+      "fuse": 0.4,
+      "postprocess": 75.0,
+      "total": 10751.1,
+      "routed_by": 1.0
+    },
+    "degraded": []
+  },
+  "usage": {
+    "prompt_tokens": 1550,
+    "completion_tokens": 120,
+    "calls": 2,
+    "cost_usd": 0.0003045
+  }
+}
