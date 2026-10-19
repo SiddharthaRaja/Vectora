@@ -16,6 +16,8 @@ hardcoded ``localhost:6333``.
 
 from __future__ import annotations
 
+import contextlib
+import threading
 from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -64,6 +66,18 @@ class QdrantStore:
         self.collection = collection or settings.qdrant_collection or "vectora_default"
         self._client = client
         self._ensured = False
+        # Embedded (local-mode) Qdrant is not safe to call from several threads
+        # at once: its cosine search normalises the stored vector matrix *in
+        # place* on every query. Retrieval runs one dense search per query
+        # variant concurrently via asyncio.to_thread, so in balanced/deep mode
+        # those in-place writes race. Run 2 showed the symptom: cosine scores
+        # of ~1e13, numpy overflow warnings from qdrant_client/local, and an
+        # ablation baseline far below the identical eval run. A server
+        # handles its own concurrency, so the lock is only taken in embedded mode.
+        self._lock = threading.RLock()
+
+    def _guard(self) -> contextlib.AbstractContextManager:
+        return self._lock if self.settings.qdrant_path else contextlib.nullcontext()
 
     # ── connection ────────────────────────────────────────────────────────
 
@@ -184,7 +198,8 @@ class QdrantStore:
                 )
                 for i, chunk in enumerate(window)
             ]
-            self.client.upsert(collection_name=self.collection, points=points, wait=True)
+            with self._guard():
+                self.client.upsert(collection_name=self.collection, points=points, wait=True)
             total += len(points)
         log.info("upserted", extra={"points": total, "collection": self.collection})
         return total
@@ -249,15 +264,16 @@ class QdrantStore:
             self.ensure_collection()
         query = vector.tolist() if isinstance(vector, np.ndarray) else list(vector)
 
-        response = self.client.query_points(
-            collection_name=self.collection,
-            query=query,
-            limit=limit,
-            with_payload=True,
-            with_vectors=False,
-            query_filter=self.build_filter(filters),
-            score_threshold=score_threshold,
-        )
+        with self._guard():
+            response = self.client.query_points(
+                collection_name=self.collection,
+                query=query,
+                limit=limit,
+                with_payload=True,
+                with_vectors=False,
+                query_filter=self.build_filter(filters),
+                score_threshold=score_threshold,
+            )
         out: list[tuple[Chunk, float]] = []
         for point in response.points:
             chunk = _to_chunk(point.payload)
