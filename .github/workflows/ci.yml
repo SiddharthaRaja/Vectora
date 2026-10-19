@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Lint and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      # CPU-only torch: the default wheel pulls ~2 GB of CUDA libraries.
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e ".[ingest,eval,dev]"
+      - run: ruff check vectora evaluation tests
+      - run: pytest -q
+
+  eval-gate:
+    name: Retrieval eval gate
+    runs-on: ubuntu-latest
+    needs: tests
+    timeout-minutes: 30
+    env:
+      # Embedded Qdrant, no server, no LLM: fast mode is retrieval only.
+      VECTORA_QDRANT_PATH: ./data/qdrant
+      VECTORA_QDRANT_URL: ""
+      # Calibrated on title-free QASPER questions (run 2).
+      VECTORA_MIN_DENSE_SCORE: "0.40"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - uses: actions/cache@v4
+        with:
+          path: |
+            data/qasper
+            ~/.cache/huggingface
+          key: eval-data-v1
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e ".[ingest,eval]"
+
+      # 60 dev papers, 71 title-free questions, 8 off-corpus negatives.
+      # Deterministic: the same papers and questions every run.
+      - name: Build the CI corpus
+        run: python scripts/qasper_corpus.py --corpus ci --split dev --papers 60 --force
+      - name: Ingest and index
+        run: |
+          vectora --corpus ci ingest --no-semantic
+          vectora --corpus ci index --recreate
+      - name: Evaluate (fast mode)
+        run: vectora --corpus ci eval --mode fast --output ci-eval.json
+      - name: Compare with the baseline
+        run: python -m evaluation.gate check --report ci-eval.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-eval
+          path: |
+            ci-eval.json
+            ci_baseline.suggested.json
+          if-no-files-found: ignore

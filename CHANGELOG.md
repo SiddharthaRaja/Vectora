@@ -46,6 +46,20 @@ Notable changes per release. Dates are UTC.
   answers with their cited sources to CSV, hand-label faithfulness, get
   agreement, Cohen's kappa and the confusion matrix.
 
+### CI and the eval regression gate
+
+- `.github/workflows/ci.yml`: lint and unit tests on every push and PR, then a
+  retrieval eval gate. The gate builds a fixed 60-paper QASPER dev corpus
+  (71 title-free questions, 8 negatives), indexes it with embedded Qdrant on
+  CPU and runs `fast`-mode retrieval — no GPU, no LLM, no API key.
+- `evaluation/gate.py` compares the report with `evaluation/ci_baseline.json`
+  and fails on a drop of more than one case's worth (recall, paper recall,
+  MRR, nDCG, negative rejection). The first run has no baseline, passes, and
+  uploads `ci_baseline.suggested.json` as an artifact to commit.
+- The CI corpus is chunked with `--no-semantic` to stay fast, so its numbers
+  are a regression signal, not comparable with the semantic-chunked runs.
+- Faithfulness is not gated in CI yet: it needs an LLM.
+
 ### QASPER builder
 
 - Title-free queries by default (`--title-prefix` restores the old,
