@@ -251,6 +251,12 @@ class Settings(BaseSettings):
     # placed first in a good pool. Both floors below are on scales that mean
     # the same thing from one query to the next. Tune them with `vectora eval`,
     # which reports how often off-topic questions are correctly refused.
+    use_mmr: bool | None = None
+    """Override MMR diversification for every mode (``VECTORA_USE_MMR``).
+    Unset keeps each mode's own choice. Run 3's ablation on 300 papers found
+    MMR slightly *lowers* passage-level recall (diversifying across papers
+    pushes out a second chunk from the right one), so it is worth testing off."""
+
     min_rerank_score: float = -4.0
     """Cross-encoder logit below which nothing retrieved is relevant. For
     ms-marco-MiniLM-L-6-v2, on-topic passages score above 0 and clearly
@@ -444,7 +450,10 @@ class Settings(BaseSettings):
         return self.qdrant_collection or profile.collection
 
     def profile(self, mode: SearchMode) -> ModeProfile:
-        return MODE_PROFILES[mode]
+        base = MODE_PROFILES[mode]
+        if self.use_mmr is None or base.use_mmr == self.use_mmr:
+            return base
+        return base.model_copy(update={"use_mmr": self.use_mmr})
 
     def route(self, query_type: QueryType) -> RouteProfile:
         return ROUTE_PROFILES[query_type]

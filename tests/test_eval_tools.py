@@ -375,3 +375,14 @@ def test_ablate_no_llm_skips_expansion_variants_and_drops_the_llm(monkeypatch, s
     result = CliRunner().invoke(cli.app, ["ablate", "--no-llm"])
     assert result.exit_code == 0, result.output
     assert seen == {"has_llm": False, "no_llm": True}
+
+
+def test_use_mmr_override_applies_to_every_mode(settings):
+    from vectora.config import SearchMode
+
+    assert settings.profile(SearchMode.BALANCED).use_mmr is True
+    off = settings.model_copy(update={"use_mmr": False})
+    assert off.profile(SearchMode.BALANCED).use_mmr is False
+    assert off.profile(SearchMode.DEEP).use_mmr is False
+    # Everything else in the profile is untouched.
+    assert off.profile(SearchMode.BALANCED).use_reranker is True
