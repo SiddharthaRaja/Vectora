@@ -60,3 +60,24 @@ with Ollama's "token repeat limit reached" (the model looped). Re-run in run 3b.
 ## Not done here
 - D (deep, grounding judge) and F (30-answer export): cut off — `vectora_run3b.ipynb`.
 - Ablation: moved to the laptop CPU, `vectora ablate --no-llm`.
+
+## E — ablation (laptop CPU, `vectora ablate --no-llm`, balanced, top-5)
+
+| variant | passage recall@5 | Δ vs baseline (95% CI) | off-corpus refused | p50 |
+|---|---|---|---|---|
+| no-mmr | 0.296 | +0.019 (−0.003 to +0.038) | 6/8 | 1.8 s |
+| sparse-only | 0.288 | +0.011 (−0.019 to +0.038) | 7/8 | 2.6 s |
+| **hybrid + rerank + MMR (baseline)** | 0.277 | — | 6/8 | 2.6 s |
+| dense-only | 0.266 | −0.011 (−0.038 to +0.016) | 6/8 | 2.6 s |
+| retrieval-only (no rerank, no MMR) | 0.255 | −0.022 (−0.063 to +0.019) | 8/8 | 0.3 s |
+| no-rerank | 0.244 | −0.033 (−0.077 to +0.005) | 8/8 | 1.1 s |
+
+- **The race is gone:** the ablation baseline (0.277 at top-5) now agrees with the eval (0.299 at
+  top-6). In run 2 it was 0.239 vs 0.591.
+- No single stage is significant at n = 365. The reranker is the largest and closest (−0.033 without
+  it); MMR, if anything, hurts passage recall (+0.019 without it) — diversifying across papers
+  pushes out a second chunk from the right paper. Dense and sparse are interchangeable here.
+- Every reranked variant lets 2 off-corpus questions through; the rerank floor (−4.0) needs
+  recalibrating (calibration suggests about −0.26).
+- Candidate default for this corpus: rerank on, MMR off — as good or better, ~30% faster. To be
+  confirmed as one combined change.
