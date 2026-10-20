@@ -331,3 +331,25 @@ class TestTracingIsOptional:
 
     def test_set_attributes_tolerates_none(self):
         set_attributes(None, anything=1)  # must not raise
+
+
+def test_eval_no_llm_flag_drops_the_llm(monkeypatch, settings):
+    """`vectora eval --no-llm` must hand the harness settings with no LLM key."""
+    from pydantic import SecretStr
+    from typer.testing import CliRunner
+
+    import evaluation.run_eval as run_eval_mod
+    from vectora import cli
+
+    keyed = settings.model_copy(update={"openai_api_key": SecretStr("sk-test")})
+    seen = {}
+
+    async def fake_run(s, **kwargs):
+        seen["has_llm"] = s.has_openai
+        return []
+
+    monkeypatch.setattr(cli, "_settings", lambda: keyed)
+    monkeypatch.setattr(run_eval_mod, "run", fake_run)
+    result = CliRunner().invoke(cli.app, ["eval", "--no-llm", "--mode", "fast"])
+    assert result.exit_code == 0, result.output
+    assert seen["has_llm"] is False

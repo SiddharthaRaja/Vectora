@@ -758,9 +758,20 @@ def run_eval(
     dataset: Path | None = typer.Option(None, "--dataset", help="Golden set override."),
     mode: SearchMode | None = typer.Option(None, "--mode", help="Only this mode."),
     output: Path | None = typer.Option(None, "--output", help="Write results as JSON."),
+    no_llm: bool = typer.Option(
+        False,
+        "--no-llm",
+        help="Retrieval only: never call the LLM. Rewrites/HyDE are skipped at once "
+        "and routing uses keyword rules, so a slow or missing LLM cannot stall the run.",
+    ),
 ) -> None:
     """Score retrieval against the golden set."""
     settings = _settings()
+    if no_llm:
+        from pydantic import SecretStr
+
+        settings = settings.model_copy(update={"openai_api_key": SecretStr("")})
+        _echo("--no-llm: LLM stages disabled (query expansion skipped, keyword routing).")
     from evaluation.run_eval import run
 
     asyncio.run(
