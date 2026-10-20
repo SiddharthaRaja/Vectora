@@ -4,13 +4,16 @@ Every evaluation run gets its own folder, named `YYYY-MM-DD_<hardware>_<model>`,
 holding the raw outputs it produced and a `RUN.md` with the exact setup and the
 headline numbers. This table is the summary; the folders are the evidence.
 
-Corpus for all runs so far: `qasper-sentiment` — 40 QASPER papers (CC BY 4.0),
-3,185 chunks; golden set of 88 answerable questions + 21 negatives.
+Corpus for runs 1–2: `qasper-sentiment` — 40 QASPER papers (CC BY 4.0),
+3,185 chunks; golden set of 88 answerable questions + 21 negatives. Run 3 onwards:
+`qasper-300` — 300 papers, 23,448 chunks, 365 title-free questions with evidence and reference
+answers + 8 off-corpus negatives. From run 3, recall is passage-level (paper-level shown beside it).
 
 | run | hardware | LLM | retrieval recall (fast) | MRR | retrieval p50 | citation validity | refusal accuracy | LLM speed | notes |
 |---|---|---|---|---|---|---|---|---|---|
 | [2026-10-19](2026-10-19_colab-cpu_qwen2.5-7b/RUN.md) | Colab, LLM on CPU | qwen2.5:7b | 1.000 | 0.987 | 209 ms | 100% | 76.1% | 4.4 tok/s | Baseline. Ollama fell back to CPU. |
 | [2026-10-19 #2](2026-10-19_colab-t4_iter2/RUN.md) | Colab T4, LLM on GPU | gemma3:4b (of 5 compared) | 1.000 titled · **0.545 title-free** | 0.987 · 0.450 | 30 ms | 100% | 79.8% | 29.6 tok/s (qwen2.5:7b) · 50.3 (gemma3:4b) | GPU fix; honest title-free recall; 5-model comparison; found embedded-Qdrant race |
+| [2026-10-20 #3](2026-10-20_run3_colab-t4-and-laptop-cpu/RUN.md) | Colab T4 + laptop CPU | qwen2.5:7b (gemma3:4b pending) | **qasper-300, passage-level: 0.258** (paper 0.704) · balanced 0.293 | 0.148 · 0.173 | 132 ms | **raw (pre-strip) 100%: 0 / 1,233 hallucinated** | 98.9% | — | 300 papers; passage vs paper recall; reranker +0.04 passage (p=0.077), LLM expansion adds nothing; deep + gemma pending (run 3b) |
 
 ## Caveats that apply to every run
 

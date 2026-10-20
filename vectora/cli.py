@@ -789,6 +789,10 @@ def ablate(
     ),
     steps: int = typer.Option(5, "--steps", help="Sweep granularity."),
     output: Path | None = typer.Option(None, "--output"),
+    no_llm: bool = typer.Option(
+        False, "--no-llm",
+        help="Never call the LLM; skips the expansion-only variants (CPU-friendly).",
+    ),
 ) -> None:
     """Measure whether each retrieval stage earns its latency.
 
@@ -798,6 +802,11 @@ def ablate(
     decimals.
     """
     settings = _settings()
+    if no_llm:
+        from pydantic import SecretStr
+
+        settings = settings.model_copy(update={"openai_api_key": SecretStr("")})
+        _echo("--no-llm: LLM stages disabled; expansion-only variants skipped.")
     from evaluation.ablate import run
 
     if metric not in {"recall", "mrr", "ndcg", "precision"}:
@@ -805,7 +814,7 @@ def ablate(
         raise typer.Exit(1)
     asyncio.run(
         run(settings, mode=mode, top_k=top_k, metric=metric, sweep=sweep,
-            sweep_steps=steps, corpus=_CORPUS, output=output)
+            sweep_steps=steps, corpus=_CORPUS, output=output, no_llm=no_llm)
     )
 
 

@@ -1,0 +1,11 @@
+/content/Vectora/vectora/store/qdrant_store.py:91: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Collection <vectora_qasper_300> contains 23448 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+  self._client = QdrantClient(path=self.settings.qdrant_path)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights:  56%|█████▋    | 58/103 [00:00<00:00, 568.93it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 592.53it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights:  52%|█████▏    | 55/105 [00:00<00:00, 514.51it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 579.60it/s]
+WARNING [ab26324a] generation.citations   unverifiable quote discarded  source=5 quote=We found that users within our sample were spreading fake news (i.e. they produc
+WARNING [5159cfdf] generation.citations   unverifiable quote discarded  source=1 quote=We consider two types of partial explanation in these experiments: the set of re
+WARNING [5159cfdf] generation.citations   unverifiable quote discarded  source=5 quote=Our analysis focuses on two directions, firstly, we check the correlation betwee

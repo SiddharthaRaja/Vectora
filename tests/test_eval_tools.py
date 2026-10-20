@@ -353,3 +353,25 @@ def test_eval_no_llm_flag_drops_the_llm(monkeypatch, settings):
     result = CliRunner().invoke(cli.app, ["eval", "--no-llm", "--mode", "fast"])
     assert result.exit_code == 0, result.output
     assert seen["has_llm"] is False
+
+
+def test_ablate_no_llm_skips_expansion_variants_and_drops_the_llm(monkeypatch, settings):
+    from pydantic import SecretStr
+    from typer.testing import CliRunner
+
+    import evaluation.ablate as ablate_mod
+    from vectora import cli
+
+    keyed = settings.model_copy(update={"openai_api_key": SecretStr("sk-test")})
+    seen = {}
+
+    async def fake_run(s, **kwargs):
+        seen["has_llm"] = s.has_openai
+        seen["no_llm"] = kwargs.get("no_llm")
+        return []
+
+    monkeypatch.setattr(cli, "_settings", lambda: keyed)
+    monkeypatch.setattr(ablate_mod, "run", fake_run)
+    result = CliRunner().invoke(cli.app, ["ablate", "--no-llm"])
+    assert result.exit_code == 0, result.output
+    assert seen == {"has_llm": False, "no_llm": True}

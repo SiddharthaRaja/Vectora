@@ -1,0 +1,27 @@
+/content/Vectora/vectora/store/qdrant_store.py:91: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Collection <vectora_qasper_300> contains 23448 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+  self._client = QdrantClient(path=self.settings.qdrant_path)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 3761.22it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 3904.41it/s]
+
+Calibrating in balanced mode over 365 real and 8 off-topic questions…
+
+Cross-encoder logit of the best chunk
+  on-topic   n=365  min=-5.038  p10=+1.268  median=+4.990  p90=+7.765  max=+9.683
+  off-topic  n=8  min=-11.127  p10=-11.127  median=-6.440  p90=-2.396  max=-2.396
+  suggested  VECTORA_MIN_RERANK_SCORE=-0.262
+             distributions overlap — this floor refuses 18/365 real questions and catches 8/8 off-topic ones
+  current    -4.0
+
+Dense cosine of the best chunk
+  on-topic   n=365  min=+0.442  p10=+0.567  median=+0.694  p90=+0.800  max=+0.918
+  off-topic  n=8  min=+0.227  p10=+0.227  median=+0.362  p90=+0.468  max=+0.468
+  suggested  VECTORA_MIN_DENSE_SCORE=0.529
+             distributions overlap — this floor refuses 14/365 real questions and catches 8/8 off-topic ones
+  current    0.4
+
+Nothing has been changed. Put the suggested values in .env if they look right, then re-run `vectora eval` to confirm both the recall and the rejection rate moved the way you expected.
+

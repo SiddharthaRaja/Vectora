@@ -530,8 +530,14 @@ async def run(
     sweep_steps: int = 5,
     corpus: str | None = None,
     output: Path | None = None,
+    no_llm: bool = False,
 ) -> list[VariantResult]:
-    """Run the ablation set (or a weight sweep) over the golden set."""
+    """Run the ablation set (or a weight sweep) over the golden set.
+
+    ``no_llm`` drops the variants that only switch LLM query expansion on or
+    off: with no LLM they are identical to the baseline, so running them
+    would spend time to report a difference of exactly zero.
+    """
     configure_logging(settings)
     from evaluation.run_eval import load_dataset
     from vectora.api.deps import build_container
@@ -559,6 +565,9 @@ async def run(
             )
 
         variants = weight_sweep(sweep_steps) if sweep else standard_ablations()
+        if no_llm and not sweep:
+            expansion_only = {"no-hyde", "no-rewrite", "no-expansion"}
+            variants = [v for v in variants if v.name not in expansion_only]
         print(
             f"\nRunning {len(variants)} configurations over {len(cases)} cases "
             f"and {len(negatives)} negatives, in {mode.value} mode.\n"
