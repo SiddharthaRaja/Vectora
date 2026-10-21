@@ -4067,3 +4067,213 @@ negative_cases:
     expect: fallback
     notes: "Outside the corpus."
 
+  - id: off-corpus-9
+    query: "What is the capital of Australia?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-10
+    query: "How many bones are in the adult human body?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-11
+    query: "What causes the seasons on Earth?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-12
+    query: "How long should I boil an egg for a soft yolk?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-13
+    query: "What is the best way to remove a red wine stain from carpet?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-14
+    query: "Who painted the ceiling of the Sistine Chapel?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-15
+    query: "How do I change a flat tyre on a car?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-16
+    query: "What is the difference between a crocodile and an alligator?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-17
+    query: "When is the best time of year to visit Japan?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-18
+    query: "How do I file an income tax return online?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-19
+    query: "What are the rules of cricket's LBW decision?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-20
+    query: "How many players are on a basketball team on court?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-21
+    query: "What is the half-life of carbon-14?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-22
+    query: "How does CRISPR-Cas9 cut DNA?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-23
+    query: "What is the mechanism of action of metformin?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-24
+    query: "How do mRNA vaccines produce an immune response?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-25
+    query: "What is the Chandrasekhar limit for white dwarfs?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-26
+    query: "How does a lithium-ion battery degrade over charge cycles?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-27
+    query: "What is the Reynolds number used for in fluid dynamics?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-28
+    query: "How do plate tectonics cause earthquakes?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-29
+    query: "What determines the yield strength of steel?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-30
+    query: "How does photosynthesis convert light into chemical energy?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-31
+    query: "What is the Black-Scholes formula used to price?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-32
+    query: "How do central banks use interest rates to control inflation?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-33
+    query: "How do I configure a static IP address on Ubuntu?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-34
+    query: "What is the difference between TCP and UDP?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-35
+    query: "How does garbage collection work in the Java virtual machine?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-36
+    query: "How do I resolve a merge conflict in git?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-37
+    query: "What is the time complexity of quicksort in the worst case?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-38
+    query: "How do I centre a div horizontally with CSS?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-39
+    query: "What is a race condition in multithreaded code?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-40
+    query: "How does public-key encryption establish a shared secret?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-41
+    query: "What context window does GPT-4o support?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-42
+    query: "How does Llama 3 differ from Llama 2 in training data size?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-43
+    query: "What is the Model Context Protocol used for?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-44
+    query: "How does speculative decoding speed up LLM inference?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-45
+    query: "What is direct preference optimization and how does it replace RLHF?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-46
+    query: "How does vLLM's PagedAttention manage the KV cache?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-47
+    query: "What is the Mixtral mixture-of-experts architecture?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-48
+    query: "How do diffusion models generate images from noise?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-49
+    query: "What GPU memory does a 70B parameter model need in 4-bit?"
+    expect: fallback
+    notes: "Outside the corpus."
+
+  - id: off-corpus-50
+    query: "What benchmark scores did Gemini 1.5 report?"
+    expect: fallback
+    notes: "Outside the corpus."
+

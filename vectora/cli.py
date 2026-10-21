@@ -844,6 +844,9 @@ def answers(
 def calibrate(
     dataset: Path | None = typer.Option(None, "--dataset"),
     mode: SearchMode = typer.Option(SearchMode.BALANCED, "--mode", "-m"),
+    no_llm: bool = typer.Option(
+        False, "--no-llm", help="Never call the LLM (keyword routing, no expansion)."
+    ),
 ) -> None:
     """Measure the score distributions and suggest the refusal thresholds.
 
@@ -852,6 +855,11 @@ def calibrate(
     written; the suggested values are printed for .env.
     """
     settings = _settings()
+    if no_llm:
+        from pydantic import SecretStr
+
+        settings = settings.model_copy(update={"openai_api_key": SecretStr("")})
+        _echo("--no-llm: LLM stages disabled.")
     from evaluation.calibrate import run
 
     asyncio.run(run(settings, dataset=dataset, mode=mode, corpus=_CORPUS))

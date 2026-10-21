@@ -1,0 +1,4 @@
+fast      bge-small  passage recall +0.041  (fixed 28, broke 13)  95% CI +0.008 to +0.074
+fast      bge-base   passage recall +0.041  (fixed 28, broke 13)  95% CI +0.008 to +0.074
+balanced  bge-small  passage recall +0.014  (fixed 14, broke 9)  95% CI -0.011 to +0.038
+balanced  bge-base   passage recall +0.008  (fixed 13, broke 10)  95% CI -0.016 to +0.033

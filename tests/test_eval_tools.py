@@ -386,3 +386,24 @@ def test_use_mmr_override_applies_to_every_mode(settings):
     assert off.profile(SearchMode.DEEP).use_mmr is False
     # Everything else in the profile is untouched.
     assert off.profile(SearchMode.BALANCED).use_reranker is True
+
+
+def test_calibrate_no_llm_drops_the_llm(monkeypatch, settings):
+    from pydantic import SecretStr
+    from typer.testing import CliRunner
+
+    import evaluation.calibrate as calibrate_mod
+    from vectora import cli
+
+    keyed = settings.model_copy(update={"openai_api_key": SecretStr("sk-test")})
+    seen = {}
+
+    async def fake_run(s, **kwargs):
+        seen["has_llm"] = s.has_openai
+        return None
+
+    monkeypatch.setattr(cli, "_settings", lambda: keyed)
+    monkeypatch.setattr(calibrate_mod, "run", fake_run)
+    result = CliRunner().invoke(cli.app, ["calibrate", "--no-llm", "--mode", "fast"])
+    assert result.exit_code == 0, result.output
+    assert seen["has_llm"] is False
