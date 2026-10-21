@@ -2,7 +2,23 @@
 
 Notable changes per release. Dates are UTC.
 
-## Unreleased — measuring what the milestones ask for
+## Unreleased — 2026-10-21: defaults from measurement
+
+- **Embedding model: BAAI/bge-small-en-v1.5** (was all-MiniLM-L6-v2). On qasper-300 it raised
+  passage-level recall@6 in fast mode from 0.258 to 0.299 (paired over 365 questions, 95% CI
+  +0.008 to +0.074); BGE-base gave the same gain at three times the latency.
+- **MMR off by default** (`VECTORA_USE_MMR=false`; `None` restores per-mode choice): the ablation
+  found it lowers passage recall slightly and costs latency.
+- **Refusal floors calibrated on 50 off-corpus questions** (was 8): dense 0.707 (fast mode, BGE;
+  refuses 11/365 real, catches 40/50), rerank 0.903 (balanced/deep; refuses 18/365, catches 48/50).
+  With 8 negatives MiniLM had looked perfectly separable; with 50 it is not.
+- **Guard against same-dimension model swaps.** Every point now records the model that embedded
+  it; opening an index built by a different encoder fails loudly. MiniLM and bge-small are both
+  384-d, so the old dimension check could not catch this and queries would have silently returned
+  nonsense. Indexes built before this change log a warning instead: re-index them.
+- `calibrate --no-llm`; golden set has 50 off-corpus negatives.
+
+## 2026-10-20 — measuring what the milestones ask for
 
 ### Fixed: concurrent searches corrupted embedded Qdrant (50c59bc, now tested)
 

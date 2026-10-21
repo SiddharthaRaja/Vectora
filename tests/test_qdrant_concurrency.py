@@ -99,3 +99,28 @@ def test_concurrent_embedded_searches_return_valid_cosines(settings, chunk_facto
     scores = [s for hits in results for _, s in hits]
     assert len(scores) == 64 * 10
     assert max(abs(s) for s in scores) <= 1.0 + 1e-4
+
+
+def test_index_built_with_another_same_size_model_is_refused(settings, chunk_factory):
+    """MiniLM and bge-small are both 384-d: the dimension check cannot tell
+    them apart, so the model name stored with each point must."""
+    pytest.importorskip("qdrant_client")
+    rng = np.random.default_rng(1)
+    chunks = [chunk_factory(f"chunk {i} text here", paper_id="p1") for i in range(5)]
+    vectors = rng.normal(size=(5, settings.embedding_dim)).astype(np.float32)
+
+    built = settings.model_copy(update={"embedding_model": "sentence-transformers/all-MiniLM-L6-v2"})
+    store = QdrantStore(built, collection="models")
+    store.ensure_collection(recreate=True)
+    store.upsert(chunks, vectors)
+    store.close()
+
+    same = QdrantStore(built, collection="models")
+    same.ensure_collection()  # same model: fine
+    same.close()
+
+    other = settings.model_copy(update={"embedding_model": "BAAI/bge-small-en-v1.5"})
+    reopened = QdrantStore(other, collection="models")
+    with pytest.raises(RuntimeError, match="embedded with"):
+        reopened.ensure_collection()
+    reopened.close()

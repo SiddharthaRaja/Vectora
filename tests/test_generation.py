@@ -180,7 +180,7 @@ class TestGuards:
         ok, reason = guards.check(weak, settings)
         assert not ok and reason == "low_confidence"
 
-        strong = [rc(chunk_factory("x" * 300), dense_score=0.52, fused_score=0.0164)]
+        strong = [rc(chunk_factory("x" * 300), dense_score=0.85, fused_score=0.0164)]
         assert guards.check(strong, settings)[0]
 
     def test_rrf_alone_cannot_gate(self, settings, chunk_factory):

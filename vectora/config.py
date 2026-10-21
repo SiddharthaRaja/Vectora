@@ -197,7 +197,10 @@ class Settings(BaseSettings):
     skipped and only the answer call is made. 0 disables the ceiling."""
 
     # ── Embeddings ────────────────────────────────────────────────────────
-    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    #: BAAI/bge-small-en-v1.5 since 2026-10-21: on qasper-300 it raised
+    #: passage-level recall@6 in fast mode from 0.258 to 0.299 over
+    #: all-MiniLM-L6-v2 (paired, 95% CI +0.008 to +0.074), same 384 dims.
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
     embedding_dim: int = 384
     embedding_batch_size: int = 64
     embedding_device: str | None = None
@@ -251,17 +254,23 @@ class Settings(BaseSettings):
     # placed first in a good pool. Both floors below are on scales that mean
     # the same thing from one query to the next. Tune them with `vectora eval`,
     # which reports how often off-topic questions are correctly refused.
-    use_mmr: bool | None = None
+    use_mmr: bool | None = False
     """Override MMR diversification for every mode (``VECTORA_USE_MMR``).
-    Unset keeps each mode's own choice. Run 3's ablation on 300 papers found
-    MMR slightly *lowers* passage-level recall (diversifying across papers
-    pushes out a second chunk from the right one), so it is worth testing off."""
+    ``None`` keeps each mode's own choice. Off by default since 2026-10-21:
+    run 3's ablation on 300 papers found MMR slightly *lowers* passage-level
+    recall (diversifying across papers pushes out a second chunk from the
+    right one) and costs latency."""
 
-    min_rerank_score: float = -4.0
+    min_rerank_score: float = 0.903
     """Cross-encoder logit below which nothing retrieved is relevant. For
     ms-marco-MiniLM-L-6-v2, on-topic passages score above 0 and clearly
-    irrelevant ones land between -8 and -11."""
-    min_dense_score: float = 0.26
+    irrelevant ones land between -8 and -11. 0.903 is calibrated on
+    qasper-300 (365 real, 50 off-corpus questions): refuses 18/365 real and
+    catches 48/50 off-corpus. Re-run `vectora calibrate` for a new corpus."""
+    min_dense_score: float = 0.707
+    #: ^ calibrated for bge-small-en-v1.5 on qasper-300 (fast mode): refuses
+    #: 11/365 real and catches 40/50 off-corpus. Floors are model-specific:
+    #: BGE similarities run ~0.2 higher than MiniLM's (MiniLM's was 0.477).
     """Cosine floor, used when the reranker did not run. all-MiniLM-L6-v2
     puts unrelated sentence pairs near 0.0-0.15 and genuinely related ones
     above 0.35; 0.26 sits in the gap."""

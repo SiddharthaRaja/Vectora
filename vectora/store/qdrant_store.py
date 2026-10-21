@@ -145,6 +145,7 @@ class QdrantStore:
                     f"{self.settings.embedding_dim}. Re-index with "
                     f"`vectora index --recreate`, or use a different corpus."
                 )
+            self._check_embedding_model()
             self._ensured = True
             return
 
@@ -171,6 +172,35 @@ class QdrantStore:
 
     # ── writes ────────────────────────────────────────────────────────────
 
+    def _check_embedding_model(self) -> None:
+        """Refuse an index built by a different encoder of the same dimension.
+
+        The dimension check above cannot tell all-MiniLM-L6-v2 from
+        bge-small-en-v1.5 (both 384-d): querying one model's index with the
+        other's vectors raises nothing and returns plausible-looking garbage.
+        Every point records the model that embedded it, so compare one.
+        """
+        with self._guard():
+            points, _ = self.client.scroll(
+                collection_name=self.collection, limit=1, with_payload=True, with_vectors=False
+            )
+        if not points:
+            return
+        built_with = (points[0].payload or {}).get("embedding_model")
+        if built_with is None:
+            log.warning(
+                "index does not record its embedding model; if VECTORA_EMBEDDING_MODEL "
+                "changed since it was built, re-index with `vectora index --recreate`",
+                extra={"collection": self.collection},
+            )
+        elif built_with != self.settings.embedding_model:
+            raise RuntimeError(
+                f"Collection '{self.collection}' was embedded with {built_with}, but "
+                f"VECTORA_EMBEDDING_MODEL is {self.settings.embedding_model}. Same "
+                f"dimension, different vector space: results would be nonsense. "
+                f"Re-index with `vectora index --recreate`, or set the model back."
+            )
+
     def upsert(self, chunks: Sequence[Chunk], vectors: np.ndarray) -> int:
         """Idempotently store chunks and their vectors.
 
@@ -194,7 +224,7 @@ class QdrantStore:
                 PointStruct(
                     id=chunk.point_id,
                     vector=vectors[start + i].tolist(),
-                    payload=chunk.payload(),
+                    payload={**chunk.payload(), "embedding_model": self.settings.embedding_model},
                 )
                 for i, chunk in enumerate(window)
             ]

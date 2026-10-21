@@ -36,8 +36,6 @@ jobs:
       # Embedded Qdrant, no server, no LLM: fast mode is retrieval only.
       VECTORA_QDRANT_PATH: ./data/qdrant
       VECTORA_QDRANT_URL: ""
-      # Calibrated on title-free QASPER questions (run 2).
-      VECTORA_MIN_DENSE_SCORE: "0.40"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

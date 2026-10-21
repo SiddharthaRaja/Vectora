@@ -380,7 +380,11 @@ def test_ablate_no_llm_skips_expansion_variants_and_drops_the_llm(monkeypatch, s
 def test_use_mmr_override_applies_to_every_mode(settings):
     from vectora.config import SearchMode
 
-    assert settings.profile(SearchMode.BALANCED).use_mmr is True
+    # Off by default since 2026-10-21; None restores each mode's own choice.
+    assert settings.profile(SearchMode.BALANCED).use_mmr is False
+    per_mode = settings.model_copy(update={"use_mmr": None})
+    assert per_mode.profile(SearchMode.BALANCED).use_mmr is True
+    assert per_mode.profile(SearchMode.FAST).use_mmr is False
     off = settings.model_copy(update={"use_mmr": False})
     assert off.profile(SearchMode.BALANCED).use_mmr is False
     assert off.profile(SearchMode.DEEP).use_mmr is False
