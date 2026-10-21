@@ -81,3 +81,46 @@ with Ollama's "token repeat limit reached" (the model looped). Re-run in run 3b.
   recalibrating (calibration suggests about −0.26).
 - Candidate default for this corpus: rerank on, MMR off — as good or better, ~30% faster. To be
   confirmed as one combined change.
+
+## F — MMR off + rerank floor −0.26 (laptop CPU, balanced, `--no-llm`)
+
+`VECTORA_USE_MMR=false VECTORA_MIN_RERANK_SCORE=-0.26`, compared with the same run at the defaults:
+
+| | defaults (MMR on, floor −4.0) | MMR off, floor −0.26 |
+|---|---|---|
+| passage recall | 0.299 | 0.304 (8 fixed, 6 broken: no real difference) |
+| paper recall | 0.819 | 0.806 |
+| off-corpus refused | 6/8 | **8/8** |
+| p50 / p95 | 2.10 / 4.05 s | 2.01 / 3.44 s |
+
+The floor fixes the off-corpus leak at no recall cost. Its price is not in this table: run 3's
+calibration says −0.26 also refuses about 18 of 365 real questions (~5%). Turning MMR off is
+neutral on recall and slightly faster.
+
+## G — embedding models at passage level (Colab CPU, `vectora_embeddings_cpu.ipynb`)
+
+Same chunks (MiniLM semantic chunking) re-indexed with each model; 365 questions; paired against
+MiniLM on the same questions.
+
+| model | fast passage | fast paper | balanced passage | balanced paper | fast p50 (Colab CPU) |
+|---|---|---|---|---|---|
+| all-MiniLM-L6-v2 (384-d) | 0.258 | 0.712 | 0.299 | 0.819 | 364 ms |
+| **bge-small-en-v1.5 (384-d)** | **0.299** | 0.734 | 0.312 | 0.808 | 623 ms |
+| bge-base-en-v1.5 (768-d) | 0.299 | 0.734 | 0.307 | 0.819 | 1,780 ms |
+
+| paired vs MiniLM | Δ passage recall | fixed / broken | 95% CI |
+|---|---|---|---|
+| fast, bge-small | **+0.041** | 28 / 13 | **+0.008 to +0.074** (significant) |
+| fast, bge-base | +0.041 | 28 / 13 | +0.008 to +0.074 (significant) |
+| balanced, bge-small | +0.014 | 14 / 9 | −0.011 to +0.038 |
+| balanced, bge-base | +0.008 | 13 / 10 | −0.016 to +0.033 |
+
+- **BGE-small is a real first-stage improvement:** +0.041 passage recall in fast mode, significant,
+  same as BGE-base at a third of the latency. Run 2's "no difference" was a paper-level, 88-question
+  artefact.
+- **The reranker absorbs most of it:** with reranking on, the gain shrinks to +0.014 (not
+  significant). Fast mode with BGE-small matches balanced mode with MiniLM (0.299) at a fraction of
+  the latency.
+- **Refusal:** in fast mode both BGE models refused 0/8 off-corpus questions at the MiniLM floor
+  (0.40): BGE similarities sit higher, so the dense floor must be recalibrated per model (see the
+  calibrate output in the run logs).
