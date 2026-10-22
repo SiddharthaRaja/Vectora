@@ -124,3 +124,16 @@ MiniLM on the same questions.
 - **Refusal:** in fast mode both BGE models refused 0/8 off-corpus questions at the MiniLM floor
   (0.40): BGE similarities sit higher, so the dense floor must be recalibrated per model (see the
   calibrate output in the run logs).
+
+## H — reranker pool size (laptop CPU, balanced `--no-llm`, new defaults: BGE-small, MMR off, rerank floor 0.903)
+
+| reranker sees | passage recall | paper recall | off-corpus refused | p50 | vs pool 4 |
+|---|---|---|---|---|---|
+| 24 (pool 4, old default) | 0.310 | 0.808 | 48/50 | 1.65 s | — |
+| **48 (pool 8, new default)** | **0.326** | 0.822 | 48/50 | 2.23 s | +0.016: fixed 7, broke 1; CI +0.003 to +0.033; McNemar p 0.070 — borderline |
+| 96, 100 candidates | 0.323 | 0.814 | 48/50 | 5.18 s | +0.014: fixed 9, broke 4; CI −0.005 to +0.033; p 0.267 |
+
+The new defaults alone moved balanced mode from 0.299 / 75% refused (MiniLM, MMR, −4.0 floor) to
+0.310 / 96% while getting faster. Pool 8 is a cheap, borderline gain; pool 16 adds latency and
+nothing else. Reports in `pool/`. `evaluation/compare.py` calls a difference significant only when
+the bootstrap CI and the exact McNemar test agree.
