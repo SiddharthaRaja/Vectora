@@ -261,6 +261,13 @@ class Settings(BaseSettings):
     recall (diversifying across papers pushes out a second chunk from the
     right one) and costs latency."""
 
+    rerank_pool_multiplier: int | None = None
+    """How many candidates the cross-encoder reranks, as a multiple of top-k
+    (``VECTORA_RERANK_POOL_MULTIPLIER``). ``None`` keeps the mode's value (4)."""
+    retrieval_candidates: int | None = None
+    """Dense and sparse candidates fetched per query before fusion
+    (``VECTORA_RETRIEVAL_CANDIDATES``). ``None`` keeps the mode's values."""
+
     min_rerank_score: float = 0.903
     """Cross-encoder logit below which nothing retrieved is relevant. For
     ms-marco-MiniLM-L-6-v2, on-topic passages score above 0 and clearly
@@ -460,9 +467,15 @@ class Settings(BaseSettings):
 
     def profile(self, mode: SearchMode) -> ModeProfile:
         base = MODE_PROFILES[mode]
-        if self.use_mmr is None or base.use_mmr == self.use_mmr:
-            return base
-        return base.model_copy(update={"use_mmr": self.use_mmr})
+        update: dict[str, Any] = {}
+        if self.use_mmr is not None and base.use_mmr != self.use_mmr:
+            update["use_mmr"] = self.use_mmr
+        if self.rerank_pool_multiplier is not None:
+            update["rerank_pool_multiplier"] = self.rerank_pool_multiplier
+        if self.retrieval_candidates is not None:
+            update["dense_candidates"] = self.retrieval_candidates
+            update["sparse_candidates"] = self.retrieval_candidates
+        return base.model_copy(update=update) if update else base
 
     def route(self, query_type: QueryType) -> RouteProfile:
         return ROUTE_PROFILES[query_type]

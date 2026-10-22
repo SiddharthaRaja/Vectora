@@ -411,3 +411,14 @@ def test_calibrate_no_llm_drops_the_llm(monkeypatch, settings):
     result = CliRunner().invoke(cli.app, ["calibrate", "--no-llm", "--mode", "fast"])
     assert result.exit_code == 0, result.output
     assert seen["has_llm"] is False
+
+
+def test_pool_and_candidate_overrides(settings):
+    from vectora.config import SearchMode
+
+    base = settings.profile(SearchMode.BALANCED)
+    tuned = settings.model_copy(
+        update={"rerank_pool_multiplier": 12, "retrieval_candidates": 100}
+    ).profile(SearchMode.BALANCED)
+    assert (tuned.rerank_pool_multiplier, tuned.dense_candidates, tuned.sparse_candidates) == (12, 100, 100)
+    assert tuned.use_reranker == base.use_reranker  # nothing else moves
