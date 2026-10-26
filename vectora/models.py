@@ -344,6 +344,10 @@ class Answer(BaseModel):
     raw_citation_markers: list[int] = Field(default_factory=list)
     #: The subset of ``raw_citation_markers`` that pointed at no source.
     invalid_citation_markers: list[int] = Field(default_factory=list)
+    #: Chunk id of every source the model was shown, in order: SOURCE [n] is
+    #: ``source_chunk_ids[n - 1]``. ``citations`` is one entry per paper for
+    #: display, so it cannot map every marker back to its text; this can.
+    source_chunk_ids: list[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=utcnow)
 
     def wire(self) -> dict[str, Any]:

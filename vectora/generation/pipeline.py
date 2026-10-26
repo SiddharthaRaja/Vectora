@@ -251,6 +251,7 @@ class RAGEngine:
             usage=prepared.usage,
             raw_citation_markers=raw_markers,
             invalid_citation_markers=invalid_markers,
+            source_chunk_ids=[rc.chunk.chunk_id for rc in prepared.chunks],
         )
 
     def _fallback_answer(self, prepared: _Prepared) -> Answer:
@@ -268,6 +269,7 @@ class RAGEngine:
             fallback=prepared.fallback,
             diagnostics=prepared.diagnostics,
             usage=prepared.usage,
+            source_chunk_ids=[rc.chunk.chunk_id for rc in prepared.chunks],
         )
 
     # ── public ────────────────────────────────────────────────────────────

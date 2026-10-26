@@ -116,6 +116,9 @@ class AnswerScore:
     #: Kept so answers can be hand-labelled (evaluation/judge_agreement.py).
     answer_text: str = ""
     cited_chunk_ids: list[str] = field(default_factory=list)
+    #: SOURCE [n] -> source_chunk_ids[n - 1], so a labeller sees exactly what
+    #: each marker in the answer pointed at.
+    source_chunk_ids: list[str] = field(default_factory=list)
     latency_ms: float = 0.0
     cost_usd: float = 0.0
     llm_calls: int = 0
@@ -337,6 +340,7 @@ async def score_case(
     score.answer_chars = len(result.answer)
     score.answer_text = result.answer
     score.cited_chunk_ids = [c.chunk_id for c in result.citations]
+    score.source_chunk_ids = list(getattr(result, "source_chunk_ids", []) or [])
     score.cost_usd = result.usage.cost_usd
     score.llm_calls = result.usage.calls
 

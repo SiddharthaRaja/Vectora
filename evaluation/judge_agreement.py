@@ -28,6 +28,7 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 from pathlib import Path
 
 COLUMNS = [
@@ -48,6 +49,24 @@ def _load_chunks(path: Path) -> dict[str, str]:
     return out
 
 
+_MARKER = re.compile(r"\[(\d{1,3})\]")
+
+
+def numbered_sources(answer: str, source_ids: list[str], chunks: dict[str, str]) -> str:
+    """Every source the answer cites, under the number the answer uses for it.
+
+    Several chunks of one paper are separate sources here, because the
+    answer may cite each for a different claim.
+    """
+    cited = sorted({int(n) for n in _MARKER.findall(answer)})
+    blocks = [
+        f"[{n}] {chunks.get(source_ids[n - 1], '(chunk text not found)')[:1500]}"
+        for n in cited
+        if 1 <= n <= len(source_ids)
+    ]
+    return "\n\n".join(blocks)
+
+
 def export(answers: Path, out: Path, n: int, chunks_path: Path, threshold: int) -> int:
     report = json.loads(answers.read_text("utf-8"))
     pool = [
@@ -63,16 +82,24 @@ def export(answers: Path, out: Path, n: int, chunks_path: Path, threshold: int) 
     pool.sort(key=lambda s: hashlib.sha256(s["case_id"].encode()).hexdigest())
     rows = pool[:n]
     chunks = _load_chunks(chunks_path)
+    numbered = all(s.get("source_chunk_ids") for s in rows)
+    if not numbered:
+        print("WARNING: this report predates source_chunk_ids, so the sources cannot be matched to "
+              "the [n] markers and only one chunk per paper is known. Labels made from it measure "
+              "the export, not the judge. Re-run `vectora answers --mode deep` before labelling.")
 
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", newline="", encoding="utf-8-sig") as fh:
         w = csv.DictWriter(fh, fieldnames=COLUMNS)
         w.writeheader()
         for s in rows:
-            sources = "\n\n".join(
-                f"[{cid[:8]}] {chunks.get(cid, '(chunk text not found)')[:1500]}"
-                for cid in s.get("cited_chunk_ids", [])
-            )
+            if numbered:
+                sources = numbered_sources(s["answer_text"], s["source_chunk_ids"], chunks)
+            else:
+                sources = "\n\n".join(
+                    f"[{cid[:8]}] {chunks.get(cid, '(chunk text not found)')[:1500]}"
+                    for cid in s.get("cited_chunk_ids", [])
+                )
             w.writerow({
                 "case_id": s["case_id"],
                 "query": s["query"],

@@ -149,6 +149,27 @@ class TestPreStripCitations:
 
 
 class TestJudgeAgreement:
+    def test_export_numbers_every_cited_source_even_from_one_paper(self, tmp_path):
+        # Regression: run 3c's export showed one chunk per paper, labelled by
+        # chunk id, so a claim cited [2] could not be checked by the labeller.
+        per_case = [{"case_id": "c0", "query": "q", "refused": False, "groundedness": 90,
+                     "answer_text": "First claim [1][3]. Second claim [2]. Third [9].",
+                     "cited_chunk_ids": ["a"], "source_chunk_ids": ["a", "b", "c"]}]
+        report = tmp_path / "answers-deep.json"
+        report.write_text(json.dumps({"per_case": per_case}))
+        chunks = tmp_path / "chunks.jsonl"
+        chunks.write_text("".join(
+            json.dumps({"chunk_id": k, "title": "Same paper", "content": f"text {k}"}) + "\n"
+            for k in "abc"))
+        labels = tmp_path / "labels.csv"
+        export(report, labels, 30, chunks, 70)
+        src = next(csv.DictReader(labels.open(encoding="utf-8-sig")))["sources"]
+        assert "[1] Same paper\ntext a" in src
+        assert "[2] Same paper\ntext b" in src
+        assert "[3] Same paper\ntext c" in src
+        assert "[9]" not in src          # out of range: there is no source 9
+
+
     def test_kappa(self):
         assert cohen_kappa([1, 0, 1, 0], [1, 0, 1, 0]) == 1.0
         assert cohen_kappa([1, 1, 0, 0], [1, 0, 1, 0]) == 0.0
