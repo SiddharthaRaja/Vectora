@@ -217,3 +217,42 @@ class TestQasperBuilder:
     def test_generic_questions_are_detected(self, qasper):
         assert qasper.specific_words("What is the baseline?") < 3
         assert qasper.specific_words("Which sentiment lexicon do they use for tweets?") >= 3
+
+
+class TestAnswerCheckpoints:
+    def test_a_killed_run_keeps_what_it_scored(self, tmp_path, monkeypatch, settings):
+        """Run 3b's deep-mode job died partway and lost everything, because the
+        report was only written at the end. Now it is saved every N cases."""
+        golden = tmp_path / "golden.yaml"
+        golden.write_text(
+            "cases:\n"
+            + "".join(f"  - id: q{i}\n    query: question {i}?\n" for i in range(12))
+            + "negative_cases: []\n"
+        )
+        ctx = SimpleNamespace(name="t", golden=golden, reports=tmp_path / "reports")
+        container = SimpleNamespace(
+            corpus=ctx, llm=object(), store=SimpleNamespace(exists=lambda: True)
+        )
+
+        async def aclose():
+            return None
+
+        container.aclose = aclose
+        monkeypatch.setattr("vectora.api.deps.build_container", lambda *a, **k: container)
+
+        calls = {"n": 0}
+
+        async def fake_score(container, *, case_id, query, **_):
+            calls["n"] += 1
+            if calls["n"] == 8:
+                raise KeyboardInterrupt("simulated kill")
+            return ans.AnswerScore(case_id, query, True, False)
+
+        monkeypatch.setattr(ans, "score_case", fake_score)
+        out = tmp_path / "answers.json"
+        with pytest.raises(KeyboardInterrupt):
+            asyncio.run(ans.run(settings, output=out, judge=False, checkpoint_every=5))
+        saved = json.loads(out.read_text())
+        assert saved["partial"] is True
+        assert len(saved["per_case"]) == 5
+        assert saved["planned_cases"] == 12

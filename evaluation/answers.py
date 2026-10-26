@@ -411,6 +411,7 @@ async def run(
     judge: bool = True,
     corpus: str | None = None,
     output: Path | None = None,
+    checkpoint_every: int = 10,
 ) -> AnswerReport:
     """Score generated answers over the golden set.
 
@@ -457,8 +458,23 @@ async def run(
         )
 
         report = AnswerReport(corpus=ctx.name, mode=mode.value)
+        ctx.reports.mkdir(parents=True, exist_ok=True)
+        target = output or ctx.reports / f"answers-{mode.value}.json"
+
+        def save(*, partial: bool) -> None:
+            """Write the report so far. Called every few cases, so a run that is
+            killed (a notebook timeout, an out-of-memory kill) keeps what it
+            scored instead of losing hours of generation."""
+            payload = report.as_dict()
+            payload["generated_at"] = datetime.now(timezone.utc).isoformat()
+            payload["judged_by"] = settings.utility_model if judge else None
+            payload["partial"] = partial
+            payload["planned_cases"] = total
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(json.dumps(payload, indent=2), "utf-8")
+
         for i, case in enumerate(cases, start=1):
-            print(f"  [{i}/{total}] {case.query[:62]}")
+            print(f"  [{i}/{total}] {case.query[:62]}", flush=True)
             report.scores.append(
                 await score_case(
                     container,
@@ -471,8 +487,10 @@ async def run(
                     references=list(case.reference_answers) or None,
                 )
             )
+            if i % checkpoint_every == 0:
+                save(partial=True)
         for j, negative in enumerate(negatives, start=len(cases) + 1):
-            print(f"  [{j}/{total}] (negative) {negative.query[:52]}")
+            print(f"  [{j}/{total}] (negative) {negative.query[:52]}", flush=True)
             report.scores.append(
                 await score_case(
                     container,
@@ -486,13 +504,7 @@ async def run(
             )
 
         print(report.summary())
-
-        ctx.reports.mkdir(parents=True, exist_ok=True)
-        target = output or ctx.reports / f"answers-{mode.value}.json"
-        payload = report.as_dict()
-        payload["generated_at"] = datetime.now(timezone.utc).isoformat()
-        payload["judged_by"] = settings.utility_model if judge else None
-        target.write_text(json.dumps(payload, indent=2), "utf-8")
+        save(partial=False)
         print(f"Wrote {target}\n")
         return report
     finally:

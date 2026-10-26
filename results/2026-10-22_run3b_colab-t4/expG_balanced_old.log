@@ -1,0 +1,535 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 4507.60it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights:  68%|██████▊   | 71/105 [00:00<00:00, 659.52it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 650.85it/s]
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-2 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-27 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-34 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-35 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-36 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-41 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-42 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-43 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-44 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-48 answered=True
+WARNING evaluation.run_eval    negative case behaved wrongly  case=off-corpus-49 answered=True
+
+Loaded 365 cases and 50 negatives from golden.yaml (corpus 'q300-minilm')
+  evaluating balanced…
+
+======================================================================================
+  RETRIEVAL EVALUATION
+======================================================================================
+
+  mode        recall   paper    prec     MRR    nDCG   p50 ms   p95 ms  neg ok
+  ----------------------------------------------------------------------------------
+  balanced     0.315   0.800   0.071   0.177   0.209     5488     7284     78%
+
+  balanced missed 250:
+    q-3d39e57e90: Do the authors give any examples of major events which draw th
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+    q-69ef007fc1: Which tweets are used to output the daily sentiment signal?
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+    q-20df24165b: What is the baseline machine learning prediction approach?
+      got: Trading the Twitter Sentiment with Reinforcement Learning
+    q-56a8826cbe: How did they determine fake news tweets?
+      got: Characterizing Political Fake News in Twitter by its Meta-Da
+    q-41174d8b17: Does the Agent ask for a value of a variable using natural lan
+      got: e-QRAQ: A Multi-turn Reasoning Dataset and Simulator with Ex
+    q-184e1f28f9: How is the domain knowledge transfer represented as knowledge 
+      got: Transfer in Deep Reinforcement Learning using Knowledge Grap
+    q-75043c17a2: What trends are found in musical preferences?
+      got: The Wiki Music dataset: A tool for computational analysis of
+    q-cbbcafffda: Was any variation in results observed based on language typolo
+      got: Zero-shot Reading Comprehension by Cross-lingual Transfer Le
+    q-447eb98e60: What are lyrical topics present in the metal genre?
+      got: Warriors of the Word' -- Deciphering Lyrical Topics in Music
+    q-83f14af3cc: Which of the two ensembles yields the best performance?
+      got: Improving Implicit Discourse Relation Classification by Mode
+    q-0154d8be77: What are the two ways of ensembling BERT and E-BERT?
+      got: BERT is Not a Knowledge Base (Yet): Factual Knowledge vs. Na
+    q-e737cfe0f6: How is it determined that a fact is easy-to-guess?
+      got: BERT is Not a Knowledge Base (Yet): Factual Knowledge vs. Na
+    q-d05d667822: How did they get relations between mentions?
+      got: Question Answering by Reasoning Across Documents with Graph 
+    q-2a1e6a69e0: How did they detect entity mentions?
+      got: Named Entity Disambiguation for Noisy Text
+    q-e574f0f733: How is the expectation regularization loss defined?
+      got: Transfer Learning Between Related Tasks Using Expected Label
+    q-de830c534c: Which words are used differently across ArXiv?
+      got: Structured Embedding Models for Grouped Data
+    q-281cd4e78b: What is the average length of the claims?
+      got: The Role of Pragmatic and Discourse Context in Determining A
+    q-fb96c0cd77: What debate websites did they look at?
+      got: Seeing Things from a Different Angle: Discovering Diverse Pe
+    q-5cb3d69607: Does adversarial learning have stronger performance gains for 
+      got: Adversarial Learning with Contextual Embeddings for Zero-res
+    q-12d7055baf: How much higher quality is the resulting annotated data?
+      got: Predicting Annotation Difficulty to Improve Task Routing and
+    q-498c0229f8: How do they match annotators to instances?
+      got: Predicting the Type and Target of Offensive Posts in Social 
+    q-8c48c726bb: How much data is needed to train the task-specific encoder?
+      got: Predicting Annotation Difficulty to Improve Task Routing and
+    q-31b20a4bab: What are recent works on knowedge graph embeddings authors men
+      got: Learning High-order Structural and Attribute information by 
+    q-a712718e65: How big are improvements of small-scale unbalanced datasets wh
+      got: A Neural Topic-Attention Model for Medical Term Abbreviation
+    q-d71cb7f3aa: Which models achieve state-of-the-art performances?
+      got: Multi-style Generative Reading Comprehension
+    q-7889ec45b9: What was previous state of the art model for automatic post ed
+      got: The Transference Architecture for Automatic Post-Editing
+    q-d915b401bb: What future possible improvements are listed?
+      got: RobBERT: a Dutch RoBERTa-based Language Model
+    q-664db50350: What is quantitative improvement of proposed method (the best 
+      got: Deja-vu: Double Feature Presentation and Iterated Loss in De
+    q-312417675b: What are the causal mapping methods employed?
+      got: Facilitating on-line opinion dynamics by mining expressions 
+    q-42af0472e6: Which language directions are machine translation systems of W
+      got: Edinburgh Neural Machine Translation Systems for WMT 16
+    q-4c854d33a8: What neural configurations are explored?
+      got: BERTQA -- Attention on Steroids
+    q-41b7069951: what civil field is the dataset about?
+      got: Automatic Judgment Prediction via Legal Reading Comprehensio
+    q-2255c36c8c: What is the motivation behind the work? Why question generatio
+      got: Improving Question Generation With to the Point Context
+    q-04d1b3b41f: How many annotators tagged each text?
+      got: Named Entities in Medical Case Reports: Corpus and Experimen
+    q-ec80432903: What other natural processing tasks authors think could be stu
+      got: Multilingual Sentiment Analysis: An RNN-Based Framework for 
+    q-23d32666df: Do the use word embeddings alone or they replace some previous
+      got: Basic tasks of sentiment analysis
+    q-cfffc94518: What approaches without reinforcement learning have been tried
+      got: Classification Betters Regression in Query-based Multi-docum
+    q-973f628466: What proficiency indicators are used to the score the utteranc
+      got: TLT-school: a Corpus of Non Native Children Speech
+    q-0a3a8d1b0c: What accuracy is achieved by the speech recognition system?
+      got: Natural Language Interactions in Autonomous Vehicles: Intent
+    q-90bc603205: How do they enrich the positional embedding with length inform
+      got: Controlling the Output Length of Neural Machine Translation
+    q-f52b2ca49d: How do they condition the output to a given target-source clas
+      got: Controlling the Output Length of Neural Machine Translation
+    q-fa5357c56e: How many layers do they use in their best performing network?
+      got: Character-Based Text Classification using Top Down Semantic 
+    q-35915166ab: Do they just sum up all the loses the calculate to end up with
+      got: Learning Multilingual Word Embeddings Using Image-Text Data
+    q-bc16ce6e9c: What is the average length of dialog?
+      got: Topic Spotting using Hierarchical Networks with Self Attenti
+    q-a71ebd8dc9: how did they ask if a tweet was racist?
+      got: Exploring Hate Speech Detection in Multimodal Publications
+    q-a9337636b5: Do they employ their indexing-based method to create a sample 
+      got: Analysis of Wikipedia-based Corpora for Question Answering
+    q-30e21f5bc1: How do they analyze contextual similaries across datasets?
+      got: Named Entity Disambiguation for Noisy Text
+    q-dc4096b8ba: How they observe that fine-tuning BERT on a specific task does
+      got: Compressing BERT: Studying the Effects of Weight Pruning on 
+    q-c4c9c7900a: How much is pre-training loss increased in Low/Medium/Hard lev
+      got: Compressing BERT: Studying the Effects of Weight Pruning on 
+    q-f1bd66bb35: How do slot binary classifiers improve performance?
+      got: Flexibly-Structured Model for Task-Oriented Dialogues
+    q-18412237f7: Where did this model place in the final evaluation of the shar
+      got: Grammatical Error Correction and Style Transfer via Zero-sho
+    q-02945c85d6: What in-domain data is used to continue pre-training?
+      got: Multi-Task Bidirectional Transformer Representations for Iro
+    q-6e51af9088: What dialect is used in the Google BERT model and what is used
+      got: Cross-Lingual Machine Reading Comprehension
+    q-7f452eb145: What crowdsourcing platform is used for data collection and da
+      got: Data Collection for Interactive Learning through the Dialog
+    q-5fa464a158: Is audio data per language balanced in dataset?
+      got: Common Voice: A Massively-Multilingual Speech Corpus
+    q-3cf1edfa6d: What natural language(s) are the recipes written in?
+      got: Generating Personalized Recipes from Historical User Prefere
+    q-3415762847: How much is classification performance improved in experiments
+      got: Learning Data Manipulation for Augmentation and Weighting
+    q-0c08af6e4f: Do the authors mention any confounds to their study?
+      got: Garbage In, Garbage Out? Do Machine Learning Application Pap
+    q-368317b4fd: Is the data acquired under distant supervision verified by hum
+      got: AraNet: A Deep Learning Toolkit for Arabic Social Media
+    q-ecc63972b2: How do they encourage understanding of literature as part of t
+      got: Improving Distributed Representations of Tweets - Present an
+    q-2c85865a65: Which data do they use as a starting point for the dialogue da
+      got: Follow Alice into the Rabbit Hole: Giving Dialogue Agents Un
+    q-dd53baf26d: How do they select instances to their hold-out test set?
+      got: A Human-AI Loop Approach for Joint Keyword Discovery and Exp
+    q-27b01883ed: What syntactic structure is used to model tones?
+      got: A Cascade Sequence-to-Sequence Model for Chinese Mandarin Li
+    q-9714cb7203: What visual information characterizes tones?
+      got: A Cascade Sequence-to-Sequence Model for Chinese Mandarin Li
+    q-30c6d34b87: Are any experiments performed to try this approach to word emb
+      got: A Deep Learning Architecture for De-identification of Patien
+    q-8e8097cada: How is pargmative and discourse context added to the dataset?
+      got: Improving Implicit Discourse Relation Classification by Mode
+    q-db9021ddd4: What additional techniques are incorporated?
+      got: Unsupervised Pre-training for Natural Language Generation: A
+    q-3214292825: What additional techniques could be incorporated to further im
+      got: Multi-modal Sentiment Analysis using Super Characters Method
+    q-7fe48939ce: Where do they employ feature-wise sigmoid gating?
+      got: Gating Mechanisms for Combining Character and Word-level Wor
+    q-65ad17f614: Which model architecture do they use to obtain representations
+      got: IIIDYT at SemEval-2018 Task 3: Irony detection in English tw
+    q-a3d83c2a1b: How many sentence transformations on average are available per
+      got: COSTRA 1.0: A Dataset of Complex Sentence Transformations
+    q-d5fa26a2b7: How are possible sentence transformations represented in datas
+      got: COSTRA 1.0: A Dataset of Complex Sentence Transformations
+    q-016b59daa8: Do they do any analysis of of how the modifications changed th
+      got: Adversarial Examples with Difficult Common Words for Paraphr
+    q-a9610cbcca: What statistics on the VIST dataset are reported?
+      got: 1909.07863
+    q-b124137e62: What new interesting tasks can be solved based on the uncanny 
+      got: Exploring Scholarly Data by Semantic Query on Knowledge Grap
+    q-bfad30f51c: What is the general framework for data exploration by semantic
+      got: Exploring Scholarly Data by Semantic Query on Knowledge Grap
+    q-682e26262a: What are the differences between this dataset and pre-existing
+      got: Predicting the Type and Target of Offensive Posts in Social 
+    q-d015faf0f8: What kinds of offensive content are explored?
+      got: Predicting the Type and Target of Offensive Posts in Social 
+    q-290ee79b5e: What are the three layers of the annotation scheme?
+      got: Distilling Translations with Visual Awareness
+    q-2965c86467: How were dialogue act labels defined?
+      got: Enriching Existing Conversational Emotion Datasets with Dial
+    q-47726be864: How is embedding quality assessed?
+      got: Bidirectional Context-Aware Hierarchical Attention Network f
+    q-8958465d1e: What are the three measures of bias which are reduced in exper
+      got: Probabilistic Bias Mitigation in Word Embeddings
+    q-6b7d76c1e1: What provisional explanation do the authors give for the impac
+      got: The Effect of Context on Metaphor Paraphrase Aptness Judgmen
+    q-37753fbffc: What document context was added?
+      got: The Effect of Context on Metaphor Paraphrase Aptness Judgmen
+    q-c0bee6539e: Does BERT reach the best performance among all the algorithms 
+      got: BoolQ: Exploring the Surprising Difficulty of Natural Yes/No
+    q-375b281e74: What is a wizard of oz setup?
+      got: Taskmaster-1: Toward a Realistic and Diverse Dialog Dataset
+    q-4319a13a6c: How is some information lost in the RNN-based generation model
+      got: Variational Cross-domain Natural Language Generation for Spo
+    q-a7829abed2: What hyperparameters have been tuned?
+      got: Measuring Compositional Generalization: A Comprehensive Meth
+    q-707db46938: How much F1 was improved after adding skip connections?
+      got: BERTQA -- Attention on Steroids
+    q-540e9db559: How was a quality control performed so that the text is noisy 
+      got: How big is big enough? Unsupervised word sense disambiguatio
+    q-981fd79dd6: What is the difference of the proposed model with a standard R
+      got: Natural Language Generation for Spoken Dialogue System using
+    q-b093b440ae: What are the currently available datasets for EAC?
+      got: Emotionally-Aware Chatbots: A Survey
+    q-3fddd9f670: Do they jointly tackle multiple tagging problems?
+      got: 1906.06442
+    q-fc54736e67: How do they confirm their model working well on out-of-vocabul
+      got: To lemmatize or not to lemmatize: how word normalisation aff
+    q-8b0abc1907: Were any of the pipeline components based on deep learning mod
+      got: Brundlefly at SemEval-2016 Task 12: Recurrent Neural Network
+    q-b65a83a24f: How are sentences selected from the summary graph?
+      got: Text Summarization using Abstract Meaning Representation
+    q-b6f466e0fd: Do they introduce errors in the data or does the data already 
+      got: Artificial Error Generation with Machine Translation and Syn
+    q-ca8e023d14: How did they determine the distinct classes?
+      got: Introducing RONEC -- the Romanian Named Entity Corpus
+    q-e659ceb184: Are the intent labels imbalanced in the dataset?
+      got: Learning Representations of Emotional Speech with Deep Convo
+    q-c33d0bc548: Do the images have multilingual annotations or monolingual one
+      got: Learning Multilingual Word Embeddings Using Image-Text Data
+    q-93b1b94b30: Could you learn such embedding simply from the image annotatio
+      got: Learning Multilingual Word Embeddings Using Image-Text Data
+    q-441886f049: What examples of applications are mentioned?
+      got: Ranking Sentences for Extractive Summarization with Reinforc
+    q-221e9189a9: What is the average number of turns per dialog?
+      got: Taskmaster-1: Toward a Realistic and Diverse Dialog Dataset
+    q-c21d26130b: Which six domains are covered in the dataset?
+      got: Taskmaster-1: Toward a Realistic and Diverse Dialog Dataset
+    q-0449584525: Do they look for inconsistencies between different UD treebank
+      got: Czech Text Processing with Contextual Embeddings: POS Taggin
+    q-0fa81adf00: Which components of QA and QG models are shared during trainin
+      got: Learning to Discover, Ground and Use Words with Segmental Ne
+    q-4ade72bfa2: How much improvement does jointly learning QA and QG give, com
+      got: A Joint Model for Question Answering and Question Generation
+    q-d4e5e3f376: what kinds of male and female words are looked at?
+      got: Probabilistic Bias Mitigation in Word Embeddings
+    q-5f60defb54: how is mitigation of gender bias evaluated?
+      got: Reducing Gender Bias in Word-Level Language Models with a Ge
+    q-6852217163: What benchmark datasets are used for the link prediction task?
+      got: STransE: a novel embedding model of entities and relationshi
+    q-022c365a14: What is the attention module pretrained on?
+      got: Bridging the Gap between Pre-Training and Fine-Tuning for En
+    q-dac087e132: LDA is an unsupervised method; is this paper introducing an un
+      got: Unsupervised Machine Commenting with Neural Variational Topi
+    q-a1645d0ba5: What is the benchmark dataset and is its quality high?
+      got: Character-Based Text Classification using Top Down Semantic 
+    q-0a4e82dc37: How do they gather human reviews?
+      got: A Novel ILP Framework for Summarizing Content with High Lexi
+    q-c635dc8013: Do they explain model predictions solely on attention weights?
+      got: Generating Descriptions from Structured Data Using a Bifocal
+    q-61aac406b6: Can their method of creating more informative visuals be appli
+      got: Paying Attention to Attention: Highlighting Influential Samp
+    q-6583e8bfa7: What are multilingual models that were outperformed in perform
+      got: Learning Multilingual Word Embeddings Using Image-Text Data
+    q-3aa43a0d54: What elements of natural language processing are proposed to a
+      got: Data Innovation for International Development: An overview o
+    q-249f2a9bd9: Do they train the NMT model on PBMT outputs?
+      got: Pre-Translation for Neural Machine Translation
+    q-c34a15f1d1: Are the models required to also generate rationales?
+      got: CommonGen: A Constrained Text Generation Dataset Towards Gen
+    q-4bae74eb70: Will these findings be robust through different datasets and d
+      got: Analysis of Wikipedia-based Corpora for Question Answering
+    q-c30c3e0f84: What is the underlying question answering algorithm?
+      got: A Joint Model for Question Answering and Question Generation
+    q-0f7867f888: How does their simple voting scheme work?
+      got: A Multi-Task Learning Framework for Extracting Drugs and The
+    q-e2e977d722: Which variant of the recurrent neural network do they use?
+      got: Emotionally-Aware Chatbots: A Survey
+    q-53377f1c5e: Which state-of-the-art model is surpassed by 9.68% attraction 
+      got: Hooks in the Headline: Learning to Generate Headlines with C
+    q-f37ed011e7: What is increase in percentage of humor contained in headlines
+      got: Hooks in the Headline: Learning to Generate Headlines with C
+    q-90b2154ec3: How is presence of three target styles detected?
+      got: Hooks in the Headline: Learning to Generate Headlines with C
+    q-4f253dfced: How do the authors evidence the claim that many engineers find
+      got: NeuronBlocks: Building Your NLP DNN Models Like Playing Lego
+    q-1405824a68: Was the introduced LSTM+CNN model trained on annotated data in
+      got: Learning Representations of Emotional Speech with Deep Convo
+    q-d201b99928: IS the graph representation supervised?
+      got: Learning High-order Structural and Attribute information by 
+    q-4b62406433: Did participants behave unexpectedly?
+      got: Speakers account for asymmetries in visual perspective so li
+    q-a9acd1af4a: Is this a span-based (extractive) QA task?
+      got: A Joint Model for Question Answering and Question Generation
+    q-4986f42088: Which additional latent variables are used in the model?
+      got: Improving Span-based Question Answering Systems with Coarsel
+    q-6568a31241: Do they add one latent variable for each language pair in thei
+      got: A Bayesian Model of Multilingual Unsupervised Semantic Role 
+    q-ee27e5b56e: Do they beat current state-of-the-art on SICK?
+      got: MonaLog: a Lightweight System for Natural Language Inference
+    q-45893f31ef: How do they select monotonicity facts?
+      got: Using text as features in Twitter is challenging because of 
+    q-03f4e5ac5a: How do the n-gram features incorporate compositionality?
+      got: A Computational Approach to Automatic Prediction of Drunk Te
+    q-7d2f812cb3: Which two pairs of ERPs from the literature benefit from joint
+      got: Understanding language-elicited EEG data by predicting it fr
+    q-a778b8204a: What is the Random Kitchen Sink approach?
+      got: Offensive Language Detection: A Comparative Analysis
+    q-871c34219e: Which model have the smallest Character Error Rate and which h
+      got: End-to-End Speech Recognition: A review for the French Langu
+    q-285858416b: What will be in focus for future work?
+      got: This framing suggests a supervised learning setup. Let $t$ d
+    q-acc512c57a: What are the existing end-to-end ASR approaches for the French
+      got: End-to-End Speech Recognition: A review for the French Langu
+    q-d5ff8fc4d3: What are results of comparison between novel method to other a
+      got: Measuring Compositional Generalization: A Comprehensive Meth
+    q-d9c6493e1c: How authors justify that question answering dataset presented 
+      got: Improving Span-based Question Answering Systems with Coarsel
+    q-0c234db3b3: What architecture does the decoder have?
+      got: Combining Advanced Methods in Japanese-Vietnamese Neural Mac
+    q-fa527becb8: What architecture does the encoder have?
+      got: Word, Subword or Character? An Empirical Study of Granularit
+    q-17988d65e4: Are the unobserved samples from the same distribution as the t
+      got: Named Entity Disambiguation for Noisy Text
+    q-43f074baca: How is the keyword specific expectation elicited from the crow
+      got: A Human-AI Loop Approach for Joint Keyword Discovery and Exp
+    q-f9bf6bef94: How is non-standard pronunciation identified?
+      got: A Resource for Computational Experiments on Mapudungun
+    q-923b12c0a5: What experiments with large-scale features are performed?
+      got: A simple discriminative training method for machine translat
+    q-524abe0ab7: Do the authors suggest any future extensions to this work?
+      got: STransE: a novel embedding model of entities and relationshi
+    q-7b2bf0c1a2: How are the keywords associated with events such as protests s
+      got: Using text as features in Twitter is challenging because of 
+    q-c9e9c5f443: How does propose model model that capture three-way interactio
+      got: RTFM: Generalising to Novel Environment Dynamics via Reading
+    q-63850ac98a: What is the problem with existing metrics that they are trying
+      got: Handling Divergent Reference Texts when Evaluating Table-to-
+    q-785eb3c7c5: What they formulate the question generation as?
+      got: Improving Question Generation With to the Point Context
+    q-bf6c14e9c5: What two main modules their approach consists of?
+      got: Summary Level Training of Sentence Rewriting for Abstractive
+    q-0ba3ea93ee: Did they use a crowdsourcing platform for annotations?
+      got: DpgMedia2019: A Dutch News Dataset for Partisanship Detectio
+    q-d353a6bbdc: How is correctness of automatic derivation proved?
+      got: Multi-SimLex: A Large-Scale Evaluation of Multilingual and C
+    q-24c0f3d617: How is data collected, manual collection or Twitter api?
+      got: Predicting the Type and Target of Offensive Posts in Social 
+    q-21a9f1cddd: How many tweats does MMHS150k contains, 150000?
+      got: Exploring Hate Speech Detection in Multimodal Publications
+    q-44c7c1fbac: What is the sample size of people used to measure user satisfa
+      got: Identifying Dogmatism in Social Media: Signals and Models
+    q-e4024db40f: How they compare varioius mechanisms in terms of naturalness?
+      got: Location-Relative Attention Mechanisms For Robust Long-Form 
+    q-f608fbc7a4: Which model is used to capture the implicit structure?
+      got: Learning Explicit and Implicit Structures for Targeted Senti
+    q-1afd550cbe: Is the model evaluated against the baseline also on single-asp
+      got: Low-Level Linguistic Controls for Style Transfer and Content
+    q-78c010db64: What is different in the improved annotation protocol?
+      got: Crowdsourcing a High-Quality Gold Standard for QA-SRL
+    q-b974523a6c: How often are the newspaper websites crawled daily?
+      got: Microsoft Research Asia's Systems for WMT19
+    q-e1b3692711: By how much does using phonetic feedback improve state-of-the-
+      got: Phonetic Feedback for Speech Enhancement With and Without Pa
+    q-3c3807f226: Are the experts comparable to real-world users?
+      got: Predicting Annotation Difficulty to Improve Task Routing and
+    q-c70bafc35e: Are the answers double (and not triple) annotated?
+      got: Improving Robustness of Task Oriented Dialog Systems
+    q-5913930ce5: How does their model improve interpretability compared to soft
+      got: We propose an adaptive version of sparse attention, where th
+    q-2fea3c955f: What conclusions are drawn from the syntactic analysis?
+      got: Basic tasks of sentiment analysis
+    q-faa4f28a2f: What type of syntactic analysis is performed?
+      got: Semi-Supervised Methods for Out-of-Domain Dependency Parsing
+    q-da068b2098: How is it demonstrated that the correct gender and number info
+      got: Filling Gender&Number Gaps in Neural Machine Translation wit
+    q-4b8257cdd9: How do the authors define or exemplify 'incorrect words'?
+      got: Evaluation of basic modules for isolated spelling error corr
+    q-4debd79269: Should their approach be applied only when dealing with incomp
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-3b745f086f: By how much do they outperform other models in the sentiment i
+      got: Stacked DeBERT: All Attention in Incomplete Data for Text Cl
+    q-369b0a481a: What data was used to build the word embeddings?
+      got: Semantic Structure and Interpretability of Word Embeddings
+    q-c6a0b9b5da: Which approach out of two proposed in the paper performed bett
+      got: Semi-Supervised Methods for Out-of-Domain Dependency Parsing
+    q-5871d258f6: did they use other pretrained language models besides bert?
+      got: Sensitive Data Detection and Classification in Spanish Clini
+    q-5d9b088bb0: what processing was done on the speeches before being parsed?
+      got: Database of Parliamentary Speeches in Ireland, 1919-2013
+    q-07580f78b0: Can the approach be generalized to other technical domains as 
+      got: Combining Advanced Methods in Japanese-Vietnamese Neural Mac
+    q-3c16d4cf5d: How do they select answer candidates for their QA task?
+      got: Propagate-Selector: Detecting Supporting Sentences for Quest
+    q-5067e5eb2c: Which matching features do they employ?
+      got: Multi-turn Inference Matching Network for Natural Language I
+    q-2f4acd34eb: What is dataset used for news-driven stock movement prediction
+      got: News-Driven Stock Prediction With Attention-Based Noisy Recu
+    q-4e1a67f8dc: Does the experiments focus on a specific domain?
+      got: An Empirical Comparison of Simple Domain Adaptation Methods 
+    q-a4ff1b9164: Which two datasets does the resource come from?
+      got: Multi-SimLex: A Large-Scale Evaluation of Multilingual and C
+    q-87bb3105e0: why are their techniques cheaper to implement?
+      got: Improving Distributed Representations of Tweets - Present an
+    q-d9980676a8: what data simulation techniques were introduced?
+      got: Using Monolingual Data in Neural Machine Translation: a Syst
+    q-9225b651e0: what is their explanation for the effectiveness of back-transl
+      got: 1906.06442
+    q-a09633584d: How is human evaluation performed, what was the criteria?
+      got: Hooks in the Headline: Learning to Generate Headlines with C
+    q-fe2666ace2: Why challenges does word segmentation in Vietnamese pose?
+      got: State-of-the-Art Vietnamese Word Segmentation
+    q-70a1b0f9f2: How successful are the approaches used to solve word segmentat
+      got: State-of-the-Art Vietnamese Word Segmentation
+    q-78102422a5: What is discriminator in this generative adversarial setup?
+      got: Learning Representations of Emotional Speech with Deep Convo
+    q-f4e1d2276d: What is the unsupervised task in the final layer?
+      got: Deep Semi-Supervised Learning with Linguistically Motivated 
+    q-6ead576ee5: How do they measure the quality of summaries?
+      got: SUM-QE: a BERT-based Summary Quality Estimation Model
+    q-1d9b953a32: Does API provide ability to connect to models written in some 
+      got: Torch-Struct: Deep Structured Prediction Library
+    q-093039f974: Is this library implemented into Torch or is framework agnosti
+      got: Torch-Struct: Deep Structured Prediction Library
+    q-94edac71ee: What general-purpose optimizations are included?
+      got: Torch-Struct: Deep Structured Prediction Library
+    q-ac3c88ace5: How better are results for pmra algorithm  than Doc2Vec in hum
+      got: 1911.11698
+    q-26012f57cb: What Doc2Vec architectures other than PV-DBOW have been tried?
+      got: 1911.11698
+    q-bd26a6d5d8: What four evaluation tasks are defined to determine what influ
+      got: 1911.11698
+    q-d67c01d9b6: How large are the improvements of the Attention-Sum Reader mod
+      got: Embracing data abundance: BookTest Dataset for Reading Compr
+    q-c348a8c06e: What two components are included in their proposed framework?
+      got: Exploring Scholarly Data by Semantic Query on Knowledge Grap
+    q-d5105a6a6d: How many demographic attributes they try to predict?
+      got: Community Question Answering Platforms vs. Twitter for Predi
+    q-7793805982: Are the annotations automatic or manually created?
+      got: Automatically Annotated Turkish Corpus for Named Entity Reco
+    q-72ed5fed07: How long are the essays on average?
+      got: A Portuguese Native Language Identification Dataset
+    q-9651fbd887: What experimental phenomena are presented?
+      got: Measuring Compositional Generalization: A Comprehensive Meth
+    q-1fd969f53b: How strategy-based methods handle obstacles in NLG?
+      got: Unsupervised Pre-training for Natural Language Generation: A
+    q-cdf65116a7: What open relation extraction tasks did they experiment on?
+      got: Logician: A Unified End-to-End Neural Approach for Open-Doma
+    q-c8031c1629: How is Logician different from traditional seq2seq models?
+      got: Unsupervised Machine Commenting with Neural Variational Topi
+    q-691cba5713: Do they argue that all words can be derived from other (elemen
+      got: Gating Mechanisms for Combining Character and Word-level Wor
+    q-4542a4e7ea: Do they break down word meanings into elementary particles as 
+      got: From quantum foundations via natural language meaning to a t
+    q-37be0d4794: What is the model performance on target language reading compr
+      got: Cross-Lingual Machine Reading Comprehension
+    q-55569d0a45: what does the model learn in zero-shot setting?
+      got: Zero-shot Reading Comprehension by Cross-lingual Transfer Le
+    q-72e4e26d0d: What models are used for painting embedding and what for langu
+      got: Low-Level Linguistic Controls for Style Transfer and Content
+    q-c6e63e3b80: What are the supported natural commands?
+      got: Natural Language Interactions in Autonomous Vehicles: Intent
+    q-be73a88d5b: Is there any evidence that encoders with latent structures wor
+      got: StructSum: Incorporating Latent and Explicit Sentence Depend
+    q-4519afe91b: How do they obtain distant supervision rules for predicting re
+      got: Brundlefly at SemEval-2016 Task 12: Recurrent Neural Network
+    q-0cfaca6f3f: Which structured prediction approach do they adopt for tempora
+      got: Brundlefly at SemEval-2016 Task 12: Recurrent Neural Network
+    q-4410466879: What is the difference in performance between the interpretabl
+      got: Evaluation of basic modules for isolated spelling error corr
+    q-b25e7137f4: Which specific error correction solutions have been proposed f
+      got: Evaluation of basic modules for isolated spelling error corr
+    q-28067da818: Ngrams of which length are aligned using PARENT?
+      got: To Swap or Not to Swap? Exploiting Dependency Word Pairs for
+    q-bf3b27a4f4: How many people participated in their evaluation study of tabl
+      got: Handling Divergent Reference Texts when Evaluating Table-to-
+    q-ffa7f91d64: By how much more does PARENT correlate with human judgements i
+      got: Handling Divergent Reference Texts when Evaluating Table-to-
+    q-07c9863e1e: Does a neural scoring function take both the question and the 
+      got: Neural Multi-Step Reasoning for Question Answering on Semi-S
+    q-bf7cb53f41: What is the source of the paraphrases of the questions?
+      got: Neural Multi-Step Reasoning for Question Answering on Semi-S
+    q-a6419207d2: Does the dataset they use differ from the one used by Pasupat 
+      got: Neural Multi-Step Reasoning for Question Answering on Semi-S
+    q-4bd894c365: How authors create adversarial test set to measure model robus
+      got: Improving Robustness of Task Oriented Dialog Systems
+    q-58d50567df: Does the dataset contain content from various social media pla
+      got: Emotionally-Aware Chatbots: A Survey
+    q-2ec9c1590c: How were the machine learning papers from ArXiv sampled?
+      got: Garbage In, Garbage Out? Do Machine Learning Application Pap
+    q-208e667982: What are the core best practices of structured content analysi
+      got: Garbage In, Garbage Out? Do Machine Learning Application Pap
+    q-1269c5d8f6: what methods were used to reduce data sparsity effects?
+      got: Combining Advanced Methods in Japanese-Vietnamese Neural Mac
+    q-b53efdbb9e: How are some nodes initially connected based on text structure
+      got: Propagate-Selector: Detecting Supporting Sentences for Quest
+    q-c383fa9170: How they know what are content words?
+      got: Low-Level Linguistic Controls for Style Transfer and Content
+    q-a2a3af59f3: What social media platform is observed?
+      got: Community Question Answering Platforms vs. Twitter for Predi
+    q-8d258899e3: What scoring function does the model use to score triples?
+      got: MDE: Multi Distance Embeddings for Link Prediction in Knowle
+    q-2281587808: What other examples of morphologically-rich languages do the a
+      got: Named Entity Recognition on Twitter for Turkish using Semi-s
+    q-182c791932: How does the model recognize entities and their relation to an
+      got: Question Dependent Recurrent Entity Network for Question Ans
+    q-b8137eb0fa: What domains are considered that have such large vocabularies?
+      got: Network-Efficient Distributed Word2vec Training System for L
+    q-d79d897f94: What result from experiments suggest that natural language bas
+      got: Natural Language State Representation for Reinforcement Lear
+    q-084fb7c80a: How is state to learn and complete tasks represented via natur
+      got: Natural Language State Representation for Reinforcement Lear
+    q-ee9b95d773: How are content clusters used to improve the prediction of inc
+      got: Extracting information from free text through unsupervised g
+    q-95c7b27d19: What baseline function is used in REINFORCE algorithm?
+      got: A Better Variant of Self-Critical Sequence Training
+    q-52f9cd05d8: Do the authors hypothesize that humans' robustness to noise is
+      got: Explicit Utilization of General Knowledge in Machine Reading
+    q-5758ebff49: What do they constrain using integer linear programming?
+      got: Vietnamese Semantic Role Labelling
+    q-e84ba95c9a: Do they build one model per topic or on all topics?
+      got: What comes next? Extractive summarization by next-sentence p
+    q-caf9819be5: Do they quantitavely or qualitatively evalute the output of th
+      got: A Novel ILP Framework for Summarizing Content with High Lexi
+    q-66f0dee89f: Do they use pretrained word representations in their neural ne
+      got: Multi-SimLex: A Large-Scale Evaluation of Multilingual and C
+    q-8f882f414d: How do they combine the two proposed neural network models?
+      got: Neural Network Translation Models for Grammatical Error Corr
+    q-a49832c89a: Which dataset do they evaluate grammatical error correction on
+      got: Grammatical Error Correction and Style Transfer via Zero-sho
+
+======================================================================================
+
+Wrote /content/drive/MyDrive/vectora_results/run3b_2026-10-22_0525/expG_balanced_old.json
+

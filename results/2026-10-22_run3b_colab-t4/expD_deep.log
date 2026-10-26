@@ -1,0 +1,12 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:  37%|███▋      | 74/199 [00:00<00:00, 728.52it/s]Loading weights:  74%|███████▍  | 148/199 [00:00<00:00, 714.58it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 737.87it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights:  72%|███████▏  | 76/105 [00:00<00:00, 748.54it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 778.53it/s]
+WARNING [dda901df] generation.citations   unverifiable quote discarded  source=1 quote=A knowledge graph is composed of triples, $(h, t, r)$, representing facts betwee
+WARNING [33ab1d07] llm                    llm call failed  purpose=answer model=gemma3:4b attempt=2 err=InternalServerError: Error code: 500 - {'error': {'message': 'prediction aborted, token repeat limit reached', 'type': 'api_error', 'param': None, 'code': None}}
+WARNING evaluation.answers     answer failed  case=q-cbbcafffda err=answer failed after 2 attempts: Error code: 500 - {'error': {'message': 'prediction aborted, token repeat limit reached', 'type': 'api_error
+WARNING [2082bf15] llm                    structured output did not validate  purpose=attribute err=Unterminated string starting at: line 5 column 16 (char 57)
+WARNING [13a186d5] generation.citations   unverifiable quote discarded  source=2 quote=Given an input α, encs emits a sequence of hidden vectors αh^s
+WARNING [cb365858] generation.citations   unverifiable quote discarded  source=1 quote=In automatic post-editing (APE) it makes sense to condition post-editing (pe) de

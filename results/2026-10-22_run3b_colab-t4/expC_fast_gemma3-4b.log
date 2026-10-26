@@ -1,0 +1,469 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING huggingface_hub.utils._http Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 4152.51it/s]
+/content/Vectora/vectora/embeddings.py:52: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  actual = self._model.get_sentence_embedding_dimension()
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 5805.53it/s]
+WARNING [dbba1a78] generation.citations   answer cited sources that were not provided  invalid=[11, 12, 15] provided=8
+WARNING [7ff79e62] generation.citations   answer cited sources that were not provided  invalid=[4] provided=3
+
+Scoring 365 questions and 50 negatives in fast mode.
+This makes 830-ish OpenAI calls, roughly $0.290 on gpt-4o-mini.
+
+  [1/415] Do the authors give any examples of major events which draw th
+  [2/415] Which tweets are used to output the daily sentiment signal?
+  [3/415] What is the baseline machine learning prediction approach?
+  [4/415] How did they determine fake news tweets?
+  [5/415] What is their definition of tweets going viral?
+  [6/415] What are the characteristics of the accounts that spread fake 
+  [7/415] How do they measure correlation between the prediction and exp
+  [8/415] Does the Agent ask for a value of a variable using natural lan
+  [9/415] How are aspects identified in aspect extraction?
+  [10/415] How is the domain knowledge transfer represented as knowledge 
+  [11/415] Where are the cybersecurity articles used in the model sourced
+  [12/415] What trends are found in musical preferences?
+  [13/415] Was any variation in results observed based on language typolo
+  [14/415] What are lyrical topics present in the metal genre?
+  [15/415] What features of the document are integrated into vectors of e
+  [16/415] Which of the two ensembles yields the best performance?
+  [17/415] What are the two ways of ensembling BERT and E-BERT?
+  [18/415] How is it determined that a fact is easy-to-guess?
+  [19/415] Did they use a relation extraction method to construct the edg
+  [20/415] How did they get relations between mentions?
+  [21/415] How did they detect entity mentions?
+  [22/415] How is the expectation regularization loss defined?
+  [23/415] How is Super Character method modified to handle tabular data 
+  [24/415] Which words are used differently across ArXiv?
+  [25/415] What is the average length of the claims?
+  [26/415] What debate websites did they look at?
+  [27/415] What debate topics are included in the dataset?
+  [28/415] How do they quantify alignment between the embeddings of a doc
+  [29/415] Does adversarial learning have stronger performance gains for 
+  [30/415] Do any of the evaluations show that adversarial learning impro
+  [31/415] How much higher quality is the resulting annotated data?
+  [32/415] How do they match annotators to instances?
+  [33/415] How much data is needed to train the task-specific encoder?
+  [34/415] What are least important components identified in the the trai
+  [35/415] What components are identified as core components for training
+  [36/415] What objective function is used in the GAN?
+  [37/415] How does KANE capture both high-order structural and attribute
+  [38/415] What are recent works on knowedge graph embeddings authors men
+  [39/415] How big are improvements of small-scale unbalanced datasets wh
+  [40/415] Which models achieve state-of-the-art performances?
+  [41/415] What experiment result led to conclussion that reducing the nu
+  [42/415] How much is performance hurt when using too small amount of la
+  [43/415] What was previous state of the art model for automatic post ed
+  [44/415] What future possible improvements are listed?
+  [45/415] What is quantitative improvement of proposed method (the best 
+  [46/415] What are the causal mapping methods employed?
+  [47/415] How does soft contextual data augmentation work?
+  [48/415] How does muli-agent dual learning work?
+  [49/415] Which language directions are machine translation systems of W
+  [50/415] What neural configurations are explored?
+  [51/415] what civil field is the dataset about?
+  [52/415] what is the size of the real-world civil case dataset?
+  [53/415] What is the motivation behind the work? Why question generatio
+  [54/415] How many annotators tagged each text?
+  [55/415] What other natural processing tasks authors think could be stu
+  [56/415] What is the reason that traditional co-occurrence networks fai
+  [57/415] Do the use word embeddings alone or they replace some previous
+  [58/415] What approaches without reinforcement learning have been tried
+  [59/415] Did classification models perform better than previous regress
+  [60/415] What proficiency indicators are used to the score the utteranc
+  [61/415] What accuracy is achieved by the speech recognition system?
+  [62/415] How do they enrich the positional embedding with length inform
+  [63/415] How do they condition the output to a given target-source clas
+  [64/415] How many layers do they use in their best performing network?
+  [65/415] Do they just sum up all the loses the calculate to end up with
+  [66/415] which non-english language was the had the worst results?
+  [67/415] What is the average length of dialog?
+  [68/415] how did they ask if a tweet was racist?
+  [69/415] Do they employ their indexing-based method to create a sample 
+  [70/415] How many question types do they find in the datasets analyzed?
+  [71/415] How do they analyze contextual similaries across datasets?
+  [72/415] How they observe that fine-tuning BERT on a specific task does
+  [73/415] How much is pre-training loss increased in Low/Medium/Hard lev
+  [74/415] How do slot binary classifiers improve performance?
+  [75/415] Where did this model place in the final evaluation of the shar
+  [76/415] What in-domain data is used to continue pre-training?
+  [77/415] What dialect is used in the Google BERT model and what is used
+  [78/415] What crowdsourcing platform is used for data collection and da
+  [79/415] Is audio data per language balanced in dataset?
+  [80/415] What are the tasks in the multitask learning setup?
+  [81/415] What natural language(s) are the recipes written in?
+  [82/415] How long are dialogue recordings used for evaluation?
+  [83/415] How much is classification performance improved in experiments
+  [84/415] What off-the-shelf reward learning algorithm from RL for joint
+  [85/415] Do the authors mention any confounds to their study?
+  [86/415] Is the data acquired under distant supervision verified by hum
+  [87/415] Do the authors equate drunk tweeting with drunk texting?
+  [88/415] what is the proposed Progressive Dynamic Hurdles method?
+  [89/415] How does Progressive Dynamic Hurdles work?
+  [90/415] How do they encourage understanding of literature as part of t
+  [91/415] Which data do they use as a starting point for the dialogue da
+  [92/415] How do they select instances to their hold-out test set?
+  [93/415] What syntactic structure is used to model tones?
+  [94/415] What visual information characterizes tones?
+  [95/415] Are any experiments performed to try this approach to word emb
+  [96/415] What models that rely only on claim-specific linguistic featur
+  [97/415] How is pargmative and discourse context added to the dataset?
+  [98/415] What additional techniques are incorporated?
+  [99/415] What additional techniques could be incorporated to further im
+  [100/415] Where do they employ feature-wise sigmoid gating?
+  [101/415] Which model architecture do they use to obtain representations
+  [102/415] How many sentence transformations on average are available per
+  [103/415] How are possible sentence transformations represented in datas
+  [104/415] Do they do any analysis of of how the modifications changed th
+  [105/415] What statistics on the VIST dataset are reported?
+  [106/415] Is Arabic one of the 11 languages in CoVost?
+  [107/415] What new interesting tasks can be solved based on the uncanny 
+  [108/415] What are the uncanny semantic structures of the embedding spac
+  [109/415] What is the general framework for data exploration by semantic
+  [110/415] How they extract "structured answer-relevant relation"?
+  [111/415] What are the differences between this dataset and pre-existing
+  [112/415] What kinds of offensive content are explored?
+  [113/415] What are the three layers of the annotation scheme?
+  [114/415] How does the ensemble annotator extract the final label?
+  [115/415] How were dialogue act labels defined?
+  [116/415] How is embedding quality assessed?
+  [117/415] What are the three measures of bias which are reduced in exper
+  [118/415] What provisional explanation do the authors give for the impac
+  [119/415] What document context was added?
+  [120/415] Does BERT reach the best performance among all the algorithms 
+  [121/415] What functionality does Macaw provide?
+  [122/415] What is a wizard of oz setup?
+  [123/415] What interface does Macaw currently have?
+  [124/415] How is some information lost in the RNN-based generation model
+  [125/415] What hyperparameters have been tuned?
+  [126/415] How much F1 was improved after adding skip connections?
+  [127/415] How was a quality control performed so that the text is noisy 
+  [128/415] What is the difference of the proposed model with a standard R
+  [129/415] Does the model evaluated on NLG datasets or dialog datasets?
+  [130/415] What are the currently available datasets for EAC?
+  [131/415] What are the research questions posed in the paper regarding E
+  [132/415] What is a bifocal attention mechanism?
+  [133/415] Do they jointly tackle multiple tagging problems?
+  [134/415] How do they confirm their model working well on out-of-vocabul
+  [135/415] Were any of the pipeline components based on deep learning mod
+  [136/415] How are sentences selected from the summary graph?
+  [137/415] Do they introduce errors in the data or does the data already 
+  [138/415] How did they determine the distinct classes?
+  [139/415] what are the topics pulled from Reddit?
+  [140/415] Are the intent labels imbalanced in the dataset?
+  [141/415] Are resolution mode variables hand crafted?
+  [142/415] Do the images have multilingual annotations or monolingual one
+  [143/415] Could you learn such embedding simply from the image annotatio
+  [144/415] Is is known whether Sina Weibo posts are censored by humans or
+  [145/415] What examples of applications are mentioned?
+  [146/415] Does each attention head in the decoder calculate the same out
+  [147/415] What can word subspace represent?
+  [148/415] What is the average number of turns per dialog?
+  [149/415] Which six domains are covered in the dataset?
+  [150/415] What are the main sources of recall errors in the mapping?
+  [151/415] Do they look for inconsistencies between different languages' 
+  [152/415] Do they look for inconsistencies between different UD treebank
+  [153/415] Which components of QA and QG models are shared during trainin
+  [154/415] How much improvement does jointly learning QA and QG give, com
+  [155/415] what kinds of male and female words are looked at?
+  [156/415] how is mitigation of gender bias evaluated?
+  [157/415] What benchmark datasets are used for the link prediction task?
+  [158/415] How better does HAKE model peform than state-of-the-art method
+  [159/415] How are entities mapped onto polar coordinate system?
+  [160/415] What is the attention module pretrained on?
+  [161/415] LDA is an unsupervised method; is this paper introducing an un
+  [162/415] What is the benchmark dataset and is its quality high?
+  [163/415] Do transferring hurt the performance is the corpora are not re
+  [164/415] How do they gather human reviews?
+  [165/415] Do they explain model predictions solely on attention weights?
+  [166/415] Can their method of creating more informative visuals be appli
+  [167/415] Is infinite-length sequence generation a result of training wi
+  [168/415] What are multilingual models that were outperformed in perform
+  [169/415] What elements of natural language processing are proposed to a
+  [170/415] What are the differences in the use of emojis between gang mem
+  [171/415] What are the differences in the use of YouTube links between g
+  [172/415] What are the differences in the use of images between gang mem
+  [173/415] Do they train the NMT model on PBMT outputs?
+  [174/415] Are the models required to also generate rationales?
+  [175/415] Are the rationales generated after the sentences were written?
+  [176/415] Are the sentences in the dataset written by humans who were sh
+  [177/415] How they prove that multi-head self-attention is at least as p
+  [178/415] Will these findings be robust through different datasets and d
+  [179/415] What is the underlying question answering algorithm?
+  [180/415] How does their simple voting scheme work?
+  [181/415] Which variant of the recurrent neural network do they use?
+  [182/415] How do they obtain the new context represetation?
+  [183/415] Which state-of-the-art model is surpassed by 9.68% attraction 
+  [184/415] What is increase in percentage of humor contained in headlines
+  [185/415] How is presence of three target styles detected?
+  [186/415] What neural network modules are included in NeuronBlocks?
+  [187/415] How do the authors evidence the claim that many engineers find
+  [188/415] Was the introduced LSTM+CNN model trained on annotated data in
+  [189/415] how many movie genres do they explore?
+  [190/415] IS the graph representation supervised?
+  [191/415] Is the G-BERT model useful beyond the task considered?
+  [192/415] Which classification algorithm do they use for s2sL?
+  [193/415] Did participants behave unexpectedly?
+  [194/415] Is this a span-based (extractive) QA task?
+  [195/415] Which additional latent variables are used in the model?
+  [196/415] Overall, does having parallel data improve semantic role induc
+  [197/415] Do they add one latent variable for each language pair in thei
+  [198/415] Do they beat current state-of-the-art on SICK?
+  [199/415] How do they combine MonaLog with BERT?
+  [200/415] How do they select monotonicity facts?
+  [201/415] How do the n-gram features incorporate compositionality?
+  [202/415] Which two pairs of ERPs from the literature benefit from joint
+  [203/415] What is the Random Kitchen Sink approach?
+  [204/415] Why are current ELS's not sufficiently effective?
+  [205/415] Which model have the smallest Character Error Rate and which h
+  [206/415] What will be in focus for future work?
+  [207/415] What are the existing end-to-end ASR approaches for the French
+  [208/415] How strong is negative correlation between compound divergence
+  [209/415] What are results of comparison between novel method to other a
+  [210/415] How authors justify that question answering dataset presented 
+  [211/415] What architecture does the decoder have?
+  [212/415] What architecture does the encoder have?
+  [213/415] Are the unobserved samples from the same distribution as the t
+  [214/415] How are the interpretability merits of the approach demonstrat
+  [215/415] How is the keyword specific expectation elicited from the crow
+  [216/415] How is non-standard pronunciation identified?
+  [217/415] What experiments with large-scale features are performed?
+  [218/415] What are the weaknesses of their proposed interpretability qua
+  [219/415] What advantages does their proposed method of quantifying inte
+  [220/415] Do the authors suggest any future extensions to this work?
+  [221/415] How are the keywords associated with events such as protests s
+  [222/415] How does propose model model that capture three-way interactio
+  [223/415] What is the problem with existing metrics that they are trying
+  [224/415] What they formulate the question generation as?
+  [225/415] What two main modules their approach consists of?
+  [226/415] Did they use a crowdsourcing platform for annotations?
+  [227/415] How do they deal with unknown distribution senses?
+  [228/415] How is correctness of automatic derivation proved?
+  [229/415] What is author's opinion on why current multimodal models cann
+  [230/415] How is data collected, manual collection or Twitter api?
+  [231/415] How many tweats does MMHS150k contains, 150000?
+  [232/415] What NLP tasks do the authors evaluate feed-forward networks o
+  [233/415] What is the sample size of people used to measure user satisfa
+  [234/415] What are all the metrics to measure user engagement?
+  [235/415] Do they gather explicit user satisfaction data on Gunrock?
+  [236/415] How they compare varioius mechanisms in terms of naturalness?
+  [237/415] Which model is used to capture the implicit structure?
+  [238/415] Is car-speak language collection of abstract features that cla
+  [239/415] Is order of "words" important in car speak language?
+  [240/415] What are labels in car speak language dataset?
+  [241/415] Is the model evaluated against the baseline also on single-asp
+  [242/415] What is different in the improved annotation protocol?
+  [243/415] How often are the newspaper websites crawled daily?
+  [244/415] By how much does using phonetic feedback improve state-of-the-
+  [245/415] Are the experts comparable to real-world users?
+  [246/415] Are the answers double (and not triple) annotated?
+  [247/415] Which race and gender are given higher sentiment intensity pre
+  [248/415] What criteria are used to select the 8,640 English sentences?
+  [249/415] How does their model improve interpretability compared to soft
+  [250/415] What conclusions are drawn from the syntactic analysis?
+  [251/415] What type of syntactic analysis is performed?
+  [252/415] How is it demonstrated that the correct gender and number info
+  [253/415] How do the authors define or exemplify 'incorrect words'?
+  [254/415] Should their approach be applied only when dealing with incomp
+  [255/415] By how much do they outperform other models in the sentiment i
+  [256/415] What data was used to build the word embeddings?
+  [257/415] Which approach out of two proposed in the paper performed bett
+  [258/415] did they use other pretrained language models besides bert?
+  [259/415] what processing was done on the speeches before being parsed?
+  [260/415] Which model do they use to convert between masculine-inflected
+  [261/415] How does morphological analysis differ from morphological infl
+  [262/415] Which language family does Chatino belong to?
+  [263/415] Can the approach be generalized to other technical domains as 
+  [264/415] How do they select answer candidates for their QA task?
+  [265/415] Which matching features do they employ?
+  [266/415] What is dataset used for news-driven stock movement prediction
+  [267/415] Does the experiments focus on a specific domain?
+  [268/415] Which two datasets does the resource come from?
+  [269/415] why are their techniques cheaper to implement?
+  [270/415] what data simulation techniques were introduced?
+  [271/415] what is their explanation for the effectiveness of back-transl
+  [272/415] Which machine learning models do they use to correct run-on se
+  [273/415] How is human evaluation performed, what was the criteria?
+  [274/415] Which one of the four proposed models performed best?
+  [275/415] What are the limitations of existing Vietnamese word segmentat
+  [276/415] Why challenges does word segmentation in Vietnamese pose?
+  [277/415] How successful are the approaches used to solve word segmentat
+  [278/415] How much in experiments is performance improved for models tra
+  [279/415] How much dramatically results drop for models on generated adv
+  [280/415] What is discriminator in this generative adversarial setup?
+  [281/415] What is the unsupervised task in the final layer?
+  [282/415] How do they measure the quality of summaries?
+  [283/415] Does their model also take the expected answer style as input?
+  [284/415] What do they mean by answer styles?
+  [285/415] Does API provide ability to connect to models written in some 
+  [286/415] Is this library implemented into Torch or is framework agnosti
+  [287/415] What general-purpose optimizations are included?
+  [288/415] How better are results for pmra algorithm  than Doc2Vec in hum
+  [289/415] What Doc2Vec architectures other than PV-DBOW have been tried?
+  [290/415] What four evaluation tasks are defined to determine what influ
+  [291/415] How large are the improvements of the Attention-Sum Reader mod
+  [292/415] What two components are included in their proposed framework?
+  [293/415] Do they use datasets with transcribed text or do they determin
+  [294/415] How do they combine audio and text sequences in their RNN?
+  [295/415] On Twitter, do the demographic attributes and answers show mor
+  [296/415] How many demographic attributes they try to predict?
+  [297/415] What discourse relations does it work best/worst for?
+  [298/415] Which coreference resolution systems are tested?
+  [299/415] How are the substitution rules built?
+  [300/415] Are the annotations automatic or manually created?
+  [301/415] How long are the essays on average?
+  [302/415] Which future direction in NLG are discussed?
+  [303/415] What experimental phenomena are presented?
+  [304/415] How strategy-based methods handle obstacles in NLG?
+  [305/415] What open relation extraction tasks did they experiment on?
+  [306/415] How is Logician different from traditional seq2seq models?
+  [307/415] Do they argue that all words can be derived from other (elemen
+  [308/415] Do they break down word meanings into elementary particles as 
+  [309/415] What is the model performance on target language reading compr
+  [310/415] what does the model learn in zero-shot setting?
+  [311/415] What models are used for painting embedding and what for langu
+  [312/415] How does final model rate on Likert scale?
+  [313/415] What is best BLEU score of language style transfer authors got
+  [314/415] What is barycentric Newton diagram?
+  [315/415] What are the supported natural commands?
+  [316/415] What is the architecture of the siamese neural network?
+  [317/415] Which are the four Arabic dialects?
+  [318/415] Is there any evidence that encoders with latent structures wor
+  [319/415] Does the performance necessarily drop when more control is des
+  [320/415] How is the model trained to do only content selection?
+  [321/415] How do they obtain distant supervision rules for predicting re
+  [322/415] Which structured prediction approach do they adopt for tempora
+  [323/415] What is the difference in performance between the interpretabl
+  [324/415] Which specific error correction solutions have been proposed f
+  [325/415] Ngrams of which length are aligned using PARENT?
+  [326/415] How many people participated in their evaluation study of tabl
+  [327/415] By how much more does PARENT correlate with human judgements i
+  [328/415] How much bigger is Switchboard-2000 than Switchboard-300 datab
+  [329/415] Does a neural scoring function take both the question and the 
+  [330/415] What is the source of the paraphrases of the questions?
+  [331/415] Does the dataset they use differ from the one used by Pasupat 
+  [332/415] How authors create adversarial test set to measure model robus
+  [333/415] Does the dataset contain content from various social media pla
+  [334/415] What are the key issues around whether the gold standard data 
+  [335/415] How were the machine learning papers from ArXiv sampled?
+  [336/415] What are the core best practices of structured content analysi
+  [337/415] Do they propose any solution to debias the embeddings?
+  [338/415] what methods were used to reduce data sparsity effects?
+  [339/415] How are some nodes initially connected based on text structure
+  [340/415] How are rare words defined?
+  [341/415] What is the architecture of the span detector?
+  [342/415] How they know what are content words?
+  [343/415] How they model style as a suite of low-level linguistic contro
+  [344/415] What controversial topics are experimented with?
+  [345/415] What social media platform is observed?
+  [346/415] What scoring function does the model use to score triples?
+  [347/415] Do the authors mention any downside of lemmatizing input befor
+  [348/415] What other examples of morphologically-rich languages do the a
+  [349/415] Why is lemmatization not necessary in English?
+  [350/415] How does the model recognize entities and their relation to an
+  [351/415] Do they use skipgram version of word2vec?
+  [352/415] What domains are considered that have such large vocabularies?
+  [353/415] What textual patterns are extracted?
+  [354/415] What result from experiments suggest that natural language bas
+  [355/415] How is state to learn and complete tasks represented via natur
+  [356/415] How are content clusters used to improve the prediction of inc
+  [357/415] What baseline function is used in REINFORCE algorithm?
+  [358/415] How do the authors examine whether a model is robust to noise 
+  [359/415] Do the authors hypothesize that humans' robustness to noise is
+  [360/415] What do they constrain using integer linear programming?
+  [361/415] Do they build one model per topic or on all topics?
+  [362/415] Do they quantitavely or qualitatively evalute the output of th
+  [363/415] Do they use pretrained word representations in their neural ne
+  [364/415] How do they combine the two proposed neural network models?
+  [365/415] Which dataset do they evaluate grammatical error correction on
+  [366/415] (negative) What is the boiling point of water at the top of Mou
+  [367/415] (negative) Who won the 2018 FIFA World Cup?
+  [368/415] (negative) How do I reset a forgotten Windows password?
+  [369/415] (negative) What is the recommended daily intake of vitamin D fo
+  [370/415] (negative) How does a car's catalytic converter work?
+  [371/415] (negative) What year did the Berlin Wall fall?
+  [372/415] (negative) Which GPU should I buy for gaming at 1440p?
+  [373/415] (negative) How do I cook risotto without it going gluey?
+  [374/415] (negative) What is the capital of Australia?
+  [375/415] (negative) How many bones are in the adult human body?
+  [376/415] (negative) What causes the seasons on Earth?
+  [377/415] (negative) How long should I boil an egg for a soft yolk?
+  [378/415] (negative) What is the best way to remove a red wine stain from
+  [379/415] (negative) Who painted the ceiling of the Sistine Chapel?
+  [380/415] (negative) How do I change a flat tyre on a car?
+  [381/415] (negative) What is the difference between a crocodile and an al
+  [382/415] (negative) When is the best time of year to visit Japan?
+  [383/415] (negative) How do I file an income tax return online?
+  [384/415] (negative) What are the rules of cricket's LBW decision?
+  [385/415] (negative) How many players are on a basketball team on court?
+  [386/415] (negative) What is the half-life of carbon-14?
+  [387/415] (negative) How does CRISPR-Cas9 cut DNA?
+  [388/415] (negative) What is the mechanism of action of metformin?
+  [389/415] (negative) How do mRNA vaccines produce an immune response?
+  [390/415] (negative) What is the Chandrasekhar limit for white dwarfs?
+  [391/415] (negative) How does a lithium-ion battery degrade over charge c
+  [392/415] (negative) What is the Reynolds number used for in fluid dynami
+  [393/415] (negative) How do plate tectonics cause earthquakes?
+  [394/415] (negative) What determines the yield strength of steel?
+  [395/415] (negative) How does photosynthesis convert light into chemical 
+  [396/415] (negative) What is the Black-Scholes formula used to price?
+  [397/415] (negative) How do central banks use interest rates to control i
+  [398/415] (negative) How do I configure a static IP address on Ubuntu?
+  [399/415] (negative) What is the difference between TCP and UDP?
+  [400/415] (negative) How does garbage collection work in the Java virtual
+  [401/415] (negative) How do I resolve a merge conflict in git?
+  [402/415] (negative) What is the time complexity of quicksort in the wors
+  [403/415] (negative) How do I centre a div horizontally with CSS?
+  [404/415] (negative) What is a race condition in multithreaded code?
+  [405/415] (negative) How does public-key encryption establish a shared se
+  [406/415] (negative) What context window does GPT-4o support?
+  [407/415] (negative) How does Llama 3 differ from Llama 2 in training dat
+  [408/415] (negative) What is the Model Context Protocol used for?
+  [409/415] (negative) How does speculative decoding speed up LLM inference
+  [410/415] (negative) What is direct preference optimization and how does 
+  [411/415] (negative) How does vLLM's PagedAttention manage the KV cache?
+  [412/415] (negative) What is the Mixtral mixture-of-experts architecture?
+  [413/415] (negative) How do diffusion models generate images from noise?
+  [414/415] (negative) What GPU memory does a 70B parameter model need in 4
+  [415/415] (negative) What benchmark scores did Gemini 1.5 report?
+
+========================================================================
+  ANSWER QUALITY — qasper-300, fast mode
+========================================================================
+  cases 415   answered 362   refused 53
+
+  Mechanical (computed from the text — trust these first)
+    citation coverage      94.1%   share of substantive sentences with a marker
+    raw citation validity  99.8%   markers the model wrote that pointed at a real source
+    hallucinated markers   0.3%   (stripped before the user sees the answer)
+    citation validity      100.0%   after stripping — 100% by construction
+    answer token F1        11.3%   vs annotators' answers (best reference)
+    answer token recall    32.6%   share of the reference the answer contains
+    anchor recall          100.0%   expected phrases present in the answer
+    refusal accuracy       94.9%   answered when it should, declined when it should
+
+  Judged by a model (indicative — see the module docstring)
+    groundedness           0/100
+    relevance              0/100
+    completeness           0/100
+
+  Cost
+    total                  $0.1098  ($0.00026 per question)
+    median latency         3253 ms
+
+  Answers where the model cited a source that was not provided:
+    3 invalid in: What are lyrical topics present in the metal genre
+    1 invalid in: How were dialogue act labels defined?
+
+  Wrong answer/refusal decision:
+    refused a fair question: which non-english language was the had the worst res
+    refused a fair question: How do they select instances to their hold-out test 
+    refused a fair question: What additional techniques are incorporated?
+    refused a fair question: What is a wizard of oz setup?
+    refused a fair question: what are the topics pulled from Reddit?
+    refused a fair question: How does their simple voting scheme work?
+    refused a fair question: How do they obtain the new context represetation?
+    refused a fair question: What is the Random Kitchen Sink approach?
+========================================================================
+
+Wrote /content/drive/MyDrive/vectora_results/run3b_2026-10-22_0525/expC_fast_gemma3-4b.json
+
