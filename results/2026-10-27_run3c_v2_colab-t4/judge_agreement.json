@@ -1,0 +1,16 @@
+{
+  "labelled": 30,
+  "threshold": 70,
+  "agreement": 0.8333,
+  "cohen_kappa": -0.0563,
+  "human_faithful_rate": 0.8667,
+  "judge_faithful_rate": 0.9667,
+  "judge_passed_unfaithful": 4,
+  "judge_failed_faithful": 1,
+  "confusion": {
+    "both_faithful": 25,
+    "both_unfaithful": 0,
+    "judge_yes_human_no": 4,
+    "judge_no_human_yes": 1
+  }
+}

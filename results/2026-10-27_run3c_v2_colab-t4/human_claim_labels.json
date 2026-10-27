@@ -1,0 +1,345 @@
+{
+ "q-dc4096b8ba": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "x"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 100
+ },
+ "q-56a8826cbe": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "x"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 85
+ },
+ "q-7f452eb145": {
+  "claims": [
+   "y"
+  ],
+  "faithful": 1,
+  "note": "It is used for Data Collection but there is no mention of Data Validation",
+  "judge_score": 80
+ },
+ "q-2a1e6a69e0": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 85
+ },
+ "q-3b7798a6bc": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "n",
+   "y",
+   "y",
+   "y",
+   "n"
+  ],
+  "faithful": 0,
+  "note": "",
+  "judge_score": 75
+ },
+ "q-30e21f5bc1": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 72
+ },
+ "q-c4c9c7900a": {
+  "claims": [
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 100
+ },
+ "q-90bc603205": {
+  "claims": [
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 95
+ },
+ "q-4db3c2ca6d": {
+  "claims": [
+   "y",
+   "n"
+  ],
+  "faithful": 0,
+  "note": "",
+  "judge_score": 100
+ },
+ "q-69ef007fc1": {
+  "claims": [
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 100
+ },
+ "q-d71cb7f3aa": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 85
+ },
+ "q-728c2fb445": {
+  "claims": [
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 95
+ },
+ "q-184e1f28f9": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 95
+ },
+ "q-968b7c3553": {
+  "claims": [
+   "y"
+  ],
+  "faithful": 1,
+  "note": "I don't think [4] should be cited here?",
+  "judge_score": 100
+ },
+ "q-a71ebd8dc9": {
+  "claims": [
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 80
+ },
+ "q-06cc8fcafc": {
+  "claims": [
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 60
+ },
+ "q-cbbcafffda": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 85
+ },
+ "q-498c0229f8": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 95
+ },
+ "q-5cb3d69607": {
+  "claims": [
+   "y",
+   "y",
+   "x",
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 75
+ },
+ "q-cfffc94518": {
+  "claims": [
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 85
+ },
+ "q-31b20a4bab": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "n",
+   "y"
+  ],
+  "faithful": 0,
+  "note": "",
+  "judge_score": 85
+ },
+ "q-312417675b": {
+  "claims": [
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 95
+ },
+ "q-0154d8be77": {
+  "claims": [
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 100
+ },
+ "q-76405b76b9": {
+  "claims": [
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 95
+ },
+ "q-4c854d33a8": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 85
+ },
+ "q-2255c36c8c": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 95
+ },
+ "q-ef07ec3443": {
+  "claims": [
+   "y",
+   "y",
+   "y",
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 80
+ },
+ "q-de830c534c": {
+  "claims": [
+   "y",
+   "x",
+   "y",
+   "y",
+   "y",
+   "y",
+   "y",
+   "x"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 95
+ },
+ "q-93e8ce6236": {
+  "claims": [
+   "y",
+   "n",
+   "y"
+  ],
+  "faithful": 0,
+  "note": "",
+  "judge_score": 80
+ },
+ "q-41174d8b17": {
+  "claims": [
+   "y"
+  ],
+  "faithful": 1,
+  "note": "",
+  "judge_score": 100
+ }
+}
