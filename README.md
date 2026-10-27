@@ -219,6 +219,10 @@ benchmark tables worthless. `--sweep` sweeps the fusion weights instead.
 accuracy) from model-judged ones (groundedness, relevance). The mechanical
 ones are the ones to trust when they disagree — using a language model to
 grade a language model shares the failure modes of both.
+Measured, not assumed: against 30 answers labelled by hand claim by claim,
+the qwen2.5:7b judge agreed 83% of the time but with Cohen's κ −0.06 (no
+better than chance) and passed all 4 answers that contained an unsupported
+claim ([run 3c v2](results/2026-10-27_run3c_v2_colab-t4/RUN.md#judge-agreement)).
 
 Reports land in `corpora/<name>/reports/` as JSON and markdown.
 
